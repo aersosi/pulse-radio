@@ -9,8 +9,8 @@ export default function StationCard({ station }: StationCardProps) {
                 {station.logo && (
                     <div className="w-full h-32 relative">
                         <Image
-                            src={station.logo}
-                            alt={station.name}
+                            src={station.logo || "/no-image-available.webp"}
+                            alt={station.name ? station.name : "No image available"}
                             fill
                             className="object-contain rounded-md"
                             sizes="(max-width: 768px) 100vw, 250px"
