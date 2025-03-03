@@ -1,5 +1,5 @@
 import Image from "next/image";
-import {getStationDetails} from "@/lib/api";
+import {getStationDetails, getTop100Stations} from "@/lib/api";
 import {notFound} from "next/navigation";
 import AudioPlayer from "@/components/AudioPlayer";
 import {StationDetailPageProps} from "@/lib/definitions";
@@ -20,6 +20,20 @@ export async function generateMetadata({params}: { params: { id: string } }) {
         description: station.description || `Höre ${station.name} live`,
     };
 }
+
+// SSG for Stations on build time
+export async function generateStaticParams() {
+    try {
+        const stations = await getTop100Stations();
+        return stations.map(({ id }) => ({ id }));
+    } catch (error) {
+        console.error("Failed to generate static paths:", error);
+        return [];
+    }
+}
+
+// ISR (Incremental Static Regeneration) every 24h
+export const revalidate = 86400;
 
 export default async function StationDetailPage({params}: StationDetailPageProps) {
     const {id} = await params;

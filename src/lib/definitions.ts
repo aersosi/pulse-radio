@@ -2,7 +2,7 @@
 interface APIBaseStation {
     id: string;
     name: string;
-    logo100x100?: string;
+    logo300x300?: string;
 }
 
 export type APIStationResponse = {

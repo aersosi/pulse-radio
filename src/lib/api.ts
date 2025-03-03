@@ -10,18 +10,22 @@ import {
 const API_BASE = "https://prod.radio-api.net/stations";
 
 async function fetchWithCache<T>(url: string, revalidateTime: number = 86400): Promise<T> {
-    const res = await fetch(url, {
-        next: {revalidate: revalidateTime}
-    });
-
-    if (!res.ok) {
-        throw new Error(`API call error: ${res.status}`);
-    }
     try {
+        const res = await fetch(url, {
+            next: { revalidate: revalidateTime }
+        });
+
+        if (!res.ok) {
+            const errorText = await res.text();
+            throw new Error(`API Error ${res.status}: ${errorText}`);
+        }
+
         return await res.json() as T;
+
     } catch (error) {
-        console.error("API Error:", error);
-        throw error;
+        // Differenziere Netzwerkfehler von Parse-Fehlern
+        console.error("Fetch Error:", error instanceof Error ? error.message : "Unknown error");
+        throw error; // Wichtig für Error Boundaries
     }
 }
 
@@ -29,7 +33,7 @@ function mapToStation(stationData: APIStationItem): Station {
     return {
         id: stationData.id,
         name: stationData.name,
-        logo: stationData.logo100x100 || null,
+        logo: stationData.logo300x300 || null,
         genre: stationData.topics?.join(", ") || null,
     };
 }
@@ -38,7 +42,7 @@ function mapToStationDetail(stationData: APIStationDetailItem): StationDetail {
     return {
         id: stationData.id,
         name: stationData.name,
-        logo: stationData.logo100x100 || null,
+        logo: stationData.logo300x300 || null,
         genre: stationData.genres || null,
         description: stationData.description || stationData.shortDescription || null,
         streamUrl: stationData.streams?.[0]?.url || null,
