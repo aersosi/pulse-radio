@@ -17,13 +17,11 @@ export const metadata: Metadata = {
     description: "Your pulse, in tune with the music",
 };
 
-export default function RootLayout({
-                                       children,
-                                   }: Readonly<{
+export default function RootLayout({children,}: Readonly<{
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
+        <html lang="en" className="light">
         <body
             className={`${geistSans.variable} antialiased`}
         >
