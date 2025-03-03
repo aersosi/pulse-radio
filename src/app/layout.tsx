@@ -8,7 +8,12 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-    title: "Pulse Radio",
+    title: {
+        absolute: "",
+        default: "Pulse Radio",
+        template: "Pulse Radio | %s"
+
+    },
     description: "Your pulse, in tune with the music",
 };
 
