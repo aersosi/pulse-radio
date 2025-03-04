@@ -60,7 +60,7 @@ export interface StationCardProps {
 }
 
 export interface StationDetailPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export interface AudioPlayerProps {
