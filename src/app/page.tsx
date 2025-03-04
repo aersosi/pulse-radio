@@ -15,6 +15,7 @@ import {
     PaginationPrevious,
 } from "@/components/ui/pagination";
 
+
 export default function Home() {
     const [stations, setStations] = useState<Station[]>([]);
     const [offset, setOffset] = useState(0);
@@ -58,13 +59,11 @@ export default function Home() {
         <div className="flex flex-col gap-8 py-4 font-[family-name:var(--font-geist-sans)]">
             <header className="container mx-auto px-4">
                 <div className="flex justify-between items-baseline gap-4">
-                    <h1 className="text-2xl font-bold">Top 100 Radio Stations</h1>
-                    <p className="flex gap-4 text-xl font-bold">
-                        <span>{`Station: ${offset + 1} - ${offset + 5}`}</span>
-                        {totalCountValue > 0 &&
-                            <span className="font-light text-muted-foreground">Total: {totalCountValue}</span>
-                        }
-                    </p>
+                    <h1 className="text-2xl font-bold">{isLoading ? "Loading Radio Stations" : "Top Radio Stations"}</h1>
+                    <div className="flex gap-4 text-xl font-bold">
+                        {isLoading ? "" : <p>{`Station: ${offset + 1} - ${offset + 5}`}</p>}
+                        {totalCountValue > 0 ? <p className="font-light text-muted-foreground">Total: {totalCountValue}</p> : "" }
+                    </div>
                 </div>
             </header>
             <main className="container mx-auto px-4">
