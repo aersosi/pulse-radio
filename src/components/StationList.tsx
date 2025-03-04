@@ -4,7 +4,7 @@ import {StationListProps} from "@/lib/definitions";
 export default function StationList({ stations }: StationListProps) {
     if (!stations?.length) {
         return (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-gray-600">
                 No stations found
             </div>
         );

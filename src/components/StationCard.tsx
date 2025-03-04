@@ -24,6 +24,8 @@ export default function StationCard({station}: StationCardProps) {
                         <Image
                             src={station.logo || "/no-image-available.webp"}
                             alt={station.name ? station.name : "No image available"}
+                            placeholder="blur"
+                            blurDataURL={station.logoSmall || "/no-image-available.webp"}
                             fill
                             className="object-contain rounded-lg"
                             sizes="(max-width: 768px) 100vw, 250px"

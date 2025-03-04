@@ -2,6 +2,7 @@
 interface APIBaseStation {
     id: string;
     name: string;
+    logo44x44?: string;
     logo300x300?: string;
 }
 
@@ -32,6 +33,7 @@ export interface APIStreamItem {
 export interface Station {
     id: string;
     name: string;
+    logoSmall: string | null;
     logo: string | null;
     genre: string | null;
 }

@@ -78,6 +78,8 @@ export default async function StationDetailPage({params}: StationDetailPageProps
                             <Image
                                 src={station.logo || "/no-image-available.webp"}
                                 alt={station.name ? station.name : "No image available"}
+                                placeholder="blur"
+                                blurDataURL={station.logoSmall || "/no-image-available.webp"}
                                 fill
                                 className="object-contain rounded-md"
                                 sizes="(max-width: 768px) 100vw, 250px"
@@ -95,7 +97,7 @@ export default async function StationDetailPage({params}: StationDetailPageProps
                             </AccordionItem>
                         </Accordion>
                     ) : (
-                        <div className="text-red-500 mt-4">Description not available</div>
+                        <div className="text-gray-600">Description not available</div>
                     )}
 
                     {/*{station.description && <p className="mt-4">{station.description}</p>}*/}
