@@ -1,7 +1,6 @@
 import {Skeleton} from "@/components/ui/skeleton"
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 
-
 export default function StationLoading() {
     return (
         <main className="container mx-auto p-4 flex flex-col gap-8">
@@ -11,11 +10,11 @@ export default function StationLoading() {
                 <CardHeader className="text-center">
                     <CardTitle className="text-4xl">
                         {/*Station Name*/}
-                        <Skeleton className="h-6 w-full"/>
+                        <Skeleton className="h-[40px] w-full"/>
                     </CardTitle>
                     <CardDescription className="text-xl">
                         {/*Station Genre*/}
-                        <Skeleton className="h-4 w-full"/>
+                        <Skeleton className="h-[28px] w-full"/>
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col items-center">
@@ -25,7 +24,7 @@ export default function StationLoading() {
                     </div>
                     {/*Station Description*/}
                     <div className="text-gray-600">
-                        <Skeleton className="h-4 w-full"/>
+                        <Skeleton className="h-[] w-full"/>
                     </div>
                 </CardContent>
                 <CardFooter>

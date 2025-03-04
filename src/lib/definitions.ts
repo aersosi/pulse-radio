@@ -10,21 +10,19 @@ export interface APIStationItem {
   id: string;
   name: string;
   logo44x44?: string | null;
-  logo100x100?: string | null;
   logo300x300?: string | null;
   topics?: string[] | null;
 }
 
 export interface APIStationResponse extends APIResponse {
   playables: APIStationItem[];
-  total?: number;
+  totalCount?: number;
 }
 
 export interface APIStationDetailItem {
   id: string;
   name: string;
   logo44x44?: string | null;
-  logo100x100?: string | null;
   logo300x300?: string | null;
   genres?: string[] | null;
   description?: string | null;
@@ -56,6 +54,7 @@ export interface StationDetail extends Station {
 // Component props interfaces
 export interface StationListProps {
   stations: Station[];
+  isLoading?: boolean;
 }
 
 export interface StationCardProps {

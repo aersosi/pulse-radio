@@ -16,11 +16,11 @@ export default function StationCard({station}: StationCardProps) {
         <Link href={`/station/${station.id}`} className="block">
 
             <Card className="hover:scale-105 transition-transform text-center">
-                <CardHeader>
+                <CardHeader className="h-[32px]">
                     <CardTitle>{station.name}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="w-32 h-32 mx-auto relative">
+                    <div className="w-20 h-20 mx-auto relative">
                         <Image
                             src={station.logo || "/no-image-available.webp"}
                             alt={station.name ? station.name : "No image available"}
@@ -32,7 +32,7 @@ export default function StationCard({station}: StationCardProps) {
                         />
                     </div>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="h-[40px]">
                     <p>{station.genre || "No genre available"}</p>
                 </CardFooter>
             </Card>

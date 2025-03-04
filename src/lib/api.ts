@@ -40,7 +40,7 @@ function mapToStation(stationData: APIStationItem): Station {
     return {
         id: stationData.id,
         name: stationData.name,
-        logo: stationData.logo100x100 || stationData.logo300x300 || "/no-image-available.webp",
+        logo: stationData.logo300x300 || "/no-image-available.webp",
         genre: stationData.topics?.join(", ") || null,
     };
 }
@@ -53,12 +53,28 @@ function mapToStationDetail(stationData: APIStationDetailItem): StationDetail {
     return {
         id: stationData.id,
         name: stationData.name,
-        logo: stationData.logo300x300 || stationData.logo100x100 || "/no-image-available.webp",
+        logo: stationData.logo300x300 || "/no-image-available.webp",
         genre: stationData.genres?.join(", ") || null,
         description: stationData.description || stationData.shortDescription || null,
         streamUrl: stationData.streams?.[0]?.url || null,
     };
 }
+
+/**
+ * Fetches totalCount
+ */
+export async function totalCount(): Promise<number> {
+    try {
+        const data = await fetchWithCache<APIStationResponse>(
+            `${API_BASE}/list-by-system-name?systemName=STATIONS_TOP&count=100`
+        );
+        return data.totalCount || 0; // Falls totalCount nicht vorhanden ist, gebe 0 zurück
+    } catch (error) {
+        console.error("Error loading totalCount:", error instanceof Error ? error.message : String(error));
+        return 0;
+    }
+}
+
 
 /**
  * Fetches top 100 radio stations
@@ -67,6 +83,21 @@ export async function getTop100Stations(): Promise<Station[]> {
     try {
         const data = await fetchWithCache<APIStationResponse>(
             `${API_BASE}/list-by-system-name?systemName=STATIONS_TOP&count=100`
+        );
+        return data.playables.map(mapToStation);
+    } catch (error) {
+        console.error("Error loading top stations:", error instanceof Error ? error.message : String(error));
+        return [];
+    }
+}
+
+/**
+ * Fetches top 5 radio stations
+ */
+export async function get5Stations(count: number = 5, offset: number = 0): Promise<Station[]> {
+    try {
+        const data = await fetchWithCache<APIStationResponse>(
+            `${API_BASE}/list-by-system-name?systemName=STATIONS_TOP&count=${count}&offset=${offset}`
         );
         return data.playables.map(mapToStation);
     } catch (error) {
