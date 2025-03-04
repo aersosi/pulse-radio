@@ -5,7 +5,7 @@ import {
     APIStationDetailResponse,
     APIStationItem,
     APIStationDetailItem,
-    RevalidationResponse
+    RevalidationResponse,
 } from "@/lib/definitions";
 
 const API_BASE = "https://prod.radio-api.net/stations";
@@ -68,7 +68,7 @@ export async function totalCount(): Promise<number> {
         const data = await fetchWithCache<APIStationResponse>(
             `${API_BASE}/list-by-system-name?systemName=STATIONS_TOP&count=100`
         );
-        return data.totalCount || 0; // Falls totalCount nicht vorhanden ist, gebe 0 zurück
+        return data.totalCount || 0;
     } catch (error) {
         console.error("Error loading totalCount:", error instanceof Error ? error.message : String(error));
         return 0;

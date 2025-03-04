@@ -1,10 +1,9 @@
-"use client"
+"use client";
 
-import {get5Stations, totalCount} from "@/lib/api";
+import React, { useEffect, useState } from "react";
+import { get5Stations, totalCount } from "@/lib/api";
+import { Station } from "@/lib/definitions";
 import StationList from "@/components/StationList";
-import {Station} from "@/lib/definitions";
-import {useEffect, useState} from "react";
-
 import {
     Pagination,
     PaginationContent,
@@ -45,8 +44,9 @@ export default function Home() {
         fetchStations();
     }, [offset]);
 
-// In your render method
-    {error && <div className="text-red-500">{error}</div>}
+    {
+        error && <div className="text-red-500">{error}</div>
+    }
 
     const handlePrev = () => {
         if (page > 1) {
@@ -68,16 +68,24 @@ export default function Home() {
     return (
         <div className="flex flex-col gap-8 py-4 font-[family-name:var(--font-geist-sans)]">
             <header className="container mx-auto px-4">
-                <div className="flex justify-between items-baseline gap-4">
-                    <h1 className="text-2xl font-bold">{isLoading ? "Loading Radio Stations" : "Top Radio Stations"}</h1>
+                <div className="flex justify-between items-center gap-4 flex-col md:flex-row">
+                    <div className="flex gap-4 items-center">
+                        <img
+                            className="w-8 h-8"
+                            src={"/pulse_logo_32.png"}
+                            alt={"Pulse radio logo"}
+                        />
+                        <h1 className="text-2xl font-bold">{isLoading ? "Loading Radio Stations" : "Top Radio Stations"}</h1>
+                    </div>
                     <div className="flex gap-4 text-xl font-bold">
                         {isLoading ? "" : <p>{`Station: ${offset + 1} - ${offset + 5}`}</p>}
-                        {totalCountValue > 0 ? <p className="font-light text-muted-foreground">Total: {totalCountValue}</p> : "" }
+                        {totalCountValue > 0 ?
+                            <p className="font-light text-muted-foreground">Total: {totalCountValue}</p> : ""}
                     </div>
                 </div>
             </header>
             <main className="container mx-auto px-4">
-                <StationList stations={stations} isLoading={isLoading} />
+                <StationList stations={stations} isLoading={isLoading}/>
             </main>
             <footer className="container mx-auto px-4">
                 <Pagination>

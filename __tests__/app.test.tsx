@@ -49,16 +49,16 @@ describe('Home Page Component', () => {
 
         render(<Home/>);
 
-        // Überprüfe, ob der Ladezustand angezeigt wird
+        // Check if the loading state is displayed
         expect(await screen.findByText(/loading radio stations/i)).toBeInTheDocument();
 
-        // Lösche die Promises
+        // Delete Promises
         await act(async () => {
             resolveGet5Stations(mockStations);
             resolveTotalCount(25);
         });
 
-        // Überprüfe, dass der Ladezustand entfernt wurde
+        // Check if load state was deleted
         await waitFor(() => {
             expect(screen.queryByText(/loading radio stations/i)).not.toBeInTheDocument();
         });
@@ -158,7 +158,7 @@ describe('Home Page Component', () => {
 
         render(<Home/>);
 
-        // Überprüfe, ob die Fehlermeldung angezeigt wird
+        // Check if error is displayed
         await waitFor(() => {
             expect(screen.getByText('Failed to load stations')).toBeInTheDocument();
         });

@@ -1,5 +1,5 @@
 import StationCard from "@/components/StationCard";
-import {StationListProps} from "@/lib/definitions";
+import { StationListProps } from "@/lib/definitions";
 import StationCardLoading from "@/components/StationCardLoading";
 
 export default function StationList({stations, isLoading}: StationListProps & { isLoading: boolean }) {

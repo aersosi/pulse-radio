@@ -1,5 +1,3 @@
-// src/lib/definitions.ts
-
 // API response interfaces
 export interface APIResponse {
   status: string;
@@ -72,4 +70,12 @@ export interface AudioPlayerProps {
 export interface RevalidationResponse {
   success: boolean;
   message: string;
+}
+
+export interface HLSPlayerProps {
+  url: string;
+}
+
+export interface AudioPlayerProps {
+  streamUrl: string;
 }

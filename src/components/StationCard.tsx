@@ -1,14 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
-import {StationCardProps} from "@/lib/definitions";
-
+import { StationCardProps } from "@/lib/definitions";
 import {
     Card,
     CardContent,
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 
 
 export default function StationCard({station}: StationCardProps) {

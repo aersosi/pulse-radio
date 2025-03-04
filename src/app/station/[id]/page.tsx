@@ -1,10 +1,9 @@
+import type { Metadata } from "next";
 import Image from "next/image";
-import {getStationDetails} from "@/lib/api";
-import {notFound} from "next/navigation";
-import AudioPlayer from "@/components/AudioPlayer";
-import {StationDetailPageProps, StationDetail} from "@/lib/definitions";
+import { notFound } from "next/navigation";
+import { getStationDetails } from "@/lib/api";
+import { StationDetailPageProps, StationDetail } from "@/lib/definitions";
 import Btn_toTop100 from "@/components/Btn_toTop100";
-
 import {
     Card,
     CardContent,
@@ -12,16 +11,16 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
-
+} from "@/components/ui/card";
 import {
     Accordion,
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
-} from "@/components/ui/accordion"
-import {truncateEnd, truncateStart} from "@/lib/utils";
-import {Metadata} from "next";
+} from "@/components/ui/accordion";
+import { truncateEnd, truncateStart } from "@/lib/utils";
+import HLSPlayer from "@/components/HLSPlayer";
+import NativeAudioPlayer from "@/components/NativeAudioPlayer";
 
 // Dynamic metadata based on station
 export async function generateMetadata({params}: { params: { id: string } }): Promise<Metadata> {
@@ -75,7 +74,7 @@ export default async function StationDetailPage({params}: StationDetailPageProps
                     )}
 
                     {station.description ? (
-                        <Accordion type="single" collapsible className="max-w-1/2">
+                        <Accordion type="single" collapsible className="max-w-3/4">
                             <AccordionItem value="item-1">
                                 <AccordionTrigger>{truncateEnd(station.description, 80)}</AccordionTrigger>
                                 <AccordionContent>
@@ -88,12 +87,22 @@ export default async function StationDetailPage({params}: StationDetailPageProps
                     )}
                 </CardContent>
                 <CardFooter>
-                    {station.streamUrl ? (
-                        <AudioPlayer streamUrl={station.streamUrl}/>
-                    ) : (
-                        <div className="text-red-500 mt-4">Stream currently not available</div>
-                    )}
+                    <div className="flex flex-col gap-8 items-center w-full">
+                        {station.streamUrl ? (
+                            station.streamUrl.includes('.m3u8') ? (
+                                <HLSPlayer url={station.streamUrl} />
+                            ) : (
+                                <NativeAudioPlayer streamUrl={station.streamUrl} />
+                            )
+                        ) : (
+                            <div className="text-red-500 mt-4">Stream currently not available</div>
+                        )}
+
+                        <p className="text-green-500 font-bold">Enjoy your Radio and increase volume if you like!</p>
+                    </div>
                 </CardFooter>
             </Card>
+            <p className="text-center break-all max-w-3/4 text-muted-foreground text-sm mx-auto">{station.streamUrl}</p>
+
         </main>);
 }
