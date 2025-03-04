@@ -2,7 +2,7 @@ import {getTop100Stations} from "@/lib/api";
 import StationList from "@/components/StationList";
 import {Station} from "@/lib/definitions";
 
-// ISR (Incremental Static Regeneration) every 24h
+// ISR with 24h cache
 export const revalidate = 86400;
 
 export default async function Home() {

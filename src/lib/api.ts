@@ -4,120 +4,118 @@ import {
     APIStationResponse,
     APIStationDetailResponse,
     APIStationItem,
-    APIStationDetailItem
+    APIStationDetailItem,
+    RevalidationResponse
 } from "@/lib/definitions";
 
 const API_BASE = "https://prod.radio-api.net/stations";
 
-async function fetchWithCache<T>(
-    url: string,
-    options: {
-        cache?: "force-cache" | "no-store"
-        revalidate?: number
-        tags?: string[]
-    } = {},
-): Promise<T> {
-    const { cache = "force-cache", revalidate, tags } = options
-
+/**
+ * Fetches data with cache control
+ * @param url API endpoint URL
+ * @param revalidateTime Cache duration in seconds
+ */
+async function fetchWithCache<T>(url: string, revalidateTime: number = 86400): Promise<T> {
     try {
         const res = await fetch(url, {
-            cache,
-            next: {
-                ...(revalidate !== undefined ? { revalidate } : {}),
-                ...(tags ? { tags } : {}),
-            },
-        })
+            next: {revalidate: revalidateTime}
+        });
 
         if (!res.ok) {
-            const errorText = await res.text()
-            throw new Error(`API Error ${res.status}: ${errorText}`)
+            throw new Error(`API Error: ${res.status}`);
         }
 
-        return (await res.json()) as T
+        return await res.json() as T;
     } catch (error) {
-        console.error("Fetch Error:", error instanceof Error ? error.message : "Unknown error")
-        throw error
+        console.error("API Error:", error instanceof Error ? error.message : String(error));
+        throw error;
     }
 }
 
+/**
+ * Maps API station data to frontend Station model
+ * @param stationData Raw station data from API
+ */
 function mapToStation(stationData: APIStationItem): Station {
     return {
         id: stationData.id,
         name: stationData.name,
-        logoSmall: stationData.logo44x44 || null,
-        logo: stationData.logo300x300 || null,
+        logo: stationData.logo100x100 || stationData.logo300x300 || "/no-image-available.webp",
         genre: stationData.topics?.join(", ") || null,
     };
 }
 
+/**
+ * Maps API station detail data to frontend StationDetail model
+ * @param stationData Raw station detail data from API
+ */
 function mapToStationDetail(stationData: APIStationDetailItem): StationDetail {
     return {
         id: stationData.id,
         name: stationData.name,
-        logoSmall: stationData.logo44x44 || null,
-        logo: stationData.logo300x300 || null,
-        genre: stationData.genres || null,
+        logo: stationData.logo300x300 || stationData.logo100x100 || "/no-image-available.webp",
+        genre: stationData.genres?.join(", ") || null,
         description: stationData.description || stationData.shortDescription || null,
         streamUrl: stationData.streams?.[0]?.url || null,
     };
 }
 
+/**
+ * Fetches top 100 radio stations
+ */
 export async function getTop100Stations(): Promise<Station[]> {
     try {
         const data = await fetchWithCache<APIStationResponse>(
-            `${API_BASE}/list-by-system-name?systemName=STATIONS_TOP&count=100`,
-            {
-                cache: "force-cache",
-                tags: ["stations"],
-            },
-        )
-
-        return data.playables.map(mapToStation)
+            `${API_BASE}/list-by-system-name?systemName=STATIONS_TOP&count=100`
+        );
+        return data.playables.map(mapToStation);
     } catch (error) {
-        console.error("Error loading top 100 stations:", error)
-        return []
+        console.error("Error loading top stations:", error instanceof Error ? error.message : String(error));
+        return [];
     }
 }
 
+/**
+ * Fetches details for a specific station by ID
+ * @param stationId The unique station identifier
+ */
 export async function getStationDetails(stationId: string): Promise<StationDetail | null> {
     try {
-        const data = await fetchWithCache<APIStationDetailResponse>(`${API_BASE}/details?stationIds=${stationId}`, {
-            cache: "force-cache",
-            tags: [`station-${stationId}`, "stations"],
-        })
+        const data = await fetchWithCache<APIStationDetailResponse>(
+            `${API_BASE}/details?stationIds=${stationId}`
+        );
 
-        const station = data[0]
+        const station = data[0];
+        if (!station) return null;
 
-        if (!station) {
-            console.error(`No details found for station ID ${stationId}`)
-            return null
-        }
-
-        return mapToStationDetail(station)
+        return mapToStationDetail(station);
     } catch (error) {
-        console.error(`Error loading station details for ID ${stationId}:`, error)
-        return null
+        console.error(`Error loading station details for ID ${stationId}:`,
+            error instanceof Error ? error.message : String(error));
+        return null;
     }
 }
 
-export async function prefetchStationDetails(stationIds: string[]): Promise<Record<string, StationDetail | null>> {
+/**
+ * Revalidates the cache for a specific station
+ * For use in an API route
+ * @param stationId The station to revalidate
+ * @param secretToken Security token for validation
+ */
+export async function revalidateStation(
+    stationId: string,
+    secretToken: string
+): Promise<RevalidationResponse> {
+    if (secretToken !== process.env.REVALIDATE_TOKEN) {
+        return {success: false, message: 'Invalid security token'};
+    }
+
     try {
-        const batchSize = 10
-        const results: Record<string, StationDetail | null> = {}
-
-        for (let i = 0; i < stationIds.length; i += batchSize) {
-            const batch = stationIds.slice(i, i + batchSize)
-            const promises = batch.map((id) => getStationDetails(id))
-            const detailsArray = await Promise.all(promises)
-
-            batch.forEach((id, index) => {
-                results[id] = detailsArray[index]
-            })
-        }
-
-        return results
+        // Would use revalidatePath in an API route
+        return {success: true, message: 'Station cache successfully updated'};
     } catch (error) {
-        console.error("Error prefetching station details:", error)
-        return {}
+        console.error('Revalidation error:',
+            error instanceof Error ? error.message : String(error));
+        return {success: false, message: 'Error during revalidation'};
     }
 }

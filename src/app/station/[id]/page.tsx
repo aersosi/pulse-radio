@@ -1,8 +1,8 @@
 import Image from "next/image";
-import {getStationDetails, getTop100Stations} from "@/lib/api";
+import {getStationDetails} from "@/lib/api";
 import {notFound} from "next/navigation";
 import AudioPlayer from "@/components/AudioPlayer";
-import {StationDetailPageProps} from "@/lib/definitions";
+import {StationDetailPageProps, StationDetail} from "@/lib/definitions";
 import Btn_toTop100 from "@/components/Btn_toTop100";
 
 import {
@@ -21,45 +21,32 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 import {truncateEnd, truncateStart} from "@/lib/utils";
+import {Metadata} from "next";
 
-
-export async function generateMetadata({params}: { params: { id: string } }) {
+// Dynamic metadata based on station
+export async function generateMetadata({params}: { params: { id: string } }): Promise<Metadata> {
     const {id} = await params;
     const station = await getStationDetails(id);
 
     if (!station) {
         return {
-            title: "Station not found",
+            title: 'Station not found',
         };
     }
 
     return {
         title: `${station.name}`,
-        description: station.description || `Höre ${station.name} live`,
+        description: station.description || `Listen to ${station.name} live`,
     };
 }
 
-// SSG for Stations on build time
-export async function generateStaticParams() {
-    try {
-        const stations = await getTop100Stations();
-        return stations.map(({id}) => ({id}));
-    } catch (error) {
-        console.error("Failed to generate static paths:", error);
-        return [];
-    }
-}
-
-// ISR (Incremental Static Regeneration) every 24h
-export const revalidate = 86400;
-
-
-
 export default async function StationDetailPage({params}: StationDetailPageProps) {
     const {id} = await params;
-    const station = await getStationDetails(id);
+    const station: StationDetail | null = await getStationDetails(id);
 
-    if (!station) notFound();
+    if (!station) {
+        notFound();
+    }
 
     return (
         <main className="container mx-auto p-4 flex flex-col gap-8">
@@ -69,7 +56,7 @@ export default async function StationDetailPage({params}: StationDetailPageProps
                 <CardHeader className="text-center">
                     <CardTitle className="text-4xl">{station.name}</CardTitle>
                     {station.genre && (
-                        <CardDescription className="text-xl">{station.genre.join(', ')}</CardDescription>
+                        <CardDescription className="text-xl">{station.genre}</CardDescription>
                     )}
                 </CardHeader>
                 <CardContent className="flex flex-col items-center">
@@ -79,7 +66,7 @@ export default async function StationDetailPage({params}: StationDetailPageProps
                                 src={station.logo || "/no-image-available.webp"}
                                 alt={station.name ? station.name : "No image available"}
                                 placeholder="blur"
-                                blurDataURL={station.logoSmall || "/no-image-available.webp"}
+                                blurDataURL={station.logo || "/no-image-available.webp"}
                                 fill
                                 className="object-contain rounded-md"
                                 sizes="(max-width: 768px) 100vw, 250px"
@@ -99,8 +86,6 @@ export default async function StationDetailPage({params}: StationDetailPageProps
                     ) : (
                         <div className="text-gray-600">Description not available</div>
                     )}
-
-                    {/*{station.description && <p className="mt-4">{station.description}</p>}*/}
                 </CardContent>
                 <CardFooter>
                     {station.streamUrl ? (
@@ -110,6 +95,5 @@ export default async function StationDetailPage({params}: StationDetailPageProps
                     )}
                 </CardFooter>
             </Card>
-        </main>
-    );
+        </main>);
 }

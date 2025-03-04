@@ -1,61 +1,76 @@
-// API Types
-interface APIBaseStation {
-    id: string;
-    name: string;
-    logo44x44?: string;
-    logo300x300?: string;
+// src/lib/definitions.ts
+
+// API response interfaces
+export interface APIResponse {
+  status: string;
+  timestamp: string;
 }
 
-export type APIStationResponse = {
-    playables: APIStationItem[];
-};
+export interface APIStationItem {
+  id: string;
+  name: string;
+  logo44x44?: string | null;
+  logo100x100?: string | null;
+  logo300x300?: string | null;
+  topics?: string[] | null;
+}
 
-export interface APIStationItem extends APIBaseStation {
-    topics?: string[];
+export interface APIStationResponse extends APIResponse {
+  playables: APIStationItem[];
+  total?: number;
+}
+
+export interface APIStationDetailItem {
+  id: string;
+  name: string;
+  logo44x44?: string | null;
+  logo100x100?: string | null;
+  logo300x300?: string | null;
+  genres?: string[] | null;
+  description?: string | null;
+  shortDescription?: string | null;
+  streams?: APIStreamItem[] | null;
 }
 
 export type APIStationDetailResponse = APIStationDetailItem[];
 
-export interface APIStationDetailItem extends APIBaseStation {
-    genres?: string[];
-    description?: string;
-    shortDescription?: string;
-    streams?: APIStreamItem[];
-}
-
 export interface APIStreamItem {
-    url: string;
-    format?: string;
-    bitrate?: number;
+  url: string;
+  format?: string;
+  bitrate?: number;
 }
 
-// Component Types
+// Frontend model interfaces
 export interface Station {
-    id: string;
-    name: string;
-    logoSmall: string | null;
-    logo: string | null;
-    genre: string | null;
+  id: string;
+  name: string;
+  logo: string;
+  genre: string | null;
+}
+
+export interface StationDetail extends Station {
+  description: string | null;
+  streamUrl: string | null;
+}
+
+// Component props interfaces
+export interface StationListProps {
+  stations: Station[];
 }
 
 export interface StationCardProps {
-    station: Station;
+  station: Station;
 }
 
 export interface StationDetailPageProps {
-    params: { id: string };
-}
-
-export interface StationDetail extends Omit<Station, 'genre'> {
-    genre: string[] | null;
-    description: string | null;
-    streamUrl: string | null;
-}
-
-export interface StationListProps {
-    stations: Station[] | null;
+  params: { id: string };
 }
 
 export interface AudioPlayerProps {
-    streamUrl: string | null;
+  streamUrl: string;
+}
+
+export interface RevalidationResponse {
+  success: boolean;
+  message: string;
 }
