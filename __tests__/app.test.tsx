@@ -3,6 +3,7 @@ import {render, screen, fireEvent, waitFor, act} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Home from "../src/app/page";
 import {get5Stations, totalCount} from '@/lib/api';
+import {Station} from "@/lib/definitions";
 
 // Mock the API functions
 jest.mock('@/lib/api', () => ({
@@ -19,11 +20,11 @@ jest.mock('@/components/StationList', () => {
 
 describe('Home Page Component', () => {
     const mockStations = [
-        {id: 1, name: 'Station 1', genre: 'Rock'},
-        {id: 2, name: 'Station 2', genre: 'Pop'},
-        {id: 3, name: 'Station 3', genre: 'Jazz'},
-        {id: 4, name: 'Station 4', genre: 'Classical'},
-        {id: 5, name: 'Station 5', genre: 'Electronic'}
+        {id: "1", name: 'Station 1', logo: 'no-image-available.webp', genre: 'Rock'},
+        {id: "2", name: 'Station 2', logo: 'no-image-available.webp', genre: 'Pop'},
+        {id: "3", name: 'Station 3', logo: 'no-image-available.webp', genre: 'Jazz'},
+        {id: "4", name: 'Station 4', logo: 'no-image-available.webp', genre: 'Classical'},
+        {id: "5", name: 'Station 5', logo: 'no-image-available.webp', genre: 'Electronic'}
     ];
 
     beforeEach(() => {
@@ -35,23 +36,45 @@ describe('Home Page Component', () => {
         (totalCount as jest.Mock).mockResolvedValue(25);
     });
 
-    test('renders initial page with stations and pagination', async () => {
+    test('renders initial page with loading state', async () => {
+        let resolveGet5Stations: (stations: Station[]) => void;
+        let resolveTotalCount: (count: number) => void;
+
+        (get5Stations as jest.Mock).mockImplementation(() => new Promise((resolve) => {
+            resolveGet5Stations = resolve;
+        }));
+        (totalCount as jest.Mock).mockImplementation(() => new Promise((resolve) => {
+            resolveTotalCount = resolve;
+        }));
+
+        render(<Home/>);
+
+        // Überprüfe, ob der Ladezustand angezeigt wird
+        expect(await screen.findByText(/loading radio stations/i)).toBeInTheDocument();
+
+        // Lösche die Promises
+        await act(async () => {
+            resolveGet5Stations(mockStations);
+            resolveTotalCount(25);
+        });
+
+        // Überprüfe, dass der Ladezustand entfernt wurde
+        await waitFor(() => {
+            expect(screen.queryByText(/loading radio stations/i)).not.toBeInTheDocument();
+        });
+    });
+
+    test('renders stations after loading', async () => {
         await act(async () => {
             render(<Home/>);
         });
 
-        // Check loading state
-        expect(screen.getByText('Loading')).toBeInTheDocument();
-
         // Wait for stations to load
         await waitFor(() => {
-            expect(screen.getByText('Stations: 5')).toBeInTheDocument();
+            expect(screen.getByText('Top Radio Stations')).toBeInTheDocument();
+            expect(screen.getByText('Station: 1 - 5')).toBeInTheDocument();
+            expect(screen.getByText('Total: 25')).toBeInTheDocument();
         });
-
-        // Check header content
-        expect(screen.getByText('Top 100 Radio Stations')).toBeInTheDocument();
-        expect(screen.getByText('Station: 1 - 5')).toBeInTheDocument();
-        expect(screen.getByText('Total: 25')).toBeInTheDocument();
     });
 
     test('pagination navigation works correctly', async () => {
@@ -61,7 +84,7 @@ describe('Home Page Component', () => {
 
         // Wait for initial load
         await waitFor(() => {
-            expect(screen.getByText('Stations: 5')).toBeInTheDocument();
+            expect(screen.getByText('Top Radio Stations')).toBeInTheDocument();
         });
 
         // Click next page
@@ -71,8 +94,10 @@ describe('Home Page Component', () => {
         });
 
         // Verify offset and page change
-        expect(get5Stations).toHaveBeenCalledWith(5, 5);
-        expect(screen.getByText('Station: 6 - 10')).toBeInTheDocument();
+        await waitFor(() => {
+            expect(get5Stations).toHaveBeenCalledWith(5, 5);
+            expect(screen.getByText('Station: 6 - 10')).toBeInTheDocument();
+        });
     });
 
     test('previous page navigation works correctly', async () => {
@@ -82,12 +107,13 @@ describe('Home Page Component', () => {
 
         // Wait for initial load
         await waitFor(() => {
-            expect(screen.getByText('Stations: 5')).toBeInTheDocument();
+            expect(screen.getByText('Top Radio Stations')).toBeInTheDocument();
         });
 
         // Set initial state to page 2
         await act(async () => {
-            fireEvent.click(screen.getByText('Next'));
+            const nextButton = screen.getByText('Next');
+            fireEvent.click(nextButton);
         });
 
         // Then click previous
@@ -97,8 +123,10 @@ describe('Home Page Component', () => {
         });
 
         // Verify offset and page change
-        expect(get5Stations).toHaveBeenCalledWith(5, 0);
-        expect(screen.getByText('Station: 1 - 5')).toBeInTheDocument();
+        await waitFor(() => {
+            expect(get5Stations).toHaveBeenCalledWith(5, 0);
+            expect(screen.getByText('Station: 1 - 5')).toBeInTheDocument();
+        });
     });
 
     test('direct page navigation works', async () => {
@@ -108,7 +136,7 @@ describe('Home Page Component', () => {
 
         // Wait for initial load
         await waitFor(() => {
-            expect(screen.getByText('Stations: 5')).toBeInTheDocument();
+            expect(screen.getByText('Top Radio Stations')).toBeInTheDocument();
         });
 
         // Click on page 3
@@ -118,26 +146,21 @@ describe('Home Page Component', () => {
         });
 
         // Verify offset and page change
-        expect(get5Stations).toHaveBeenCalledWith(5, 10);
-        expect(screen.getByText('Station: 11 - 15')).toBeInTheDocument();
+        await waitFor(() => {
+            expect(get5Stations).toHaveBeenCalledWith(5, 10);
+            expect(screen.getByText('Station: 11 - 15')).toBeInTheDocument();
+        });
     });
 
     test('handles API errors gracefully', async () => {
-        // Setup error mocks
         (get5Stations as jest.Mock).mockRejectedValue(new Error('Failed to fetch stations'));
         (totalCount as jest.Mock).mockRejectedValue(new Error('Failed to fetch total count'));
 
-        // Use try-catch to handle potential unhandled promise rejections
-        await act(async () => {
-            render(<Home/>);
-        });
+        render(<Home/>);
 
-        // Wait for loading state
+        // Überprüfe, ob die Fehlermeldung angezeigt wird
         await waitFor(() => {
-            expect(screen.getByText('Loading')).toBeInTheDocument();
+            expect(screen.getByText('Failed to load stations')).toBeInTheDocument();
         });
-
-        // Note: You'll want to add error handling in the component to show an error state
-        // This test ensures no unhandled promise rejection occurs
     });
 });

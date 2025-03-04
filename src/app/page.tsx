@@ -22,21 +22,31 @@ export default function Home() {
     const [page, setPage] = useState(1);
     const [totalCountValue, setTotalCountValue] = useState<number>(0);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchStations = async () => {
-            setIsLoading(true);
-            const newStations = await get5Stations(5, offset);
-            setStations(newStations);
+            try {
+                setIsLoading(true);
+                setError(null);
+                const newStations = await get5Stations(5, offset);
+                setStations(newStations);
 
-            // Gesamtanzahl der Stationen holen
-            const count = await totalCount();
-            setTotalCountValue(count);
-            setIsLoading(false);
+                const count = await totalCount();
+                setTotalCountValue(count);
+            } catch (error) {
+                setError('Failed to load stations');
+                console.error('Failed to fetch stations:', error);
+            } finally {
+                setIsLoading(false);
+            }
         };
 
         fetchStations();
     }, [offset]);
+
+// In your render method
+    {error && <div className="text-red-500">{error}</div>}
 
     const handlePrev = () => {
         if (page > 1) {
