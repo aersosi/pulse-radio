@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { get5Stations, totalCount } from "@/lib/api";
+import { getStations, totalCount } from "@/lib/api";
 import { Station } from "@/lib/definitions";
 import StationList from "@/components/StationList";
 import {
@@ -28,7 +28,7 @@ export default function Home() {
             try {
                 setIsLoading(true);
                 setError(null);
-                const newStations = await get5Stations(5, offset);
+                const newStations = await getStations(5, offset);
                 setStations(newStations);
 
                 const count = await totalCount();
