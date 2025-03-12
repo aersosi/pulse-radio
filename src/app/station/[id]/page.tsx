@@ -3,7 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getStationDetails } from "@/lib/api";
 import { StationDetailPageProps, StationDetail } from "@/lib/definitions";
-import Btn_toTop100 from "@/components/Btn_toTop100";
+import BtnToTop100 from "@/components/BtnToTop100";
 import {
     Card,
     CardContent,
@@ -49,7 +49,7 @@ export default async function StationDetailPage({params}: StationDetailPageProps
 
     return (
         <main className="container mx-auto p-4 flex flex-col gap-8">
-            <Btn_toTop100/>
+            <BtnToTop100/>
 
             <Card>
                 <CardHeader className="text-center">

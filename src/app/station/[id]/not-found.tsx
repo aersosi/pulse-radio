@@ -1,4 +1,4 @@
-import Btn_toTop100 from "@/components/Btn_toTop100";
+import BtnToTop100 from "@/components/BtnToTop100";
 
 export default function StationNotFound() {
     return (
@@ -9,7 +9,7 @@ export default function StationNotFound() {
             <p className="mb-6">
                 The radio station you are looking for does not exist or is not available.
             </p>
-            <Btn_toTop100/>
+            <BtnToTop100/>
         </div>
     );
 }
