@@ -1,9 +1,4 @@
 // API response interfaces
-export interface APIResponse {
-  status: string;
-  timestamp: string;
-}
-
 export interface APIStationItem {
   id: string;
   name: string;
@@ -12,7 +7,9 @@ export interface APIStationItem {
   topics?: string[] | null;
 }
 
-export interface APIStationResponse extends APIResponse {
+export interface APIStationResponse {
+  status: string;
+  timestamp: string;
   playables: APIStationItem[];
   totalCount?: number;
 }
@@ -74,8 +71,4 @@ export interface RevalidationResponse {
 
 export interface HLSPlayerProps {
   url: string;
-}
-
-export interface AudioPlayerProps {
-  streamUrl: string;
 }

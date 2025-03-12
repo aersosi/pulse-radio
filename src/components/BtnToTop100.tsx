@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export default function Btn_toTop100() {
+export default function BtnToTop100() {
     return (
         <Link href="/">
             <Button>← Back to Top 100</Button>

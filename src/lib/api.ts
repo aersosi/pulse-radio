@@ -75,26 +75,10 @@ export async function totalCount(): Promise<number> {
     }
 }
 
-
 /**
- * Fetches top 100 radio stations
+ * Fetches radio stations
  */
-export async function getTop100Stations(): Promise<Station[]> {
-    try {
-        const data = await fetchWithCache<APIStationResponse>(
-            `${API_BASE}/list-by-system-name?systemName=STATIONS_TOP&count=100`
-        );
-        return data.playables.map(mapToStation);
-    } catch (error) {
-        console.error("Error loading top stations:", error instanceof Error ? error.message : String(error));
-        return [];
-    }
-}
-
-/**
- * Fetches top 5 radio stations
- */
-export async function get5Stations(count: number = 5, offset: number = 0): Promise<Station[]> {
+export async function getStations(count: number = 5, offset: number = 0): Promise<Station[]> {
     try {
         const data = await fetchWithCache<APIStationResponse>(
             `${API_BASE}/list-by-system-name?systemName=STATIONS_TOP&count=${count}&offset=${offset}`

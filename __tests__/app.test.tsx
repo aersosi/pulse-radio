@@ -2,12 +2,12 @@ import React from 'react';
 import {render, screen, fireEvent, waitFor, act} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Home from "../src/app/page";
-import {get5Stations, totalCount} from '@/lib/api';
+import {getStations, totalCount} from '@/lib/api';
 import {Station} from "@/lib/definitions";
 
 // Mock the API functions
 jest.mock('@/lib/api', () => ({
-    get5Stations: jest.fn(),
+    getStations: jest.fn(),
     totalCount: jest.fn()
 }));
 
@@ -32,16 +32,16 @@ describe('Home Page Component', () => {
         jest.clearAllMocks();
 
         // Setup default mock implementations
-        (get5Stations as jest.Mock).mockResolvedValue(mockStations);
+        (getStations as jest.Mock).mockResolvedValue(mockStations);
         (totalCount as jest.Mock).mockResolvedValue(25);
     });
 
     test('renders initial page with loading state', async () => {
-        let resolveGet5Stations: (stations: Station[]) => void;
+        let resolvegetStations: (stations: Station[]) => void;
         let resolveTotalCount: (count: number) => void;
 
-        (get5Stations as jest.Mock).mockImplementation(() => new Promise((resolve) => {
-            resolveGet5Stations = resolve;
+        (getStations as jest.Mock).mockImplementation(() => new Promise((resolve) => {
+            resolvegetStations = resolve;
         }));
         (totalCount as jest.Mock).mockImplementation(() => new Promise((resolve) => {
             resolveTotalCount = resolve;
@@ -54,7 +54,7 @@ describe('Home Page Component', () => {
 
         // Delete Promises
         await act(async () => {
-            resolveGet5Stations(mockStations);
+            resolvegetStations(mockStations);
             resolveTotalCount(25);
         });
 
@@ -95,7 +95,7 @@ describe('Home Page Component', () => {
 
         // Verify offset and page change
         await waitFor(() => {
-            expect(get5Stations).toHaveBeenCalledWith(5, 5);
+            expect(getStations).toHaveBeenCalledWith(5, 5);
             expect(screen.getByText('Station: 6 - 10')).toBeInTheDocument();
         });
     });
@@ -124,7 +124,7 @@ describe('Home Page Component', () => {
 
         // Verify offset and page change
         await waitFor(() => {
-            expect(get5Stations).toHaveBeenCalledWith(5, 0);
+            expect(getStations).toHaveBeenCalledWith(5, 0);
             expect(screen.getByText('Station: 1 - 5')).toBeInTheDocument();
         });
     });
@@ -147,13 +147,13 @@ describe('Home Page Component', () => {
 
         // Verify offset and page change
         await waitFor(() => {
-            expect(get5Stations).toHaveBeenCalledWith(5, 10);
+            expect(getStations).toHaveBeenCalledWith(5, 10);
             expect(screen.getByText('Station: 11 - 15')).toBeInTheDocument();
         });
     });
 
     test('handles API errors gracefully', async () => {
-        (get5Stations as jest.Mock).mockRejectedValue(new Error('Failed to fetch stations'));
+        (getStations as jest.Mock).mockRejectedValue(new Error('Failed to fetch stations'));
         (totalCount as jest.Mock).mockRejectedValue(new Error('Failed to fetch total count'));
 
         render(<Home/>);
