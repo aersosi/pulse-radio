@@ -6,7 +6,7 @@ import PaginationControls from "@/components/PaginationControls";
 export default async function Home({searchParams}: { searchParams: Promise<{ page?: string }> }) {
     const pageParams = await searchParams;
     const page = pageParams.page ? parseInt(pageParams.page) : 1;
-    const offset = page * 5;
+    const offset = (page - 1) * 5;
 
     const stations: Station[] = await getStations(5, offset);
     const totalCountValue: number = await totalCount();
@@ -20,7 +20,7 @@ export default async function Home({searchParams}: { searchParams: Promise<{ pag
                         <h1 className="text-2xl font-bold">Pulse Radio</h1>
                     </div>
                     <div className="flex gap-4 text-xl font-bold">
-                        <p>{`Station: ${offset - 4} - ${Math.min(offset, totalCountValue)}`}</p>
+                        <p>{`Station: ${offset + 1} - ${Math.min(offset + 5, totalCountValue)}`}</p>
                         <p className="font-light text-muted-foreground">Total: {totalCountValue}</p>
                     </div>
                 </div>
