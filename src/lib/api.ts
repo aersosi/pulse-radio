@@ -78,11 +78,17 @@ export async function totalCount(): Promise<number> {
 /**
  * Fetches radio stations
  */
-export async function getStations(count: number = 5, offset: number = 0): Promise<Station[]> {
+export async function getStations(count: number = 5, offset: number = 0, delay: number | null = null): Promise<Station[]> {
     try {
         const data = await fetchWithCache<APIStationResponse>(
             `${API_BASE}/list-by-system-name?systemName=STATIONS_TOP&count=${count}&offset=${offset}`
         );
+
+        // Mock a delayed api request to test loading state
+        if (typeof delay === "number") {
+            await new Promise(resolve => setTimeout(resolve, delay));
+        }
+
         return data.playables.map(mapToStation);
     } catch (error) {
         console.error("Error loading top stations:", error instanceof Error ? error.message : String(error));
