@@ -1,37 +1,25 @@
-import {Skeleton} from "@/components/ui/skeleton"
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import StationListLoading from "@/components/StationListLoading";
+import PaginationControls from "@/components/PaginationControls";
 
 export default function StationLoading() {
     return (
-        <main className="container mx-auto p-4 flex flex-col gap-8">
-            <div className="h-4"></div>
+        <div className="flex flex-col gap-8 py-4">
+            <header className="container mx-auto px-4">
+                <div className="flex justify-between items-center gap-4 flex-col md:flex-row">
+                    <div className="flex gap-4 items-center animate-pulse">
+                        <img className="w-8 h-8" src={"/pulse_logo_32.png"} alt={"Pulse radio logo"}/>
+                        <h1 className="text-2xl font-bold">Loading Radio Stations ...</h1>
+                    </div>
+                </div>
+            </header>
 
-            <Card>
-                <CardHeader className="text-center">
-                    <CardTitle className="text-4xl">
-                        {/*Station Name*/}
-                        <Skeleton className="h-[40px] w-full"/>
-                    </CardTitle>
-                    <CardDescription className="text-xl">
-                        {/*Station Genre*/}
-                        <Skeleton className="h-[28px] w-full"/>
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="flex flex-col items-center">
-                    {/*Station Logo Image*/}
-                    <div className="w-32 h-32 mx-auto my-4 relative">
-                        <Skeleton className="h-[128px] w-[128px] rounded-md"/>
-                    </div>
-                    {/*Station Description*/}
-                    <div className="text-gray-600">
-                        <Skeleton className="h-[] w-full"/>
-                    </div>
-                </CardContent>
-                <CardFooter>
-                    {/*Audio Player*/}
-                    <Skeleton className="h-[54px] w-[300px] rounded-full"/>
-                </CardFooter>
-            </Card>
-        </main>
+            <main className="container mx-auto px-4">
+                <StationListLoading/>
+            </main>
+
+            <footer className="container mx-auto px-4 animate-pulse">
+                <PaginationControls page={1} totalCount={5} isLoading={true}/>
+            </footer>
+        </div>
     );
 }
