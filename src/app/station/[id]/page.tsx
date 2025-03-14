@@ -50,9 +50,8 @@ export default async function StationDetailPage({params}: {
     }
 
     return (
-        <main className="container mx-auto p-4 flex flex-col gap-8">
+        <main className="container mx-auto px-4 flex flex-col gap-6">
             <BtnToTop100/>
-
             <Card>
                 <CardHeader className="text-center">
                     <CardTitle className="text-4xl">{station.name}</CardTitle>
@@ -105,6 +104,6 @@ export default async function StationDetailPage({params}: {
                 </CardFooter>
             </Card>
             <p className="text-center break-all max-w-3/4 text-muted-foreground text-sm mx-auto">{station.streamUrl}</p>
-
-        </main>);
+        </main>
+    );
 }

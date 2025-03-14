@@ -2,8 +2,6 @@ import { getStations, totalCount } from "@/lib/api";
 import { Station } from "@/lib/definitions";
 import StationList from "@/components/StationList";
 import PaginationControls from "@/components/PaginationControls";
-import Image from "next/image";
-
 
 export default async function Home({searchParams}: { searchParams: Promise<{ page?: string }> }) {
     const pageParams = await searchParams;
@@ -14,28 +12,14 @@ export default async function Home({searchParams}: { searchParams: Promise<{ pag
     const totalCountValue: number = await totalCount();
 
     return (
-        <div className="flex flex-col gap-8 py-4">
-            <header className="container mx-auto px-4">
-                <div className="flex justify-between items-center gap-4 flex-col md:flex-row">
-                    <div className="flex gap-4 items-center">
-                        <Image className="w-8 h-8" width={128} height={128} quality={100}
-                               src={"/images/pulse_logo_128.png"} alt={"Pulse radio logo"}/>
-                        <h1 className="text-2xl font-bold">Pulse Radio</h1>
-                    </div>
-                    <div className="flex gap-4 text-xl font-bold">
-                        <p>{`Station: ${offset + 1} - ${Math.min(offset + 5, totalCountValue)}`}</p>
-                        <p className="font-light text-muted-foreground">Total: {totalCountValue}</p>
-                    </div>
-                </div>
-            </header>
+        <main className="container mx-auto px-4 flex flex-col gap-6">
+            <div className="flex justify-between gap-4 text-xl font-bold">
+                <p>{`Station: ${offset + 1} - ${Math.min(offset + 5, totalCountValue)}`}</p>
+                <p className="font-light text-muted-foreground">Total: {totalCountValue}</p>
+            </div>
 
-            <main className="container mx-auto px-4">
-                <StationList stations={stations}/>
-            </main>
-
-            <footer className="container mx-auto px-4">
-                <PaginationControls page={page} totalCount={totalCountValue}/>
-            </footer>
-        </div>
+            <StationList stations={stations}/>
+            <PaginationControls page={page} totalCount={totalCountValue}/>
+        </main>
     );
 }
