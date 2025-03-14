@@ -2,6 +2,8 @@ import { getStations, totalCount } from "@/lib/api";
 import { Station } from "@/lib/definitions";
 import StationList from "@/components/StationList";
 import PaginationControls from "@/components/PaginationControls";
+import Image from "next/image";
+
 
 export default async function Home({searchParams}: { searchParams: Promise<{ page?: string }> }) {
     const pageParams = await searchParams;
@@ -16,7 +18,8 @@ export default async function Home({searchParams}: { searchParams: Promise<{ pag
             <header className="container mx-auto px-4">
                 <div className="flex justify-between items-center gap-4 flex-col md:flex-row">
                     <div className="flex gap-4 items-center">
-                        <img className="w-8 h-8" src={"/pulse_logo_32.png"} alt={"Pulse radio logo"}/>
+                        <Image className="w-8 h-8" width={128} height={128} quality={100}
+                               src={"/images/pulse_logo_128.png"} alt={"Pulse radio logo"}/>
                         <h1 className="text-2xl font-bold">Pulse Radio</h1>
                     </div>
                     <div className="flex gap-4 text-xl font-bold">
