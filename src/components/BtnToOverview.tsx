@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export default function BtnToTop100() {
+export default function BtnToOverview() {
     return (
         <Link href="/">
-            <Button>← Back to Top 100</Button>
+            <Button>← Back to overview</Button>
         </Link>
     );
 }
