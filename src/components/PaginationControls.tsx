@@ -26,7 +26,7 @@ export default function PaginationControls({page, totalCount, isLoading = false}
     return (
         <Pagination>
             <PaginationContent>
-                <PaginationItem className={`cursor-pointer ${page <= 1 ? "opacity-20 pointer-events-none" : ""}`}>
+                <PaginationItem className={`cursor-pointer ${page <= 1 ? "opacity-30 pointer-events-none" : ""}`}>
                     <PaginationPrevious onClick={() => goToPage(page - 1)}/>
                 </PaginationItem>
                 {[...Array(5)].map((_, index) => {
@@ -44,11 +44,11 @@ export default function PaginationControls({page, totalCount, isLoading = false}
                         </PaginationItem>
                     );
                 })}
-                <PaginationItem className={`${isLoading ? "opacity-20" : ""}`}>
+                <PaginationItem className="opacity-30">
                     <PaginationEllipsis/>
                 </PaginationItem>
                 <PaginationItem
-                    className={`cursor-pointer ${page >= totalPages ? "opacity-20 pointer-events-none" : ""}`}>
+                    className={`cursor-pointer ${page >= totalPages ? "opacity-30 pointer-events-none" : ""}`}>
                     <PaginationNext onClick={() => goToPage(page + 1)}/>
                 </PaginationItem>
 
