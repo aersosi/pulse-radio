@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getStationDetails } from "@/lib/api";
-import { StationDetail } from "@/lib/definitions";
+import { Station } from "@/lib/definitions";
 import BtnToTop100 from "@/components/BtnToTop100";
 import {
     Card,
@@ -43,7 +43,7 @@ export default async function StationDetailPage({params}: {
     params: Promise<{ id: string }>;
 }) {
     const {id} = await params;
-    const station: StationDetail | null = await getStationDetails(id);
+    const station: Station | null = await getStationDetails(id);
 
     if (!station) {
         notFound();
@@ -56,8 +56,8 @@ export default async function StationDetailPage({params}: {
             <Card>
                 <CardHeader className="text-center">
                     <CardTitle className="text-4xl">{station.name}</CardTitle>
-                    {station.genre && (
-                        <CardDescription className="text-xl">{station.genre}</CardDescription>
+                    {station.topics && (
+                        <CardDescription className="text-xl">{station.topics}</CardDescription>
                     )}
                 </CardHeader>
                 <CardContent className="flex flex-col items-center">

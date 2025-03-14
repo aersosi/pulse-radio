@@ -1,31 +1,25 @@
 // API response interfaces
-export interface APIStationItem {
+export interface APIStation {
   id: string;
   name: string;
-  logo44x44?: string | null;
   logo300x300?: string | null;
   topics?: string[] | null;
 }
 
-export interface APIStationResponse {
-  status: string;
-  timestamp: string;
-  playables: APIStationItem[];
-  totalCount?: number;
-}
-
-export interface APIStationDetailItem {
-  id: string;
-  name: string;
-  logo44x44?: string | null;
-  logo300x300?: string | null;
-  genres?: string[] | null;
+export interface APIStationDetail extends APIStation {
   description?: string | null;
   shortDescription?: string | null;
   streams?: APIStreamItem[] | null;
 }
 
-export type APIStationDetailResponse = APIStationDetailItem[];
+export interface APIStationResponse {
+  status: string;
+  timestamp: string;
+  playables: APIStation[];
+  totalCount?: number;
+}
+
+export type APIStationDetailResponse = APIStationDetail[];
 
 export interface APIStreamItem {
   url: string;
@@ -38,33 +32,7 @@ export interface Station {
   id: string;
   name: string;
   logo: string;
-  genre: string | null;
-}
-
-export interface StationDetail extends Station {
-  description: string | null;
-  streamUrl: string | null;
-}
-
-// Component props interfaces
-export interface StationListProps {
-  stations: Station[];
-  isLoading?: boolean;
-}
-
-export interface StationCardProps {
-  station: Station;
-}
-
-export interface AudioPlayerProps {
-  streamUrl: string;
-}
-
-export interface RevalidationResponse {
-  success: boolean;
-  message: string;
-}
-
-export interface HLSPlayerProps {
-  url: string;
+  topics: string | null;
+  description?: string | null;
+  streamUrl?: string | null;
 }

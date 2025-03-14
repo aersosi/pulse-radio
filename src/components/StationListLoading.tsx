@@ -19,7 +19,7 @@ export default function StationListLoading() {
                         </div>
                     </CardContent>
                     <CardFooter>
-                        {/*Station Genre*/}
+                        {/*Station topic*/}
                         <Skeleton className="h-6 w-[300px] rounded-full"/>
                     </CardFooter>
                 </Card>

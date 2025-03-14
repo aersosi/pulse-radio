@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { StationCardProps } from "@/lib/definitions";
+import { Station } from "@/lib/definitions";
 import {
     Card,
     CardContent,
@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 
 
-export default function StationCard({station}: StationCardProps) {
+export default function StationCard({station}: {station: Station}) {
     return (
         <Link href={`/station/${station.id}`} className="block">
 
@@ -32,7 +32,7 @@ export default function StationCard({station}: StationCardProps) {
                     </div>
                 </CardContent>
                 <CardFooter className="h-[40px]">
-                    <p>{station.genre || "No genre available"}</p>
+                    <p>{station.topics || "No topics available"}</p>
                 </CardFooter>
             </Card>
         </Link>

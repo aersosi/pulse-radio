@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { JSX, useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
 import { Skeleton } from "@/components/ui/skeleton";
-import { HLSPlayerProps } from "@/lib/definitions";
 
-const HLSPlayer: React.FC<HLSPlayerProps> = ({ url }) => {
+const HLSPlayer: ({url}: { url: string }) => JSX.Element = ({ url }:{ url:string }) => {
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
