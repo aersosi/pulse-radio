@@ -1,5 +1,6 @@
 import StationListLoading from "@/components/StationListLoading";
 import PaginationControls from "@/components/PaginationControls";
+import Image from "next/image";
 
 export default function StationLoading() {
     return (
@@ -7,7 +8,8 @@ export default function StationLoading() {
             <header className="container mx-auto px-4">
                 <div className="flex justify-between items-center gap-4 flex-col md:flex-row">
                     <div className="flex gap-4 items-center animate-pulse">
-                        <img className="w-8 h-8" src={"/pulse_logo_32.png"} alt={"Pulse radio logo"}/>
+                        <Image className="w-8 h-8" width={128} height={128} quality={100}
+                               src={"/images/pulse_logo_128.png"} alt={"Pulse radio logo"}/>
                         <h1 className="text-2xl font-bold">Loading Radio Stations ...</h1>
                     </div>
                 </div>

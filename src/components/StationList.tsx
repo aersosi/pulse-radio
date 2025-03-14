@@ -1,7 +1,7 @@
 import StationCard from "@/components/StationCard";
-import { StationListProps } from "@/lib/definitions";
+import { Station } from "@/lib/definitions";
 
-export default function StationList({stations}: StationListProps) {
+export default function StationList({stations}: { stations: Station[]; isLoading?: boolean; }) {
     if (!stations || stations.length === 0) {
         return (
             <div className="text-center py-8 text-gray-600">

@@ -2,10 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import {AudioPlayerProps} from "@/lib/definitions";
 
 
-export default function NativeAudioPlayer({ streamUrl }: AudioPlayerProps) {
+export default function NativeAudioPlayer({streamUrl}: { streamUrl: string; }) {
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
@@ -68,7 +67,7 @@ export default function NativeAudioPlayer({ streamUrl }: AudioPlayerProps) {
     return (
         <div className="relative w-full max-w-[400px]">
             {!isLoaded && !isError && (
-                <Skeleton className="absolute h-[54px] w-full rounded-full" />
+                <Skeleton className="absolute h-[54px] w-full rounded-full"/>
             )}
 
             <audio

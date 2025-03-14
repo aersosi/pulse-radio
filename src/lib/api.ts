@@ -1,11 +1,9 @@
 import {
     Station,
-    StationDetail,
     APIStationResponse,
     APIStationDetailResponse,
-    APIStationItem,
-    APIStationDetailItem,
-    RevalidationResponse,
+    APIStation,
+    APIStationDetail,
 } from "@/lib/definitions";
 
 const API_BASE = "https://prod.radio-api.net/stations";
@@ -35,30 +33,25 @@ async function fetchWithCache<T>(url: string, revalidateTime: number = 86400): P
 /**
  * Maps API station data to frontend Station model
  * @param stationData Raw station data from API
+ * @param detailed
  */
-function mapToStation(stationData: APIStationItem): Station {
-    return {
+function mapStation(stationData: APIStation | APIStationDetail, detailed: boolean = false): Station {
+    const station: Station = {
         id: stationData.id,
         name: stationData.name,
         logo: stationData.logo300x300 || "/no-image-available.webp",
-        genre: stationData.topics?.join(", ") || null,
+        topics: stationData.topics?.join(", ") || stationData.topics?.join(", ") || null,
+    };
+    if (!detailed) return station;
+
+    const detailData = stationData as APIStationDetail;
+    return {
+        ...station,
+        description: detailData.description || detailData.shortDescription || null,
+        streamUrl: detailData.streams?.[0]?.url || null,
     };
 }
 
-/**
- * Maps API station detail data to frontend StationDetail model
- * @param stationData Raw station detail data from API
- */
-function mapToStationDetail(stationData: APIStationDetailItem): StationDetail {
-    return {
-        id: stationData.id,
-        name: stationData.name,
-        logo: stationData.logo300x300 || "/no-image-available.webp",
-        genre: stationData.genres?.join(", ") || null,
-        description: stationData.description || stationData.shortDescription || null,
-        streamUrl: stationData.streams?.[0]?.url || null,
-    };
-}
 
 /**
  * Fetches totalCount
@@ -89,9 +82,9 @@ export async function getStations(count: number = 5, offset: number = 0, delay: 
             await new Promise(resolve => setTimeout(resolve, delay));
         }
 
-        return data.playables.map(mapToStation);
+        return data.playables.map(item => mapStation(item));
     } catch (error) {
-        console.error("Error loading top stations:", error instanceof Error ? error.message : String(error));
+        console.error("Error loading stations:", error instanceof Error ? error.message : String(error));
         return [];
     }
 }
@@ -99,8 +92,9 @@ export async function getStations(count: number = 5, offset: number = 0, delay: 
 /**
  * Fetches details for a specific station by ID
  * @param stationId The unique station identifier
+ * @param delay
  */
-export async function getStationDetails(stationId: string): Promise<StationDetail | null> {
+export async function getStationDetails(stationId: string, delay: number | null = null): Promise<Station | null> {
     try {
         const data = await fetchWithCache<APIStationDetailResponse>(
             `${API_BASE}/details?stationIds=${stationId}`
@@ -109,34 +103,13 @@ export async function getStationDetails(stationId: string): Promise<StationDetai
         const station = data[0];
         if (!station) return null;
 
-        return mapToStationDetail(station);
+        if (typeof delay === "number") {
+            await new Promise(resolve => setTimeout(resolve, delay));
+        }
+
+        return mapStation(station, true);
     } catch (error) {
-        console.error(`Error loading station details for ID ${stationId}:`,
-            error instanceof Error ? error.message : String(error));
+        console.error(`Error loading station ID ${stationId}:`, error instanceof Error ? error.message : String(error));
         return null;
-    }
-}
-
-/**
- * Revalidates the cache for a specific station
- * For use in an API route
- * @param stationId The station to revalidate
- * @param secretToken Security token for validation
- */
-export async function revalidateStation(
-    stationId: string,
-    secretToken: string
-): Promise<RevalidationResponse> {
-    if (secretToken !== process.env.REVALIDATE_TOKEN) {
-        return {success: false, message: 'Invalid security token'};
-    }
-
-    try {
-        // Would use revalidatePath in an API route
-        return {success: true, message: 'Station cache successfully updated'};
-    } catch (error) {
-        console.error('Revalidation error:',
-            error instanceof Error ? error.message : String(error));
-        return {success: false, message: 'Error during revalidation'};
     }
 }

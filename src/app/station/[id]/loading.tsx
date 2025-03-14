@@ -20,7 +20,7 @@ export default function StationLoading() {
                         <Skeleton className="h-[40px] w-full"/>
                     </CardTitle>
                     <CardDescription className="text-xl">
-                        {/*Station Genre*/}
+                        {/*Station Topic*/}
                         <Skeleton className="h-[28px] w-full"/>
                     </CardDescription>
                 </CardHeader>

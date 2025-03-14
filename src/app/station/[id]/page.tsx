@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getStationDetails } from "@/lib/api";
-import { StationDetailPageProps, StationDetail } from "@/lib/definitions";
+import { Station } from "@/lib/definitions";
 import BtnToTop100 from "@/components/BtnToTop100";
 import {
     Card,
@@ -39,9 +39,11 @@ export async function generateMetadata({params}: { params: Promise<{ id: string 
     };
 }
 
-export default async function StationDetailPage({params}: StationDetailPageProps) {
+export default async function StationDetailPage({params}: {
+    params: Promise<{ id: string }>;
+}) {
     const {id} = await params;
-    const station: StationDetail | null = await getStationDetails(id);
+    const station: Station | null = await getStationDetails(id);
 
     if (!station) {
         notFound();
@@ -54,8 +56,8 @@ export default async function StationDetailPage({params}: StationDetailPageProps
             <Card>
                 <CardHeader className="text-center">
                     <CardTitle className="text-4xl">{station.name}</CardTitle>
-                    {station.genre && (
-                        <CardDescription className="text-xl">{station.genre}</CardDescription>
+                    {station.topics && (
+                        <CardDescription className="text-xl">{station.topics}</CardDescription>
                     )}
                 </CardHeader>
                 <CardContent className="flex flex-col items-center">
@@ -90,9 +92,9 @@ export default async function StationDetailPage({params}: StationDetailPageProps
                     <div className="flex flex-col gap-8 items-center w-full">
                         {station.streamUrl ? (
                             station.streamUrl.includes('.m3u8') ? (
-                                <HLSPlayer url={station.streamUrl} />
+                                <HLSPlayer url={station.streamUrl}/>
                             ) : (
-                                <NativeAudioPlayer streamUrl={station.streamUrl} />
+                                <NativeAudioPlayer streamUrl={station.streamUrl}/>
                             )
                         ) : (
                             <div className="text-red-500 mt-4">Stream currently not available</div>
