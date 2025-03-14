@@ -3,7 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getStationDetails } from "@/lib/api";
 import { Station } from "@/lib/definitions";
-import BtnToTop100 from "@/components/BtnToTop100";
+import BtnToTop100 from "@/components/BtnToOverview";
 import {
     Card,
     CardContent,
