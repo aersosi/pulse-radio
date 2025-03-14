@@ -7,11 +7,12 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import BtnToTop100 from "@/components/BtnToOverview";
 
 export default function StationLoading() {
     return (
-        <main className="container mx-auto p-4 flex flex-col gap-8">
-            <div className="h-4"></div>
+        <main className="container mx-auto px-4 flex flex-col gap-6">
+            <BtnToTop100/>
 
             <Card>
                 <CardHeader className="text-center">

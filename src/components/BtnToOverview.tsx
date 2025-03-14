@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 export default function BtnToOverview() {
     return (
         <Link href="/">
-            <Button>← Back to overview</Button>
+            <Button  variant="ghost">← Back to overview</Button>
         </Link>
     );
 }
