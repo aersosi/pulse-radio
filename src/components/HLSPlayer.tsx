@@ -95,8 +95,8 @@ const HLSPlayer: ({url}: { url: string }) => JSX.Element = ({url}: { url: string
             />
 
             {isError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-red-100 text-red-500">
-                    Error loading stream
+                <div className="absolute inset-0 flex items-center justify-center bg-red-100 text-red-500 font-bold rounded-full">
+                    Error loading HLS stream
                 </div>
             )}
         </div>

@@ -85,7 +85,7 @@ export default function NativeAudioPlayer({streamUrl}: { streamUrl: string; }) {
             </audio>
 
             {isError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-red-100 text-red-500">
+                <div className="absolute inset-0 flex items-center justify-center bg-red-100 text-red-500 font-bold rounded-full">
                     Error loading audio stream
                 </div>
             )}
