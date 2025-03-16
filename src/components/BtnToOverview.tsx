@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export default function BtnToOverview() {
+export default function BtnToOverview({linkText = "Back to overview", linkHref = "/"}: {
+    linkText?: string,
+    linkHref?: string
+}) {
     return (
-        <Link href="/" className="w-fit">
-            <Button  variant="ghost">← Back to overview</Button>
+        <Link href={linkHref} className="w-fit">
+            <Button variant="ghost">← {linkText}</Button>
         </Link>
     );
 }

@@ -3,6 +3,7 @@
 import { JSX, useCallback, useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
 import { Skeleton } from "@/components/ui/skeleton";
+import { InlineError } from "@/components/errorAlert";
 
 const HLSPlayer: ({url}: { url: string }) => JSX.Element = ({url}: { url: string }) => {
     const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -94,10 +95,11 @@ const HLSPlayer: ({url}: { url: string }) => JSX.Element = ({url}: { url: string
             />
 
             {isError && (
-                <div
-                    className="absolute inset-0 flex items-center justify-center bg-red-100 text-red-500 font-bold rounded-full">
-                    Error loading HLS stream
-                </div>
+                <InlineError
+                    title="Streaming Error"
+                    description="Could not load the audio stream."
+                    onClose={() => setIsError(false)}
+                />
             )}
         </div>
     );

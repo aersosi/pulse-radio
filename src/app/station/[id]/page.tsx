@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { notFound } from "next/navigation";
 import { getStationDetails } from "@/lib/api";
 import { Station } from "@/lib/definitions";
 import BtnToTop100 from "@/components/BtnToOverview";
@@ -21,6 +20,8 @@ import {
 import { truncateEnd, truncateStart } from "@/lib/utils";
 import HLSPlayer from "@/components/HLSPlayer";
 import NativeAudioPlayer from "@/components/NativeAudioPlayer";
+import { InlineError } from "@/components/errorAlert";
+import { ErrorPage } from "@/components/errorPage";
 
 // Dynamic metadata based on station
 export async function generateMetadata({params}: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -46,7 +47,14 @@ export default async function StationDetailPage({params}: {
     const station: Station | null = await getStationDetails(id);
 
     if (!station) {
-        notFound();
+        return (
+            <ErrorPage
+                title="Station Not Found"
+                description="The station you are looking for does not exist or is not available."
+                backLinkText="Back to overview"
+                backLinkHref="/"
+            />
+        );
     }
 
     return (
@@ -96,7 +104,11 @@ export default async function StationDetailPage({params}: {
                                 <NativeAudioPlayer streamUrl={station.streamUrl}/>
                             )
                         ) : (
-                            <div className="text-red-500 mt-4">Stream currently not available</div>
+                            <InlineError
+                                title="Streaming Url not found"
+                                description="Stream currently not available"
+                                // onClose={() => setIsError(false)}
+                            />
                         )}
 
                         <p className="text-green-500 font-bold">Enjoy your Radio and increase volume if you like!</p>

@@ -13,7 +13,6 @@ import {
 export default function StationCard({station}: {station: Station}) {
     return (
         <Link href={`/station/${station.id}`} className="block">
-
             <Card className="hover:scale-105 transition-transform text-center">
                 <CardHeader className="h-[32px]">
                     <CardTitle>{station.name}</CardTitle>
