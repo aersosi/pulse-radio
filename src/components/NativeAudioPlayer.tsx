@@ -9,8 +9,7 @@ export default function NativeAudioPlayer({streamUrl}: { streamUrl: string; }) {
     const [isError, setIsError] = useState<boolean>(false);
 
     // Event-Handler mit useCallback optimieren
-    const handleCanPlay = useCallback(() => {
-        console.log('Audio can play');
+    const handleCanPlay = useCallback((): void => {
         setIsLoaded(true);
 
         const audio = audioRef.current;
@@ -18,7 +17,7 @@ export default function NativeAudioPlayer({streamUrl}: { streamUrl: string; }) {
             audio.volume = 0.2;
         }
 
-        // Attempt to autoplay
+        // Autoplay feed
         const playPromise = audio?.play();
         if (playPromise !== undefined) {
             playPromise
@@ -31,14 +30,14 @@ export default function NativeAudioPlayer({streamUrl}: { streamUrl: string; }) {
         }
     }, []);
 
-    const handleError = useCallback(() => {
+    const handleError = useCallback((): void => {
         console.error('Audio error');
         setIsError(true);
         setIsLoaded(false);
     }, []);
 
     // Setup-Funktion mit useCallback
-    const setupAudio = useCallback(() => {
+    const setupAudio = useCallback((): void => {
         const audio = audioRef.current;
         if (!audio) return;
 
@@ -49,7 +48,7 @@ export default function NativeAudioPlayer({streamUrl}: { streamUrl: string; }) {
         audio.addEventListener('error', handleError);
     }, [streamUrl, handleCanPlay, handleError]);
 
-    const cleanupAudio = useCallback(() => {
+    const cleanupAudio = useCallback((): void => {
         const audio = audioRef.current;
         if (!audio) return;
 

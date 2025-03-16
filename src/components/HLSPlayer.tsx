@@ -10,22 +10,21 @@ const HLSPlayer: ({url}: { url: string }) => JSX.Element = ({url}: { url: string
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
 
-    const handleCanPlay = useCallback(() => {
+    const handleCanPlay = useCallback((): void => {
         const video = videoRef.current;
         if (video) {
             video.volume = 0.2;
-            console.log('Video ready - Volume set to:', video.volume);
         }
         setIsLoaded(true);
     }, []);
 
-    const handleError = useCallback(() => {
+    const handleError = useCallback((): void => {
         console.error('Video error');
         setIsError(true);
         setIsLoaded(false);
     }, []);
 
-    const setupHls = useCallback(() => {
+    const setupHls = useCallback((): void => {
         const video = videoRef.current;
         if (!video) return;
 
@@ -54,7 +53,7 @@ const HLSPlayer: ({url}: { url: string }) => JSX.Element = ({url}: { url: string
         }
     }, [url, handleCanPlay, handleError]);
 
-    const cleanupHls = useCallback(() => {
+    const cleanupHls = useCallback((): void => {
         const video = videoRef.current;
         const hls = hlsRef.current;
 
@@ -95,7 +94,8 @@ const HLSPlayer: ({url}: { url: string }) => JSX.Element = ({url}: { url: string
             />
 
             {isError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-red-100 text-red-500 font-bold rounded-full">
+                <div
+                    className="absolute inset-0 flex items-center justify-center bg-red-100 text-red-500 font-bold rounded-full">
                     Error loading HLS stream
                 </div>
             )}
