@@ -23,7 +23,7 @@ import HLSPlayer from "@/components/HLSPlayer";
 import NativeAudioPlayer from "@/components/NativeAudioPlayer";
 
 // Dynamic metadata based on station
-export async function generateMetadata({params}: { params: Promise<{ id: string }> }): Promise<Metadata> {
+export async function generateMetadata({params}: { params: { id: string } }): Promise<Metadata> {
     const {id} = await params;
     const station = await getStationDetails(id);
 
