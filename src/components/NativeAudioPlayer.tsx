@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { InlineError } from "@/components/errorAlert";
 
 export default function NativeAudioPlayer({streamUrl}: { streamUrl: string; }) {
     const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -84,9 +85,11 @@ export default function NativeAudioPlayer({streamUrl}: { streamUrl: string; }) {
             </audio>
 
             {isError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-red-100 text-red-500 font-bold rounded-full">
-                    Error loading audio stream
-                </div>
+                <InlineError
+                    title="Streaming Error"
+                    description="Could not load the audio stream."
+                    onClose={() => setIsError(false)}
+                />
             )}
         </div>
     );
