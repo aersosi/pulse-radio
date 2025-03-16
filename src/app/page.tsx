@@ -2,7 +2,7 @@ import { getStations } from "@/lib/api";
 import StationList from "@/components/StationList";
 import PaginationControls from "@/components/PaginationControls";
 
-export default async function Home({searchParams}: { searchParams: { page?: string } }) {
+export default async function Home({searchParams}: { searchParams: Promise<{ page?: string }> }) {
     const pageParams = await searchParams;
     const page = pageParams.page ? parseInt(pageParams.page) : 1;
     const offset = (page - 1) * 5;
