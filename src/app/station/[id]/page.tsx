@@ -51,8 +51,8 @@ export default async function StationDetailPage({params}: {
             <ErrorPage
                 title="Station Not Found"
                 description="The station you are looking for does not exist or is not available."
-                backLinkText="Reload page"
-                backLinkHref={`/station/${id}`}
+                backLinkText="Back to overview"
+                backLinkHref="/"
             />
         );
     }

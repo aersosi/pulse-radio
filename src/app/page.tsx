@@ -14,7 +14,7 @@ export default async function Home({searchParams}: { searchParams: Promise<{ pag
         <ErrorPage
             title="Stations Not Found"
             description="The stations you are looking for do not exist or are not available."
-            backLinkText="Reload page"
+            backLinkText="Back to overview"
             backLinkHref="/"
         />
         );
