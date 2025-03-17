@@ -129,6 +129,10 @@
 }
 
 
+html, body {
+  height: 100%;
+}
+
 /*Override */
 .HSLSkeleton,
 audio,

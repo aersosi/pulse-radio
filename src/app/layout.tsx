@@ -26,7 +26,7 @@ export default function RootLayout({children,}: Readonly<{
     return (
         <html lang="en" suppressHydrationWarning>
         <body
-            className={`${geistSans.variable} antialiased`}
+            className={`${geistSans.variable} antialiased flex flex-col`}
         >
         <ThemeProvider
             attribute="class"
@@ -42,7 +42,12 @@ export default function RootLayout({children,}: Readonly<{
                 </div>
                 <ModeToggle></ModeToggle>
             </header>
+            <main className="grow container mx-auto px-4 flex flex-col gap-6">
             {children}
+            </main>
+            <footer className="text-center p-4 text-muted-foreground">
+                Pulse Radio © Copyright {new Date().getFullYear()} by Arthur Ersosi. All rights reserved.
+            </footer>
         </ThemeProvider>
         </body>
         </html>
