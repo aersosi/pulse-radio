@@ -44,7 +44,7 @@ export default async function StationDetailPage({params}: {
     params: Promise<{ id: string }>;
 }) {
     const {id} = await params;
-    const station: Station | null = await getStationDetails(id);
+    const station: Station | null = await getStationDetails(id, 30000);
 
     if (!station) {
         return (
@@ -58,7 +58,7 @@ export default async function StationDetailPage({params}: {
     }
 
     return (
-        <main className="container mx-auto px-4 flex flex-col gap-6">
+        <>
             <BtnToTop100/>
             <Card>
                 <CardHeader className="text-center">
@@ -115,7 +115,7 @@ export default async function StationDetailPage({params}: {
                     </div>
                 </CardFooter>
             </Card>
-            <p className="text-center break-all max-w-3/4 text-muted-foreground text-sm mx-auto">{station.streamUrl}</p>
-        </main>
+            <p className="flex items-center h-9 text-center break-all max-w-3/4 text-muted-foreground text-sm mx-auto">{station.streamUrl}</p>
+        </>
     );
 }
