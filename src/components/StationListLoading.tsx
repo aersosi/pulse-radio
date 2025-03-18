@@ -1,10 +1,11 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { STATIONS_PER_PAGE } from "@/lib/constants";
 
 export default function StationListLoading() {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {[...Array(5)].map((_, index) => (
+            {[...Array(STATIONS_PER_PAGE)].map((_, index) => (
                 <Card key={index}>
                     <CardHeader className="text-center">
                         <CardTitle className="text-4xl">
