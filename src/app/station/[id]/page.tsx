@@ -22,6 +22,7 @@ import HLSPlayer from "@/components/HLSPlayer";
 import NativeAudioPlayer from "@/components/NativeAudioPlayer";
 import { InlineError } from "@/components/errorAlert";
 import { ErrorPage } from "@/components/errorPage";
+import placeholderImage from "public/images/no-image-available.webp"
 
 // Dynamic metadata based on station
 export async function generateMetadata({params}: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -44,7 +45,7 @@ export default async function StationDetailPage({params}: {
     params: Promise<{ id: string }>;
 }) {
     const {id} = await params;
-    const station: Station | null = await getStationDetails(id, 30000);
+    const station: Station | null = await getStationDetails(id);
 
     if (!station) {
         return (
@@ -69,17 +70,16 @@ export default async function StationDetailPage({params}: {
                 </CardHeader>
                 <CardContent className="flex flex-col items-center">
                     {station.logo && (
-                        <div className="w-32 h-32 mx-auto my-4 relative">
                             <Image
-                                src={station.logo || "/no-image-available.webp"}
+                                src={station.logo || placeholderImage.src}
                                 alt={station.name ? station.name : "No image available"}
                                 placeholder="blur"
-                                blurDataURL={station.logo || "/no-image-available.webp"}
-                                fill
-                                className="object-contain rounded-md"
-                                sizes="(max-width: 768px) 100vw, 250px"
+                                blurDataURL={placeholderImage.blurDataURL}
+                                width={300}
+                                height={300}
+                                sizes="128px"
+                                className="w-32 h-32 my-4 mx-auto rounded-md"
                             />
-                        </div>
                     )}
 
                     {station.description ? (
