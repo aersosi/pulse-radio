@@ -2,14 +2,14 @@ import { getStations } from "@/lib/api";
 import StationList from "@/components/StationList";
 import PaginationControls from "@/components/PaginationControls";
 import { ErrorPage } from "@/components/errorPage";
+import { STATIONS_PER_PAGE } from "@/lib/constants";
 
 export default async function Home({searchParams}: { searchParams: Promise<{ page?: string }> }) {
     const pageParams = await searchParams;
     const page = pageParams.page ? parseInt(pageParams.page) : 1;
-    const stationsNumber = 6;
 
-    const offset = (page - 1) * stationsNumber;
-    const { stations, totalCount } = await getStations(stationsNumber, offset);
+    const offset = (page - 1) * STATIONS_PER_PAGE;
+    const { stations, totalCount } = await getStations(STATIONS_PER_PAGE, offset);
 
     if (!stations || stations.length === 0) {
         return (
@@ -25,7 +25,7 @@ export default async function Home({searchParams}: { searchParams: Promise<{ pag
     return (
         <>
             <div className="flex justify-between items-center gap-4 h-9 text-xl font-bold">
-                <p>{`Station: ${offset + 1} - ${Math.min(offset + stationsNumber, totalCount)}`}</p>
+                <p>{`Station: ${offset + 1} - ${Math.min(offset + STATIONS_PER_PAGE, totalCount)}`}</p>
                 <p className="font-light text-muted-foreground">Total: {totalCount}</p>
             </div>
 

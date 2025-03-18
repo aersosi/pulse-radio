@@ -7,6 +7,7 @@ import {
     APIStationDetail,
     ApiError,
 } from "@/lib/definitions";
+import { STATIONS_PER_PAGE } from "@/lib/constants";
 
 const API_BASE = "https://prod.radio-api.net/stations";
 
@@ -66,7 +67,7 @@ function mapStation(stationData: APIStation | APIStationDetail, detailed: boolea
 }
 
 export async function getStations(
-    count: number = 5,
+    count: number = STATIONS_PER_PAGE,
     offset: number = 0,
     delay: number | null = null
 ): Promise<StationsResponse> {

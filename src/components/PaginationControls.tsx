@@ -10,6 +10,7 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination";
+import { STATIONS_PER_PAGE } from "@/lib/constants";
 
 export default function PaginationControls({page, totalCount, isLoading = false}: {
     page: number;
@@ -29,7 +30,7 @@ export default function PaginationControls({page, totalCount, isLoading = false}
                 <PaginationItem className={`cursor-pointer ${page <= 1 ? "opacity-30 pointer-events-none" : ""}`}>
                     <PaginationPrevious onClick={() => goToPage(page - 1)}/>
                 </PaginationItem>
-                {[...Array(5)].map((_, index) => {
+                {[...Array(STATIONS_PER_PAGE)].map((_, index) => {
                     const pageNumber = page + index;
                     // boundries for navigation
                     if (pageNumber <= 0 || pageNumber > totalPages || isLoading) return null;
