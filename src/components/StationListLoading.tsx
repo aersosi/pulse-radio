@@ -6,7 +6,7 @@ export default function StationListLoading() {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {[...Array(STATIONS_PER_PAGE)].map((_, index) => (
-                <Card key={index}>
+                <Card key={`station-list-loading-${index}`}>
                     <CardHeader className="text-center">
                         <CardTitle className="text-4xl">
                             {/*Station Name*/}
