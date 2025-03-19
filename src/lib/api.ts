@@ -73,7 +73,7 @@ export async function getStations(
 ): Promise<StationsResponse> {
     const data = await fetchWithCache<APIStationResponse>(
         `${API_BASE}/list-by-system-name?systemName=STATIONS_TOP&count=${count}&offset=${offset}`,
-        {status: "error", timestamp: new Date().toISOString(), totalCount: 0, playables: []}
+        {status: "error", timeStamp: new Date().toISOString(), totalCount: 0, playables: []}
     );
 
     if (typeof delay === "number") {

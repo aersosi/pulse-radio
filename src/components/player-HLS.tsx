@@ -1,31 +1,35 @@
+// Alte datei
+
 "use client";
 
 import { JSX, useCallback, useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
 import { Skeleton } from "@/components/ui/skeleton";
-import { InlineError } from "@/components/error-alert";
 import { START_VOLUME, TARGET_VOLUME, VOLUME_CLIMB_DURATION } from "@/lib/constants";
 
 export default function PlayerHLS({url, title}: { url: string; title: string; }): JSX.Element {
-    const videoRef = useRef<HTMLVideoElement | null>(null);
+    const mediaRef = useRef<HTMLVideoElement | null>(null);
     const hlsRef = useRef<Hls | undefined>(undefined);
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
     const [isFadingVolume, setIsFadingVolume] = useState<boolean>(false);
+    const [volumePercentage, setVolumePercentage] = useState(0);
 
-    const fadeInVolume = useCallback((video: HTMLVideoElement, startVolume = 0, targetVolume = 0.3, duration = 3000) => {
-        if (!video) return;
+    const fadeInVolume = useCallback((media: HTMLVideoElement) => {
+        if (!media) return;
         let startTime: number | null = null;
 
-        video.volume = startVolume;
+        media.volume = START_VOLUME;
         setIsFadingVolume(true);
+        setVolumePercentage(START_VOLUME * 100);
 
-        const animateVolume = (timestamp: number) => {
-            if (!startTime) startTime = timestamp;
-            const elapsed = timestamp - startTime;
-            const progress = Math.min(elapsed / duration, 1);
+        const animateVolume = (timeStamp: number) => {
+            if (!startTime) startTime = timeStamp;
+            const elapsed = timeStamp - startTime;
+            const progress = Math.min(elapsed / VOLUME_CLIMB_DURATION, 1);
 
-            video.volume = progress * targetVolume;
+            media.volume = progress * TARGET_VOLUME;
+            setVolumePercentage(Math.round(media.volume * 100));
 
             if (progress < 1) {
                 requestAnimationFrame(animateVolume);
@@ -40,17 +44,17 @@ export default function PlayerHLS({url, title}: { url: string; title: string; })
     const handleCanPlay = useCallback((): void => {
         setIsLoaded(true);
 
-        const video = videoRef.current;
-        if (video) {
-            video.volume = START_VOLUME;
+        const media = mediaRef.current;
+        if (media) {
+            media.volume = START_VOLUME;
         }
     }, []);
 
     const handlePlay = useCallback(() => {
-        const video = videoRef.current;
-        if (video && video.volume <= START_VOLUME) {
-            fadeInVolume(video, START_VOLUME, TARGET_VOLUME, VOLUME_CLIMB_DURATION);
-            video.focus();
+        const media = mediaRef.current;
+        if (media && media.volume <= START_VOLUME) {
+            fadeInVolume(media);
+            media.focus();
         }
     }, [fadeInVolume]);
 
@@ -61,12 +65,12 @@ export default function PlayerHLS({url, title}: { url: string; title: string; })
     }, []);
 
     const setupHls = useCallback((): void => {
-        const video = videoRef.current;
-        if (!video) return;
+        const media = mediaRef.current;
+        if (!media) return;
 
-        video.addEventListener('canplay', handleCanPlay);
-        video.addEventListener('error', handleError);
-        video.addEventListener('play', handlePlay);
+        media.addEventListener('canplay', handleCanPlay);
+        media.addEventListener('error', handleError);
+        media.addEventListener('play', handlePlay);
 
         if (Hls.isSupported()) {
             const hls = new Hls();
@@ -74,13 +78,13 @@ export default function PlayerHLS({url, title}: { url: string; title: string; })
             hls.loadSource(url);
 
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                video.volume = START_VOLUME;
-                const playPromise = video?.play();
+                media.volume = START_VOLUME;
+                const playPromise = media?.play();
                 if (playPromise !== undefined) {
                     playPromise
                         .then(() => {
                             console.log('Autoplay started successfully');
-                            fadeInVolume(video, START_VOLUME, TARGET_VOLUME, VOLUME_CLIMB_DURATION);
+                            fadeInVolume(media);
                         })
                         .catch((error) => {
                             console.error('Autoplay failed:', error);
@@ -92,17 +96,17 @@ export default function PlayerHLS({url, title}: { url: string; title: string; })
                 if (data.fatal) handleError();
             });
 
-            hls.attachMedia(video);
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = url;
-            video.volume = START_VOLUME;
-            const playPromise = video.play();
+            hls.attachMedia(media);
+        } else if (media.canPlayType('application/vnd.apple.mpegurl')) {
+            media.src = url;
+            media.volume = START_VOLUME;
+            const playPromise = media.play();
             if (playPromise !== undefined) {
                 playPromise
                     .then(() => {
                         console.log('Native HLS autoplay started successfully');
-                        fadeInVolume(video, START_VOLUME, TARGET_VOLUME, VOLUME_CLIMB_DURATION);
-                        video.focus();
+                        fadeInVolume(media);
+                        media.focus();
                     })
                     .catch((error) => {
                         console.error('Native HLS autoplay failed:', error);
@@ -112,7 +116,7 @@ export default function PlayerHLS({url, title}: { url: string; title: string; })
     }, [url, handleCanPlay, handleError, handlePlay, fadeInVolume]);
 
     const cleanupHls = useCallback((): void => {
-        const video = videoRef.current;
+        const media = mediaRef.current;
         const hls = hlsRef.current;
 
         if (hls) {
@@ -120,13 +124,13 @@ export default function PlayerHLS({url, title}: { url: string; title: string; })
             hlsRef.current = undefined;
         }
 
-        if (video) {
-            video.removeEventListener('canplay', handleCanPlay);
-            video.removeEventListener('error', handleError);
-            video.removeEventListener('play', handlePlay);
-            video.pause();
-            video.removeAttribute('src');
-            video.load();
+        if (media) {
+            media.removeEventListener('canplay', handleCanPlay);
+            media.removeEventListener('error', handleError);
+            media.removeEventListener('play', handlePlay);
+            media.pause();
+            media.removeAttribute('src');
+            media.load();
         }
     }, [handleCanPlay, handleError, handlePlay]);
 
@@ -140,6 +144,19 @@ export default function PlayerHLS({url, title}: { url: string; title: string; })
         return cleanupHls;
     }, [setupHls, cleanupHls]);
 
+    const playerStatusMessage = () => {
+        switch (true) {
+            case isError:
+                return <p className="text-destructive/90">Error loading audio ...</p>;
+            case !isLoaded:
+                return <p className="text-green-500">Loading audio ...</p>;
+            case isFadingVolume:
+                return <p className="text-green-500">Adjusting volume ... ({volumePercentage}%)</p>;
+            default:
+                return <p>Enjoy your Radio and increase volume if you like!</p>;
+        }
+    };
+
     return (
         <div className="relative w-full max-w-[400px]">
             {!isLoaded && !isError && (
@@ -147,7 +164,7 @@ export default function PlayerHLS({url, title}: { url: string; title: string; })
             )}
 
             <video
-                ref={videoRef}
+                ref={mediaRef}
                 controls
                 className={`w-full ${!isLoaded ? 'invisible' : ''}`}
                 playsInline
@@ -160,28 +177,9 @@ export default function PlayerHLS({url, title}: { url: string; title: string; })
                  className="text-center text-sm text-muted-foreground py-4"
                  aria-live="assertive"
                  aria-atomic="true"
-
             >
-                {!isLoaded && !isError && (
-                    <p className="text-green-500">Loading audio ... </p>
-                )}
-
-                {isLoaded && isFadingVolume && (
-                    <p className="text-green-500">Adjusting volume ...</p>
-                )}
-
-                {isLoaded && !isFadingVolume && (
-                    <p>Enjoy your Radio and increase volume if you like!</p>
-                )}
+                {playerStatusMessage()}
             </div>
-
-            {isError && (
-                <InlineError
-                    title="Streaming Error"
-                    description="Could not load the audio stream."
-                    onClose={() => setIsError(false)}
-                />
-            )}
         </div>
     );
 };
