@@ -1,4 +1,4 @@
-import { ErrorPage } from "@/components/errorPage";
+import { ErrorPage } from "@/components/error-page";
 
 export default function StationNotFound() {
     return (

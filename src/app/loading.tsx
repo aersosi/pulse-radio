@@ -1,5 +1,5 @@
-import StationListLoading from "@/components/StationListLoading";
-import PaginationControls from "@/components/PaginationControls";
+import StationListLoading from "@/components/station-list-loading";
+import PaginationControls from "@/components/pagination-controls";
 
 export default function StationLoading() {
     return (

@@ -1,4 +1,4 @@
-import StationCard from "@/components/StationCard";
+import StationCard from "@/components/station-card";
 import { Station } from "@/lib/definitions";
 
 export default function StationList({stations}: { stations: Station[] }) {

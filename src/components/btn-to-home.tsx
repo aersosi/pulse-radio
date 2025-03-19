@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export default function BtnToOverview({linkText = "Back to overview", linkHref = "/"}: {
+export default function BtnToHome({linkText = "Back to overview", linkHref = "/"}: {
     linkText?: string,
     linkHref?: string
 }) {

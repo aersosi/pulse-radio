@@ -7,7 +7,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import BtnToTop100 from "@/components/BtnToOverview";
+import BtnToTop100 from "@/components/btn-to-home";
 
 export default function StationLoading() {
     return (

@@ -3,10 +3,10 @@
 import { JSX, useCallback, useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
 import { Skeleton } from "@/components/ui/skeleton";
-import { InlineError } from "@/components/errorAlert";
+import { InlineError } from "@/components/error-alert";
 import { START_VOLUME, TARGET_VOLUME, VOLUME_CLIMB_DURATION } from "@/lib/constants";
 
-export default function HLSPlayer({url}: { url: string }): JSX.Element {
+export default function PlayerHLS({url}: { url: string }): JSX.Element {
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const hlsRef = useRef<Hls | undefined>(undefined);
     const [isLoaded, setIsLoaded] = useState<boolean>(false);

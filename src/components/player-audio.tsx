@@ -2,10 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { InlineError } from "@/components/errorAlert";
+import { InlineError } from "@/components/error-alert";
 import { START_VOLUME, TARGET_VOLUME, VOLUME_CLIMB_DURATION } from "@/lib/constants";
 
-export default function NativeAudioPlayer({streamUrl}: { streamUrl: string; }) {
+export default function PlayerAudio({streamUrl}: { streamUrl: string; }) {
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
