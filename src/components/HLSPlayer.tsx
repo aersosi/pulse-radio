@@ -146,14 +146,22 @@ export default function HLSPlayer({url}: { url: string }): JSX.Element {
             <video
                 ref={videoRef}
                 controls
-                className={`w-full ${isLoaded ? 'visible' : 'invisible'}`}
+                className={`w-full ${!isLoaded ? 'invisible' : ''}`}
                 playsInline
             />
 
             <div className="text-center text-sm text-muted-foreground py-4">
-                {isFadingVolume ?
-                    (<p className="text-green-500">Adjusting volume ... </p>) :
-                    (<p>Enjoy your Radio and increase volume if you like!</p>)}
+                {!isLoaded && !isError && (
+                    <p className="text-green-500">Loading audio ... </p>
+                )}
+
+                {isLoaded && isFadingVolume && (
+                    <p className="text-green-500">Adjusting volume ...</p>
+                )}
+
+                {isLoaded && !isFadingVolume && (
+                    <p>Enjoy your Radio and increase volume if you like!</p>
+                )}
             </div>
 
             {isError && (

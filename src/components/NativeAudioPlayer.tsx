@@ -113,15 +113,23 @@ export default function NativeAudioPlayer({streamUrl}: { streamUrl: string; }) {
             <audio
                 ref={audioRef}
                 controls
-                className={`w-full ${isLoaded ? 'visible' : 'invisible'}`}
+                className={`w-full ${!isLoaded ? 'invisible' : ''}`}
             >
                 Your browser does not support audio streaming.
             </audio>
 
             <div className="text-center text-sm text-muted-foreground py-4">
-                {isFadingVolume ?
-                    (<p className="text-green-500">Adjusting volume ... </p>) :
-                    (<p>Enjoy your Radio and increase volume if you like!</p>)}
+                {!isLoaded && !isError && (
+                    <p className="text-green-500">Loading audio ... </p>
+                )}
+
+                {isLoaded && isFadingVolume && (
+                    <p className="text-green-500">Adjusting volume ...</p>
+                )}
+
+                {isLoaded && !isFadingVolume && (
+                    <p>Enjoy your Radio and increase volume if you like!</p>
+                )}
             </div>
 
             {isError && (
