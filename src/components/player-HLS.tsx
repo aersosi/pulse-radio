@@ -1,21 +1,19 @@
-// Alte datei
-
 "use client";
 
-import { JSX, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
 import { Skeleton } from "@/components/ui/skeleton";
 import { START_VOLUME, TARGET_VOLUME, VOLUME_CLIMB_DURATION } from "@/lib/constants";
 
-export default function PlayerHLS({url, title}: { url: string; title: string; }): JSX.Element {
+export default function PlayerHLS({url, title}: { url: string; title: string }) {
     const mediaRef = useRef<HTMLVideoElement | null>(null);
-    const hlsRef = useRef<Hls | undefined>(undefined);
+    const hlsRef = useRef<Hls | null>(null);
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
     const [isFadingVolume, setIsFadingVolume] = useState<boolean>(false);
     const [volumePercentage, setVolumePercentage] = useState(0);
 
-    const fadeInVolume = useCallback((media: HTMLVideoElement) => {
+    const fadeInVolume = useCallback((media: HTMLMediaElement) => {
         if (!media) return;
         let startTime: number | null = null;
 
@@ -59,10 +57,29 @@ export default function PlayerHLS({url, title}: { url: string; title: string; })
     }, [fadeInVolume]);
 
     const handleError = useCallback((): void => {
-        console.error('Video error');
+        console.error('Audio error');
         setIsError(true);
         setIsLoaded(false);
     }, []);
+
+    const cleanupHls = useCallback((): void => {
+        const media = mediaRef.current;
+        const hls = hlsRef.current;
+
+        if (hls) {
+            hls.destroy();
+            hlsRef.current = null;
+        }
+
+        if (media) {
+            media.removeEventListener('canplay', handleCanPlay);
+            media.removeEventListener('error', handleError);
+            media.removeEventListener('play', handlePlay);
+            media.pause();
+            media.removeAttribute('src');
+            media.load();
+        }
+    }, [handleCanPlay, handleError, handlePlay]);
 
     const setupHls = useCallback((): void => {
         const media = mediaRef.current;
@@ -115,25 +132,6 @@ export default function PlayerHLS({url, title}: { url: string; title: string; })
         }
     }, [url, handleCanPlay, handleError, handlePlay, fadeInVolume]);
 
-    const cleanupHls = useCallback((): void => {
-        const media = mediaRef.current;
-        const hls = hlsRef.current;
-
-        if (hls) {
-            hls.destroy();
-            hlsRef.current = undefined;
-        }
-
-        if (media) {
-            media.removeEventListener('canplay', handleCanPlay);
-            media.removeEventListener('error', handleError);
-            media.removeEventListener('play', handlePlay);
-            media.pause();
-            media.removeAttribute('src');
-            media.load();
-        }
-    }, [handleCanPlay, handleError, handlePlay]);
-
     useEffect(() => {
         setIsLoaded(false);
         setIsError(false);
@@ -158,7 +156,7 @@ export default function PlayerHLS({url, title}: { url: string; title: string; })
     };
 
     return (
-        <div className="relative w-full max-w-[400px]">
+        <div className="relative w-full max-w-[400px]" role="region" aria-label={`Audio Player: ${title}`}>
             {!isLoaded && !isError && (
                 <Skeleton className="absolute h-[54px] w-full rounded-full"/>
             )}
@@ -168,8 +166,6 @@ export default function PlayerHLS({url, title}: { url: string; title: string; })
                 controls
                 className={`w-full ${!isLoaded ? 'invisible' : ''}`}
                 playsInline
-                role="application"
-                aria-label={`Audio-Player, streaming: ${title}`}
                 aria-describedby="playerStatus"
             />
 
@@ -182,4 +178,4 @@ export default function PlayerHLS({url, title}: { url: string; title: string; })
             </div>
         </div>
     );
-};
+}
