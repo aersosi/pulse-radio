@@ -99,9 +99,9 @@ export default async function StationDetailPage({params}: {
                     <div className="flex flex-col gap-8 items-center w-full">
                         {station.streamUrl ? (
                             station.streamUrl.includes('.m3u8') ? (
-                                <PlayerHLS url={station.streamUrl}/>
+                                <PlayerHLS url={station.streamUrl} title={station.name}/>
                             ) : (
-                                <PlayerAudio streamUrl={station.streamUrl}/>
+                                <PlayerAudio url={station.streamUrl} title={station.name}/>
                             )
                         ) : (
                             <InlineError

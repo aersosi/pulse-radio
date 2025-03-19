@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { InlineError } from "@/components/error-alert";
 import { START_VOLUME, TARGET_VOLUME, VOLUME_CLIMB_DURATION } from "@/lib/constants";
 
-export default function PlayerAudio({streamUrl}: { streamUrl: string; }) {
+export default function PlayerAudio({url, title}: { url: string; title: string; }) {
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
@@ -42,17 +42,16 @@ export default function PlayerAudio({streamUrl}: { streamUrl: string; }) {
         if (audio) {
             audio.volume = START_VOLUME;
 
-            // Try autoplay
             const playPromise = audio?.play();
             if (playPromise !== undefined) {
                 playPromise
                     .then(() => {
                         console.log('Autoplay started successfully');
                         fadeInVolume(audio, START_VOLUME, TARGET_VOLUME, VOLUME_CLIMB_DURATION);
+                        audio.focus();
                     })
                     .catch((error) => {
                         console.error('Autoplay failed:', error);
-                        // Kein setState für autoplayBlocked mehr notwendig, da wir immer den nativen Player anzeigen
                     });
             }
         }
@@ -62,6 +61,7 @@ export default function PlayerAudio({streamUrl}: { streamUrl: string; }) {
         const audio = audioRef.current;
         if (audio && audio.volume <= START_VOLUME) {
             fadeInVolume(audio, START_VOLUME, TARGET_VOLUME, VOLUME_CLIMB_DURATION);
+            audio.focus();
         }
     }, [fadeInVolume]);
 
@@ -75,13 +75,13 @@ export default function PlayerAudio({streamUrl}: { streamUrl: string; }) {
         const audio = audioRef.current;
         if (!audio) return;
 
-        audio.src = streamUrl;
+        audio.src = url;
         audio.load(); // Ensure new source loaded
 
         audio.addEventListener('canplay', handleCanPlay);
         audio.addEventListener('error', handleError);
         audio.addEventListener('play', handlePlay);
-    }, [streamUrl, handleCanPlay, handleError, handlePlay]);
+    }, [url, handleCanPlay, handleError, handlePlay]);
 
     const cleanupAudio = useCallback((): void => {
         const audio = audioRef.current;
@@ -114,11 +114,19 @@ export default function PlayerAudio({streamUrl}: { streamUrl: string; }) {
                 ref={audioRef}
                 controls
                 className={`w-full ${!isLoaded ? 'invisible' : ''}`}
+                role="application"
+                aria-label={`Audio-Player, streaming: ${title}`}
+                aria-describedby="playerStatus"
             >
                 Your browser does not support audio streaming.
             </audio>
 
-            <div className="text-center text-sm text-muted-foreground py-4">
+            <div id="playerStatus"
+                 className="text-center text-sm text-muted-foreground py-4"
+                 aria-live="assertive"
+                 aria-atomic="true"
+
+            >
                 {!isLoaded && !isError && (
                     <p className="text-green-500">Loading audio ... </p>
                 )}

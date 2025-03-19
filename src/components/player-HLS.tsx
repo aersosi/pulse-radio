@@ -6,14 +6,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { InlineError } from "@/components/error-alert";
 import { START_VOLUME, TARGET_VOLUME, VOLUME_CLIMB_DURATION } from "@/lib/constants";
 
-export default function PlayerHLS({url}: { url: string }): JSX.Element {
+export default function PlayerHLS({url, title}: { url: string; title: string; }): JSX.Element {
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const hlsRef = useRef<Hls | undefined>(undefined);
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
     const [isFadingVolume, setIsFadingVolume] = useState<boolean>(false);
 
-    // Funktion für sanften Lautstärkeanstieg
     const fadeInVolume = useCallback((video: HTMLVideoElement, startVolume = 0, targetVolume = 0.3, duration = 3000) => {
         if (!video) return;
         let startTime: number | null = null;
@@ -39,17 +38,19 @@ export default function PlayerHLS({url}: { url: string }): JSX.Element {
     }, []);
 
     const handleCanPlay = useCallback((): void => {
+        setIsLoaded(true);
+
         const video = videoRef.current;
         if (video) {
             video.volume = START_VOLUME;
         }
-        setIsLoaded(true);
     }, []);
 
     const handlePlay = useCallback(() => {
         const video = videoRef.current;
         if (video && video.volume <= START_VOLUME) {
             fadeInVolume(video, START_VOLUME, TARGET_VOLUME, VOLUME_CLIMB_DURATION);
+            video.focus();
         }
     }, [fadeInVolume]);
 
@@ -101,6 +102,7 @@ export default function PlayerHLS({url}: { url: string }): JSX.Element {
                     .then(() => {
                         console.log('Native HLS autoplay started successfully');
                         fadeInVolume(video, START_VOLUME, TARGET_VOLUME, VOLUME_CLIMB_DURATION);
+                        video.focus();
                     })
                     .catch((error) => {
                         console.error('Native HLS autoplay failed:', error);
@@ -134,6 +136,7 @@ export default function PlayerHLS({url}: { url: string }): JSX.Element {
         setIsFadingVolume(false);
         setupHls();
 
+        // Cleanup on unmount or URL change
         return cleanupHls;
     }, [setupHls, cleanupHls]);
 
@@ -148,9 +151,17 @@ export default function PlayerHLS({url}: { url: string }): JSX.Element {
                 controls
                 className={`w-full ${!isLoaded ? 'invisible' : ''}`}
                 playsInline
+                role="application"
+                aria-label={`Audio-Player, streaming: ${title}`}
+                aria-describedby="playerStatus"
             />
 
-            <div className="text-center text-sm text-muted-foreground py-4">
+            <div id="playerStatus"
+                 className="text-center text-sm text-muted-foreground py-4"
+                 aria-live="assertive"
+                 aria-atomic="true"
+
+            >
                 {!isLoaded && !isError && (
                     <p className="text-green-500">Loading audio ... </p>
                 )}
