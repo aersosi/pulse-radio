@@ -110,8 +110,6 @@ export default async function StationDetailPage({params}: {
                                 // onClose={() => setIsError(false)}
                             />
                         )}
-
-                        <p className="text-green-500 font-bold">Enjoy your Radio and increase volume if you like!</p>
                     </div>
                 </CardFooter>
             </Card>
