@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { getStationDetails } from "@/lib/api";
 import { Station } from "@/lib/definitions";
-import BtnToTop100 from "@/components/BtnToOverview";
+import BtnToTop100 from "@/components/btn-to-home";
 import {
     Card,
     CardContent,
@@ -18,10 +18,10 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion";
 import { truncateEnd, truncateStart } from "@/lib/utils";
-import HLSPlayer from "@/components/HLSPlayer";
-import NativeAudioPlayer from "@/components/NativeAudioPlayer";
-import { InlineError } from "@/components/errorAlert";
-import { ErrorPage } from "@/components/errorPage";
+import PlayerHLS from "@/components/player-HLS";
+import PlayerAudio from "@/components/player-audio";
+import { InlineError } from "@/components/error-alert";
+import { ErrorPage } from "@/components/error-page";
 import placeholderImage from "public/images/no-image-available.webp"
 
 // Dynamic metadata based on station
@@ -99,9 +99,9 @@ export default async function StationDetailPage({params}: {
                     <div className="flex flex-col gap-8 items-center w-full">
                         {station.streamUrl ? (
                             station.streamUrl.includes('.m3u8') ? (
-                                <HLSPlayer url={station.streamUrl}/>
+                                <PlayerHLS url={station.streamUrl} title={station.name}/>
                             ) : (
-                                <NativeAudioPlayer streamUrl={station.streamUrl}/>
+                                <PlayerAudio url={station.streamUrl} title={station.name}/>
                             )
                         ) : (
                             <InlineError

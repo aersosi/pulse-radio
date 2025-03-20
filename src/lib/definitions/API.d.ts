@@ -14,7 +14,7 @@ export interface APIStationDetail extends APIStation {
 
 export interface APIStationResponse {
     status: string;
-    timestamp: string;
+    timeStamp: string;
     playables: APIStation[];
     totalCount?: number;
 }

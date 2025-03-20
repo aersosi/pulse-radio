@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css";
-import { ModeToggle } from "@/components/ModeToggle";
+import { ThemeDropdown } from "@/components/theme-dropdown";
 import Image from "next/image";
 import placeholderImage from "public/images/no-image-available.webp"
 import pulseLogo from "public/images/pulse_logo_128.png"
@@ -50,7 +50,7 @@ export default function RootLayout({children,}: Readonly<{
                     />
                     <h1 className="text-2xl font-bold">Pulse Radio</h1>
                 </div>
-                <ModeToggle></ModeToggle>
+                <ThemeDropdown></ThemeDropdown>
             </header>
             <main className="grow container mx-auto px-4 flex flex-col gap-6">
                 {children}

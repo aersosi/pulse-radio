@@ -1,5 +1,5 @@
 import { AlertCircle } from "lucide-react"
-import BtnToOverview from "@/components/BtnToOverview";
+import BtnToHome from "@/components/btn-to-home";
 
 interface ErrorPageProps {
     title: string;
@@ -21,7 +21,7 @@ export function ErrorPage({title, description, backLinkText = "Back to overview"
             {description && (
                 <p>{description}</p>
             )}
-            <BtnToOverview linkText={backLinkText} linkHref={backLinkHref}/>
+            <BtnToHome linkText={backLinkText} linkHref={backLinkHref}/>
         </div>
     );
 }
