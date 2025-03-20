@@ -1,8 +1,7 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
-import { usePlayer } from "./usePlayer";
+import { Skeleton, Button } from "@/components/ui";
+import { usePlayer } from "@/lib/hooks";
 
 export default function PlayerHLS({url, title}: { url: string; title: string }) {
     const { mediaRef, playerState, getStatusMessage } = usePlayer({

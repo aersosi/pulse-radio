@@ -1,4 +1,3 @@
-import { Skeleton } from "@/components/ui/skeleton";
 import {
     Card,
     CardContent,
@@ -6,7 +5,8 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
+    Skeleton,
+} from "@/components/ui";
 import BtnToTop100 from "@/components/btn-to-home";
 
 export default function StationLoading() {

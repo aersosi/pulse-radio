@@ -9,7 +9,7 @@ import {
     PaginationLink,
     PaginationNext,
     PaginationPrevious,
-} from "@/components/ui/pagination";
+} from "@/components/ui";
 import { STATIONS_PER_PAGE } from "@/lib/constants";
 
 export default function PaginationControls({page, totalCount, isLoading = false}: {

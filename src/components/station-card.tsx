@@ -7,7 +7,7 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
+} from "@/components/ui";
 import placeholderImage from "../../public/images/no-image-available.webp";
 
 export default function StationCard({station}: {station: Station}) {

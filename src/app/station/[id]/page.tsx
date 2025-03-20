@@ -4,19 +4,17 @@ import { getStationDetails } from "@/lib/api";
 import { Station } from "@/lib/definitions";
 import BtnToTop100 from "@/components/btn-to-home";
 import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
     Card,
     CardContent,
     CardDescription,
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-} from "@/components/ui/accordion";
+} from "@/components/ui";
 import { truncateEnd, truncateStart } from "@/lib/utils";
 import PlayerHLS from "@/components/mediaPlayer/player-HLS";
 import PlayerAudio from "@/components/mediaPlayer/player-audio";
@@ -70,16 +68,16 @@ export default async function StationDetailPage({params}: {
                 </CardHeader>
                 <CardContent className="flex flex-col items-center">
                     {station.logo && (
-                            <Image
-                                src={station.logo || placeholderImage.src}
-                                alt={station.name ? station.name : "No image available"}
-                                placeholder="blur"
-                                blurDataURL={placeholderImage.blurDataURL}
-                                width={300}
-                                height={300}
-                                sizes="128px"
-                                className="w-32 h-32 my-4 mx-auto rounded-md"
-                            />
+                        <Image
+                            src={station.logo || placeholderImage.src}
+                            alt={station.name ? station.name : "No image available"}
+                            placeholder="blur"
+                            blurDataURL={placeholderImage.blurDataURL}
+                            width={300}
+                            height={300}
+                            sizes="128px"
+                            className="w-32 h-32 my-4 mx-auto rounded-md"
+                        />
                     )}
 
                     {station.description ? (
