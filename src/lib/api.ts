@@ -8,6 +8,7 @@ import {
     ApiError,
 } from "@/lib/definitions";
 import { STATIONS_PER_PAGE } from "@/lib/constants";
+import { getPlaiceholder } from "plaiceholder";
 
 const API_BASE = "https://prod.radio-api.net/stations";
 
@@ -54,8 +55,10 @@ function mapStation(stationData: APIStation | APIStationDetail, detailed: boolea
         id: stationData.id,
         name: stationData.name,
         logo: stationData.logo300x300 ?? "",
-        topics: stationData.topics?.join(", ") || stationData.topics?.join(", ") || null,
+        topics: stationData.topics?.join(", ") || null,
+        blurDataURL: null
     };
+
     if (!detailed) return station;
 
     const detailData = stationData as APIStationDetail;
@@ -64,6 +67,14 @@ function mapStation(stationData: APIStation | APIStationDetail, detailed: boolea
         description: detailData.description || detailData.shortDescription || null,
         streamUrl: detailData.streams?.[0]?.url || null,
     };
+}
+
+
+async function getBlurDataURL(imageUrl: string) {
+    const res = await fetch(imageUrl);
+    const buffer = await res.arrayBuffer();
+    const { base64 } = await getPlaiceholder(Buffer.from(buffer));
+    return base64;
 }
 
 export async function getStations(
@@ -80,11 +91,22 @@ export async function getStations(
         await new Promise(resolve => setTimeout(resolve, delay));
     }
 
+    const stations = await Promise.all(
+        data.playables.map(async (item) => {
+            const mappedStation = mapStation(item);
+            mappedStation.blurDataURL = mappedStation.logo
+                ? await getBlurDataURL(mappedStation.logo)
+                : null;
+            return mappedStation;
+        })
+    );
+
     return {
-        stations: data.playables.map(item => mapStation(item)),
+        stations,
         totalCount: data.totalCount || 0
     };
 }
+
 
 export async function getStationDetails(stationId: string, delay: number | null = null): Promise<Station | null> {
     const data = await fetchWithCache<APIStationDetailResponse>(

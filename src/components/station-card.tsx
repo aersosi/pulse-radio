@@ -21,8 +21,8 @@ export default function StationCard({station}: {station: Station}) {
                         <Image
                             src={station.logo || placeholderImage.src}
                             alt={station.name ? station.name : "No image available"}
-                            placeholder="blur"
-                            blurDataURL={placeholderImage.blurDataURL}
+                            placeholder={station.blurDataURL ? "blur" : undefined}
+                            blurDataURL={station.blurDataURL || undefined}
                             width={300}
                             height={300}
                             sizes="80px"

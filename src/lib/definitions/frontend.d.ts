@@ -3,6 +3,7 @@ export interface Station {
   id: string;
   name: string;
   logo: string;
+  blurDataURL: string | null;
   topics: string | null;
   description?: string | null;
   streamUrl?: string | null;
