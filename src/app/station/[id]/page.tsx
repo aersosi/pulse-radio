@@ -18,8 +18,8 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion";
 import { truncateEnd, truncateStart } from "@/lib/utils";
-import PlayerHLS from "@/components/player-HLS";
-import PlayerAudio from "@/components/player-audio";
+import PlayerHLS from "@/components/mediaPlayer/player-HLS";
+import PlayerAudio from "@/components/mediaPlayer/player-audio";
 import { InlineError } from "@/components/error-alert";
 import { ErrorPage } from "@/components/error-page";
 import placeholderImage from "public/images/no-image-available.webp"

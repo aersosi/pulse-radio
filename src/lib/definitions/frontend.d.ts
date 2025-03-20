@@ -12,3 +12,10 @@ export interface StationsResponse {
   stations: Station[];
   totalCount: number;
 }
+
+export type PlayerState = "error" | "loading" | "adjusting" | "ready";
+
+export type UsePlayerProps = {
+  url: string;
+  mediaType: "audio" | "hls";
+};
