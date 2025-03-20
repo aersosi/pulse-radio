@@ -5,8 +5,8 @@ import {
     Alert,
     AlertDescription,
     AlertTitle,
-} from "@/components/ui/alert"
-import { Button } from "@/components/ui/button"
+    Button
+} from "@/components/ui"
 import { useState } from "react"
 
 interface InlineErrorProps {

@@ -1,5 +1,4 @@
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, Skeleton } from "@/components/ui";
 import { STATIONS_PER_PAGE } from "@/lib/constants";
 
 export default function StationListLoading() {

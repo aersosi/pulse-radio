@@ -53,7 +53,7 @@ function mapStation(stationData: APIStation | APIStationDetail, detailed: boolea
     const station: Station = {
         id: stationData.id,
         name: stationData.name,
-        logo: stationData.logo300x300 || "/no-image-available.webp",
+        logo: stationData.logo300x300 ?? "",
         topics: stationData.topics?.join(", ") || stationData.topics?.join(", ") || null,
     };
     if (!detailed) return station;
