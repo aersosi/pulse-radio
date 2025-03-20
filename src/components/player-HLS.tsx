@@ -41,8 +41,22 @@ export default function PlayerHLS({ url, title }: { url: string; title: string }
     }, []);
 
     const handleCanPlay = useCallback((): void => {
-        setPlayerState("ready");
-    }, []);
+        const media = mediaRef.current;
+        if (!media) return;
+
+        const playPromise = media.play();
+        if (playPromise !== undefined) {
+            playPromise
+                .then(() => {
+                    console.log('Autoplay started successfully');
+                    fadeInVolume(media);
+                })
+                .catch((error) => {
+                    console.error('Autoplay failed:', error);
+                    setPlayerState("error");
+                });
+        }
+    }, [fadeInVolume]);
 
     const handlePlay = useCallback(() => {
         const media = mediaRef.current;
@@ -57,7 +71,7 @@ export default function PlayerHLS({ url, title }: { url: string; title: string }
         setPlayerState("error");
     }, []);
 
-    const cleanupHls = useCallback((): void => {
+    const cleanup = useCallback((): void => {
         const media = mediaRef.current;
         const hls = hlsRef.current;
 
@@ -76,7 +90,7 @@ export default function PlayerHLS({ url, title }: { url: string; title: string }
         }
     }, [handleCanPlay, handleError, handlePlay]);
 
-    const setupHls = useCallback((): void => {
+    const setup = useCallback((): void => {
         const media = mediaRef.current;
         if (!media) return;
 
@@ -92,20 +106,7 @@ export default function PlayerHLS({ url, title }: { url: string; title: string }
 
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
                 media.volume = START_VOLUME;
-                const playPromise = media.play();
-                setPlayerState("ready");
-
-                if (playPromise !== undefined) {
-                    playPromise
-                        .then(() => {
-                            console.log('Autoplay started successfully');
-                            fadeInVolume(media);
-                        })
-                        .catch((error) => {
-                            console.error('Autoplay failed:', error);
-                            setPlayerState("error");
-                        });
-                }
+                setPlayerState("loading");
             });
 
             hls.on(Hls.Events.ERROR, (event, data) => {
@@ -119,33 +120,19 @@ export default function PlayerHLS({ url, title }: { url: string; title: string }
         } else if (media.canPlayType('application/vnd.apple.mpegurl')) {
             media.src = url;
             media.volume = START_VOLUME;
-            const playPromise = media.play();
-            setPlayerState("ready");
-
-            if (playPromise !== undefined) {
-                playPromise
-                    .then(() => {
-                        console.log('Native HLS autoplay started successfully');
-                        fadeInVolume(media);
-                        media.focus();
-                    })
-                    .catch((error) => {
-                        console.error('Native HLS autoplay failed:', error);
-                        setPlayerState("error");
-                    });
-            }
+            setPlayerState("loading");
         } else {
             console.error('HLS is not supported');
             setPlayerState("error");
         }
-    }, [url, handleCanPlay, handleError, handlePlay, fadeInVolume]);
+    }, [url, handleCanPlay, handleError, handlePlay]);
 
     useEffect(() => {
         setPlayerState("loading");
-        setupHls();
+        setup();
 
-        return cleanupHls;
-    }, [setupHls, cleanupHls]);
+        return cleanup;
+    }, [setup, cleanup]);
 
     const getStatusMessage = (state: PlayerState) => {
         switch (state) {

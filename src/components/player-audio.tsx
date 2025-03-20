@@ -42,8 +42,6 @@ export default function PlayerAudio({url, title}: { url: string; title: string }
         const media = mediaRef.current;
         if (!media) return;
 
-        setPlayerState("ready");
-
         const playPromise = media.play();
         if (playPromise !== undefined) {
             playPromise
@@ -71,7 +69,7 @@ export default function PlayerAudio({url, title}: { url: string; title: string }
         setPlayerState("error");
     }, []);
 
-    const cleanupAudio = useCallback((): void => {
+    const cleanup = useCallback((): void => {
         const media = mediaRef.current;
 
         if (media) {
@@ -84,7 +82,7 @@ export default function PlayerAudio({url, title}: { url: string; title: string }
         }
     }, [handleCanPlay, handleError, handlePlay]);
 
-    const setupAudio = useCallback((): void => {
+    const setup = useCallback((): void => {
         const media = mediaRef.current;
         if (!media) return;
 
@@ -101,10 +99,10 @@ export default function PlayerAudio({url, title}: { url: string; title: string }
 
     useEffect(() => {
         setPlayerState("loading");
-        setupAudio();
+        setup();
 
-        return cleanupAudio;
-    }, [setupAudio, cleanupAudio]);
+        return cleanup;
+    }, [setup, cleanup]);
 
     const getStatusMessage = (state: PlayerState) => {
         switch (state) {
@@ -126,7 +124,7 @@ export default function PlayerAudio({url, title}: { url: string; title: string }
             )}
 
             {(playerState === "loading" || playerState === "adjusting") && (
-                <Skeleton className="absolute h-[54px] w-full rounded-full"/>
+                <Skeleton className="absolute h-[54px] w-full rounded-full" />
             )}
 
             <audio
