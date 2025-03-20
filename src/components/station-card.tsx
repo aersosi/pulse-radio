@@ -8,7 +8,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui";
-import placeholderImage from "../../public/images/no-image-available.webp";
+import placeholderImage from "public/images/no-image-available.webp";
 
 export default function StationCard({station}: {station: Station}) {
     return (
