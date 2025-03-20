@@ -1,14 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
+import Hls from "hls.js";
 import { START_VOLUME, TARGET_VOLUME, VOLUME_CLIMB_DURATION } from "@/lib/constants";
-import { Button } from "@/components/ui/button";
+import { PlayerState, UsePlayerProps } from "@/lib/definitions";
 
-type PlayerState = "error" | "loading" | "adjusting" | "ready";
-
-export default function PlayerAudio({url, title}: { url: string; title: string }) {
-    const mediaRef = useRef<HTMLAudioElement | null>(null);
+export function usePlayer({ url, mediaType }: UsePlayerProps) {
+    const mediaRef = useRef<HTMLAudioElement | HTMLVideoElement | null>(null);
+    const hlsRef = useRef<Hls | null>(null);
     const [playerState, setPlayerState] = useState<PlayerState>("loading");
     const [volumePercentage, setVolumePercentage] = useState(0);
 
@@ -71,6 +70,12 @@ export default function PlayerAudio({url, title}: { url: string; title: string }
 
     const cleanup = useCallback((): void => {
         const media = mediaRef.current;
+        const hls = hlsRef.current;
+
+        if (mediaType === "hls" && hls) {
+            hls.destroy();
+            hlsRef.current = null;
+        }
 
         if (media) {
             media.removeEventListener('canplay', handleCanPlay);
@@ -80,10 +85,10 @@ export default function PlayerAudio({url, title}: { url: string; title: string }
             media.removeAttribute('src');
             media.load();
         }
-    }, [handleCanPlay, handleError, handlePlay]);
+    }, [handleCanPlay, handleError, handlePlay, mediaType]);
 
-    const setup = useCallback((): void => {
-        const media = mediaRef.current;
+    const setupAudio = useCallback(() => {
+        const media = mediaRef.current as HTMLAudioElement;
         if (!media) return;
 
         media.addEventListener('canplay', handleCanPlay);
@@ -97,13 +102,56 @@ export default function PlayerAudio({url, title}: { url: string; title: string }
         media.load();
     }, [url, handleCanPlay, handleError, handlePlay]);
 
+    const setupHLS = useCallback(() => {
+        const media = mediaRef.current as HTMLVideoElement;
+        if (!media) return;
+
+        media.addEventListener('canplay', handleCanPlay);
+        media.addEventListener('error', handleError);
+        media.addEventListener('play', handlePlay);
+
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hlsRef.current = hls;
+
+            hls.loadSource(url);
+
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                media.volume = START_VOLUME;
+                setPlayerState("loading");
+            });
+
+            hls.on(Hls.Events.ERROR, (event, data) => {
+                if (data.fatal) {
+                    console.error('Fatal HLS error:', data);
+                    handleError();
+                }
+            });
+
+            hls.attachMedia(media);
+        } else if (media.canPlayType('application/vnd.apple.mpegurl')) {
+            media.src = url;
+            media.volume = START_VOLUME;
+            setPlayerState("loading");
+        } else {
+            console.error('HLS is not supported');
+            setPlayerState("error");
+        }
+    }, [url, handleCanPlay, handleError, handlePlay]);
+
     useEffect(() => {
         setPlayerState("loading");
-        setup();
+
+        if (mediaType === "audio") {
+            setupAudio();
+        } else if (mediaType === "hls") {
+            setupHLS();
+        }
 
         return cleanup;
-    }, [setup, cleanup]);
+    }, [mediaType, setupAudio, setupHLS, cleanup]);
 
+    // Status Message Funktion hier belassen, damit beide Komponenten sie nutzen können
     const getStatusMessage = (state: PlayerState) => {
         switch (state) {
             case "error":
@@ -117,31 +165,10 @@ export default function PlayerAudio({url, title}: { url: string; title: string }
         }
     };
 
-    return (
-        <div className="relative w-full max-w-[400px]" role="region" aria-label={`Audio Player: ${title}`}>
-            {playerState === "error" && (
-                <Button onClick={() => window.location.reload()}>Reload page</Button>
-            )}
-
-            {(playerState === "loading" || playerState === "adjusting") && (
-                <Skeleton className="absolute h-[54px] w-full rounded-full" />
-            )}
-
-            <audio
-                ref={mediaRef}
-                controls
-                className={`w-full ${playerState === "ready" ? '' : 'invisible'}`}
-                aria-describedby="playerStatus"
-            />
-
-            <div
-                id="playerStatus"
-                className="text-center text-sm text-muted-foreground py-4"
-                aria-live="assertive"
-                aria-atomic="true"
-            >
-                {getStatusMessage(playerState)}
-            </div>
-        </div>
-    );
+    return {
+        mediaRef,
+        playerState,
+        volumePercentage,
+        getStatusMessage
+    };
 }
