@@ -1,4 +1,7 @@
 const nextConfig = {
+    compiler: {
+        removeConsole: process.env.NODE_ENV === "production",
+    },
     images: {
         minimumCacheTTL: 86400,
         remotePatterns: [

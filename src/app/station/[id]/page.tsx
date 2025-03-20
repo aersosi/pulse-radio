@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { notFound } from "next/navigation";
 import { getStationDetails } from "@/lib/api";
-import { StationDetailPageProps, StationDetail } from "@/lib/definitions";
-import Btn_toTop100 from "@/components/Btn_toTop100";
+import { Station } from "@/lib/definitions";
+import BtnToTop100 from "@/components/btn-to-home";
 import {
     Card,
     CardContent,
@@ -19,8 +18,11 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion";
 import { truncateEnd, truncateStart } from "@/lib/utils";
-import HLSPlayer from "@/components/HLSPlayer";
-import NativeAudioPlayer from "@/components/NativeAudioPlayer";
+import PlayerHLS from "@/components/mediaPlayer/player-HLS";
+import PlayerAudio from "@/components/mediaPlayer/player-audio";
+import { InlineError } from "@/components/error-alert";
+import { ErrorPage } from "@/components/error-page";
+import placeholderImage from "public/images/no-image-available.webp"
 
 // Dynamic metadata based on station
 export async function generateMetadata({params}: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -39,38 +41,45 @@ export async function generateMetadata({params}: { params: Promise<{ id: string 
     };
 }
 
-export default async function StationDetailPage({params}: StationDetailPageProps) {
+export default async function StationDetailPage({params}: {
+    params: Promise<{ id: string }>;
+}) {
     const {id} = await params;
-    const station: StationDetail | null = await getStationDetails(id);
+    const station: Station | null = await getStationDetails(id);
 
     if (!station) {
-        notFound();
+        return (
+            <ErrorPage
+                title="Station Not Found"
+                description="The station you are looking for does not exist or is not available."
+                backLinkText="Back to overview"
+                backLinkHref="/"
+            />
+        );
     }
 
     return (
-        <main className="container mx-auto p-4 flex flex-col gap-8">
-            <Btn_toTop100/>
-
+        <>
+            <BtnToTop100/>
             <Card>
                 <CardHeader className="text-center">
                     <CardTitle className="text-4xl">{station.name}</CardTitle>
-                    {station.genre && (
-                        <CardDescription className="text-xl">{station.genre}</CardDescription>
+                    {station.topics && (
+                        <CardDescription className="text-xl">{station.topics}</CardDescription>
                     )}
                 </CardHeader>
                 <CardContent className="flex flex-col items-center">
                     {station.logo && (
-                        <div className="w-32 h-32 mx-auto my-4 relative">
                             <Image
-                                src={station.logo || "/no-image-available.webp"}
+                                src={station.logo || placeholderImage.src}
                                 alt={station.name ? station.name : "No image available"}
                                 placeholder="blur"
-                                blurDataURL={station.logo || "/no-image-available.webp"}
-                                fill
-                                className="object-contain rounded-md"
-                                sizes="(max-width: 768px) 100vw, 250px"
+                                blurDataURL={placeholderImage.blurDataURL}
+                                width={300}
+                                height={300}
+                                sizes="128px"
+                                className="w-32 h-32 my-4 mx-auto rounded-md"
                             />
-                        </div>
                     )}
 
                     {station.description ? (
@@ -90,19 +99,21 @@ export default async function StationDetailPage({params}: StationDetailPageProps
                     <div className="flex flex-col gap-8 items-center w-full">
                         {station.streamUrl ? (
                             station.streamUrl.includes('.m3u8') ? (
-                                <HLSPlayer url={station.streamUrl} />
+                                <PlayerHLS url={station.streamUrl} title={station.name}/>
                             ) : (
-                                <NativeAudioPlayer streamUrl={station.streamUrl} />
+                                <PlayerAudio url={station.streamUrl} title={station.name}/>
                             )
                         ) : (
-                            <div className="text-red-500 mt-4">Stream currently not available</div>
+                            <InlineError
+                                title="Streaming Url not found"
+                                description="Stream currently not available"
+                                // onClose={() => setIsError(false)}
+                            />
                         )}
-
-                        <p className="text-green-500 font-bold">Enjoy your Radio and increase volume if you like!</p>
                     </div>
                 </CardFooter>
             </Card>
-            <p className="text-center break-all max-w-3/4 text-muted-foreground text-sm mx-auto">{station.streamUrl}</p>
-
-        </main>);
+            <p className="flex items-center h-9 text-center break-all max-w-3/4 text-muted-foreground text-sm mx-auto">{station.streamUrl}</p>
+        </>
+    );
 }
