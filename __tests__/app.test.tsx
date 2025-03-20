@@ -12,7 +12,7 @@ jest.mock('@/lib/api', () => ({
 }));
 
 // Mock the StationList component
-jest.mock('@/components/StationList', () => {
+jest.mock('@/components/station-list', () => {
     return function MockStationList({stations, isLoading}) {
         return <div data-testid="station-list">{isLoading ? 'Loading' : `Stations: ${stations.length}`}</div>;
     };

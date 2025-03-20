@@ -4,13 +4,14 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
 import { Skeleton } from "@/components/ui/skeleton";
 import { START_VOLUME, TARGET_VOLUME, VOLUME_CLIMB_DURATION } from "@/lib/constants";
+import { Button } from "@/components/ui/button";
 
-export default function PlayerHLS({url, title}: { url: string; title: string }) {
+type PlayerState = "error" | "loading" | "adjusting" | "ready";
+
+export default function PlayerHLS({ url, title }: { url: string; title: string }) {
     const mediaRef = useRef<HTMLVideoElement | null>(null);
     const hlsRef = useRef<Hls | null>(null);
-    const [isLoaded, setIsLoaded] = useState<boolean>(false);
-    const [isError, setIsError] = useState<boolean>(false);
-    const [isFadingVolume, setIsFadingVolume] = useState<boolean>(false);
+    const [playerState, setPlayerState] = useState<PlayerState>("loading");
     const [volumePercentage, setVolumePercentage] = useState(0);
 
     const fadeInVolume = useCallback((media: HTMLMediaElement) => {
@@ -18,7 +19,7 @@ export default function PlayerHLS({url, title}: { url: string; title: string }) 
         let startTime: number | null = null;
 
         media.volume = START_VOLUME;
-        setIsFadingVolume(true);
+        setPlayerState("adjusting");
         setVolumePercentage(START_VOLUME * 100);
 
         const animateVolume = (timeStamp: number) => {
@@ -32,7 +33,7 @@ export default function PlayerHLS({url, title}: { url: string; title: string }) 
             if (progress < 1) {
                 requestAnimationFrame(animateVolume);
             } else {
-                setIsFadingVolume(false);
+                setPlayerState("ready");
             }
         };
 
@@ -40,12 +41,7 @@ export default function PlayerHLS({url, title}: { url: string; title: string }) 
     }, []);
 
     const handleCanPlay = useCallback((): void => {
-        setIsLoaded(true);
-
-        const media = mediaRef.current;
-        if (media) {
-            media.volume = START_VOLUME;
-        }
+        setPlayerState("ready");
     }, []);
 
     const handlePlay = useCallback(() => {
@@ -58,8 +54,7 @@ export default function PlayerHLS({url, title}: { url: string; title: string }) 
 
     const handleError = useCallback((): void => {
         console.error('Audio error');
-        setIsError(true);
-        setIsLoaded(false);
+        setPlayerState("error");
     }, []);
 
     const cleanupHls = useCallback((): void => {
@@ -92,11 +87,14 @@ export default function PlayerHLS({url, title}: { url: string; title: string }) 
         if (Hls.isSupported()) {
             const hls = new Hls();
             hlsRef.current = hls;
+
             hls.loadSource(url);
 
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
                 media.volume = START_VOLUME;
-                const playPromise = media?.play();
+                const playPromise = media.play();
+                setPlayerState("ready");
+
                 if (playPromise !== undefined) {
                     playPromise
                         .then(() => {
@@ -105,12 +103,16 @@ export default function PlayerHLS({url, title}: { url: string; title: string }) 
                         })
                         .catch((error) => {
                             console.error('Autoplay failed:', error);
+                            setPlayerState("error");
                         });
                 }
             });
 
             hls.on(Hls.Events.ERROR, (event, data) => {
-                if (data.fatal) handleError();
+                if (data.fatal) {
+                    console.error('Fatal HLS error:', data);
+                    handleError();
+                }
             });
 
             hls.attachMedia(media);
@@ -118,6 +120,8 @@ export default function PlayerHLS({url, title}: { url: string; title: string }) 
             media.src = url;
             media.volume = START_VOLUME;
             const playPromise = media.play();
+            setPlayerState("ready");
+
             if (playPromise !== undefined) {
                 playPromise
                     .then(() => {
@@ -127,54 +131,60 @@ export default function PlayerHLS({url, title}: { url: string; title: string }) 
                     })
                     .catch((error) => {
                         console.error('Native HLS autoplay failed:', error);
+                        setPlayerState("error");
                     });
             }
+        } else {
+            console.error('HLS is not supported');
+            setPlayerState("error");
         }
     }, [url, handleCanPlay, handleError, handlePlay, fadeInVolume]);
 
     useEffect(() => {
-        setIsLoaded(false);
-        setIsError(false);
-        setIsFadingVolume(false);
+        setPlayerState("loading");
         setupHls();
 
-        // Cleanup on unmount or URL change
         return cleanupHls;
     }, [setupHls, cleanupHls]);
 
-    const playerStatusMessage = () => {
-        switch (true) {
-            case isError:
-                return <p className="text-destructive/90">Error loading audio ...</p>;
-            case !isLoaded:
+    const getStatusMessage = (state: PlayerState) => {
+        switch (state) {
+            case "error":
+                return <p className="text-destructive/90">Error loading audio. Please reload the page.</p>;
+            case "loading":
                 return <p className="text-green-500">Loading audio ...</p>;
-            case isFadingVolume:
+            case "adjusting":
                 return <p className="text-green-500">Adjusting volume ... ({volumePercentage}%)</p>;
-            default:
-                return <p>Enjoy your Radio and increase volume if you like!</p>;
+            case "ready":
+                return <p>Enjoy your radio! Increase the volume if you like.</p>;
         }
     };
 
     return (
         <div className="relative w-full max-w-[400px]" role="region" aria-label={`Audio Player: ${title}`}>
-            {!isLoaded && !isError && (
-                <Skeleton className="absolute h-[54px] w-full rounded-full"/>
+            {playerState === "error" && (
+                <Button onClick={() => window.location.reload()}>Reload page</Button>
+            )}
+
+            {(playerState === "loading" || playerState === "adjusting") && (
+                <Skeleton className="absolute h-[54px] w-full rounded-full" />
             )}
 
             <video
                 ref={mediaRef}
                 controls
-                className={`w-full ${!isLoaded ? 'invisible' : ''}`}
+                className={`w-full ${playerState === "ready" ? '' : 'invisible'}`}
                 playsInline
                 aria-describedby="playerStatus"
             />
 
-            <div id="playerStatus"
-                 className="text-center text-sm text-muted-foreground py-4"
-                 aria-live="assertive"
-                 aria-atomic="true"
+            <div
+                id="playerStatus"
+                className="text-center text-sm text-muted-foreground py-4"
+                aria-live="assertive"
+                aria-atomic="true"
             >
-                {playerStatusMessage()}
+                {getStatusMessage(playerState)}
             </div>
         </div>
     );

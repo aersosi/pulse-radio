@@ -3,12 +3,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { START_VOLUME, TARGET_VOLUME, VOLUME_CLIMB_DURATION } from "@/lib/constants";
+import { Button } from "@/components/ui/button";
 
-export default function PlayerAudio({ url, title }: { url: string; title: string }) {
+type PlayerState = "error" | "loading" | "adjusting" | "ready";
+
+export default function PlayerAudio({url, title}: { url: string; title: string }) {
     const mediaRef = useRef<HTMLAudioElement | null>(null);
-    const [isLoaded, setIsLoaded] = useState<boolean>(false);
-    const [isError, setIsError] = useState<boolean>(false);
-    const [isFadingVolume, setIsFadingVolume] = useState<boolean>(false);
+    const [playerState, setPlayerState] = useState<PlayerState>("loading");
     const [volumePercentage, setVolumePercentage] = useState(0);
 
     const fadeInVolume = useCallback((media: HTMLMediaElement) => {
@@ -16,7 +17,7 @@ export default function PlayerAudio({ url, title }: { url: string; title: string
         let startTime: number | null = null;
 
         media.volume = START_VOLUME;
-        setIsFadingVolume(true);
+        setPlayerState("adjusting");
         setVolumePercentage(START_VOLUME * 100);
 
         const animateVolume = (timeStamp: number) => {
@@ -30,7 +31,7 @@ export default function PlayerAudio({ url, title }: { url: string; title: string
             if (progress < 1) {
                 requestAnimationFrame(animateVolume);
             } else {
-                setIsFadingVolume(false);
+                setPlayerState("ready");
             }
         };
 
@@ -38,13 +39,24 @@ export default function PlayerAudio({ url, title }: { url: string; title: string
     }, []);
 
     const handleCanPlay = useCallback((): void => {
-        setIsLoaded(true);
-
         const media = mediaRef.current;
-        if (media) {
-            media.volume = START_VOLUME;
+        if (!media) return;
+
+        setPlayerState("ready");
+
+        const playPromise = media.play();
+        if (playPromise !== undefined) {
+            playPromise
+                .then(() => {
+                    console.log('Autoplay started successfully');
+                    fadeInVolume(media);
+                })
+                .catch((error) => {
+                    console.error('Autoplay failed:', error);
+                    setPlayerState("error");
+                });
         }
-    }, []);
+    }, [fadeInVolume]);
 
     const handlePlay = useCallback(() => {
         const media = mediaRef.current;
@@ -56,34 +68,8 @@ export default function PlayerAudio({ url, title }: { url: string; title: string
 
     const handleError = useCallback((): void => {
         console.error('Audio error');
-        setIsError(true);
-        setIsLoaded(false);
+        setPlayerState("error");
     }, []);
-
-    const setupAudio = useCallback((): void => {
-        const media = mediaRef.current;
-        if (!media) return;
-
-        media.addEventListener('canplay', handleCanPlay);
-        media.addEventListener('error', handleError);
-        media.addEventListener('play', handlePlay);
-
-        media.src = url;
-        media.volume = START_VOLUME;
-        media.load();
-
-        const playPromise = media.play();
-        if (playPromise !== undefined) {
-            playPromise
-                .then(() => {
-                    console.log('Autoplay started successfully');
-                    fadeInVolume(media);
-                })
-                .catch((error) => {
-                    console.error('Autoplay failed:', error);
-                });
-        }
-    }, [url, handleCanPlay, handleError, handlePlay, fadeInVolume]);
 
     const cleanupAudio = useCallback((): void => {
         const media = mediaRef.current;
@@ -98,48 +84,65 @@ export default function PlayerAudio({ url, title }: { url: string; title: string
         }
     }, [handleCanPlay, handleError, handlePlay]);
 
+    const setupAudio = useCallback((): void => {
+        const media = mediaRef.current;
+        if (!media) return;
+
+        media.addEventListener('canplay', handleCanPlay);
+        media.addEventListener('error', handleError);
+        media.addEventListener('play', handlePlay);
+
+        media.src = url;
+        media.volume = START_VOLUME;
+        setPlayerState("loading");
+
+        media.load();
+    }, [url, handleCanPlay, handleError, handlePlay]);
+
     useEffect(() => {
-        setIsLoaded(false);
-        setIsError(false);
-        setIsFadingVolume(false);
+        setPlayerState("loading");
         setupAudio();
 
-        // Cleanup on unmount or URL change
         return cleanupAudio;
     }, [setupAudio, cleanupAudio]);
 
-    const playerStatusMessage = () => {
-        switch (true) {
-            case isError:
-                return <p className="text-destructive/90">Error loading audio ...</p>;
-            case !isLoaded:
+    const getStatusMessage = (state: PlayerState) => {
+        switch (state) {
+            case "error":
+                return <p className="text-destructive/90">Error loading audio. Please reload the page.</p>;
+            case "loading":
                 return <p className="text-green-500">Loading audio ...</p>;
-            case isFadingVolume:
+            case "adjusting":
                 return <p className="text-green-500">Adjusting volume ... ({volumePercentage}%)</p>;
-            default:
-                return <p>Enjoy your Radio and increase volume if you like!</p>;
+            case "ready":
+                return <p>Enjoy your radio! Increase the volume if you like.</p>;
         }
     };
 
     return (
         <div className="relative w-full max-w-[400px]" role="region" aria-label={`Audio Player: ${title}`}>
-            {!isLoaded && !isError && (
+            {playerState === "error" && (
+                <Button onClick={() => window.location.reload()}>Reload page</Button>
+            )}
+
+            {(playerState === "loading" || playerState === "adjusting") && (
                 <Skeleton className="absolute h-[54px] w-full rounded-full"/>
             )}
 
             <audio
                 ref={mediaRef}
                 controls
-                className={`w-full ${!isLoaded ? 'invisible' : ''}`}
+                className={`w-full ${playerState === "ready" ? '' : 'invisible'}`}
                 aria-describedby="playerStatus"
             />
 
-            <div id="playerStatus"
-                 className="text-center text-sm text-muted-foreground py-4"
-                 aria-live="assertive"
-                 aria-atomic="true"
+            <div
+                id="playerStatus"
+                className="text-center text-sm text-muted-foreground py-4"
+                aria-live="assertive"
+                aria-atomic="true"
             >
-                {playerStatusMessage()}
+                {getStatusMessage(playerState)}
             </div>
         </div>
     );
