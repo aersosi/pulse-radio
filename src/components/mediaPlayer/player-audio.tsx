@@ -5,8 +5,6 @@ import { Button } from "@/components/ui/button";
 import { usePlayer } from "./usePlayer";
 
 export default function PlayerAudio({url, title}: { url: string; title: string }) {
-    url = "https://player.vimeo.com/video/" + title;
-
     const { mediaRef, playerState, getStatusMessage } = usePlayer({
         url,
         mediaType: "audio"
