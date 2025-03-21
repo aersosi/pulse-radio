@@ -6,6 +6,8 @@ import { ThemeDropdown } from "@/components/theme-dropdown";
 import Image from "next/image";
 import placeholderImage from "public/images/no-image-available.webp"
 import pulseLogo from "public/images/pulse_logo_128.png"
+import SearchBar from "@/components/search-bar";
+import Link from "next/link";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -36,21 +38,26 @@ export default function RootLayout({children,}: Readonly<{
             enableSystem
             disableTransitionOnChange
         >
-            <header className="container mx-auto flex p-4 justify-between">
+            <header className="container mx-auto flex flex-col sm:flex-row gap-4 p-4 justify-between ">
                 <div className="flex gap-4 items-center">
-                    <Image
-                        className="w-8 h-8"
-                        src={pulseLogo.src || placeholderImage.src}
-                        alt={pulseLogo.src ? "Pulse radio logo" : "No image available"}
-                        width={128}
-                        height={128}
-                        sizes="32px"
-                        placeholder="blur"
-                        blurDataURL={pulseLogo.blurDataURL}
-                    />
-                    <h1 className="text-2xl font-bold">Pulse Radio</h1>
+                    <Link href={"/"} className="flex gap-3">
+                        <Image
+                            className="w-8 h-8"
+                            src={pulseLogo.src || placeholderImage.src}
+                            alt={pulseLogo.src ? "Pulse radio logo" : "No image available"}
+                            width={128}
+                            height={128}
+                            sizes="32px"
+                            placeholder="blur"
+                            blurDataURL={pulseLogo.blurDataURL}
+                        />
+                        <h1 className="text-2xl font-bold">Pulse Radio</h1>
+                    </Link>
                 </div>
-                <ThemeDropdown></ThemeDropdown>
+                <div className="flex gap-4 w-full sm:w-1/2">
+                    <SearchBar />
+                    <ThemeDropdown></ThemeDropdown>
+                </div>
             </header>
             <main className="grow container mx-auto px-4 flex flex-col gap-6">
                 {children}
