@@ -122,3 +122,51 @@ export async function getStationDetails(stationId: string, delay: number | null 
     }
     return mapStation(station, true);
 }
+
+export async function getSearchResults(
+    query: string,
+    count: number = STATIONS_PER_PAGE,
+    offset: number = 0
+): Promise<StationsResponse> {
+    try {
+        const data = await fetchWithCache<APIStationResponse>(
+            `${API_BASE}/search?query=${encodeURIComponent(query)}&count=${count}&offset=${offset}`,
+            {status: "error", timeStamp: new Date().toISOString(), totalCount: 0, playables: []}
+        );
+
+        // Stelle sicher, dass playables immer ein Array ist
+        const playables = data.playables || [];
+
+        // Wenn die Seite außerhalb des gültigen Bereichs liegt, gib leere Ergebnisse zurück
+        const totalPages = Math.ceil((data.totalCount || 0) / count);
+        const currentPage = Math.floor(offset / count) + 1;
+
+        if (currentPage > totalPages && totalPages > 0) {
+            return {
+                stations: [],
+                totalCount: data.totalCount || 0
+            };
+        }
+
+        const stations = await Promise.all(
+            playables.map(async (item) => {
+                const mappedStation = mapStation(item);
+                mappedStation.blurDataURL = mappedStation.logo
+                    ? await getBlurDataURL(mappedStation.logo)
+                    : null;
+                return mappedStation;
+            })
+        );
+
+        return {
+            stations,
+            totalCount: data.totalCount || 0
+        };
+    } catch (error) {
+        console.error('Error in getSearchResults:', error);
+        return {
+            stations: [],
+            totalCount: 0
+        };
+    }
+}
