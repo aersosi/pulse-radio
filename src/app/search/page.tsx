@@ -5,10 +5,8 @@ import PaginationControls from "@/components/pagination-controls";
 import { ErrorPage } from "@/components/error-page";
 import { STATIONS_PER_PAGE } from "@/lib/constants";
 
-export default async function SearchPage({
-                                             searchParams,
-                                         }: {
-    searchParams: { q?: string; page?: string };
+export default async function SearchPage({searchParams,}: {
+    searchParams: Promise<{ q?: string; page?: string }>;
 }) {
     const params = await searchParams;
     const query = params.q || "";
@@ -52,11 +50,8 @@ export default async function SearchPage({
                 )}`}
                 </p>
                 <p className="text-xl">
-                    Search results for "
-                    <span className=" font-bold text-green-500">
-                        {`${query}`}
-                    </span>
-                    "
+                    Search results for:
+                    <span className="font-bold text-green-500">{query}</span>
                 </p>
                 <p>Total: {totalCount}</p>
             </div>
