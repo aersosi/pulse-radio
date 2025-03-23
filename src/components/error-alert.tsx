@@ -31,7 +31,7 @@ export function InlineError({title = "Error", description, onClose,}: InlineErro
 
     return (
         <Alert variant="destructive" className="relative">
-            <AlertCircle className="h-4 w-4"/>
+            <AlertCircle/>
             <AlertTitle>{title}</AlertTitle>
             {description && <AlertDescription>{description}</AlertDescription>}
             <Button
@@ -40,7 +40,7 @@ export function InlineError({title = "Error", description, onClose,}: InlineErro
                 className="absolute top-2 right-2 h-7 w-7 p-0"
                 onClick={handleClose}
             >
-                <X className="h-4 w-4"/>
+                <X/>
                 <span className="sr-only">Close</span>
             </Button>
         </Alert>
