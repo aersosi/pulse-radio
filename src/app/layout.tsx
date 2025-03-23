@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
-import { ThemeProvider } from "@/components/theme-provider"
-import "./globals.css";
-import { ThemeDropdown } from "@/components/theme-dropdown";
 import Image from "next/image";
+import Link from "next/link";
+import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeDropdown } from "@/components/theme-dropdown";
+import SearchBar from "@/components/search/search-bar";
 import placeholderImage from "public/images/no-image-available.webp"
 import pulseLogo from "public/images/pulse_logo_128.png"
-import SearchBar from "@/components/search-bar";
-import Link from "next/link";
+import "./globals.css";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -54,7 +54,7 @@ export default function RootLayout({children,}: Readonly<{
                         <h1 className="text-2xl font-bold">Pulse Radio</h1>
                     </Link>
                 </div>
-                <div className="flex gap-4 w-full sm:w-1/2">
+                <div className="flex gap-2 w-full sm:w-1/2">
                     <SearchBar />
                     <ThemeDropdown></ThemeDropdown>
                 </div>

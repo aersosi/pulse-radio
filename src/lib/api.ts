@@ -7,7 +7,7 @@ import {
     APIStationDetail,
     ApiError,
 } from "@/lib/definitions";
-import { STATIONS_PER_PAGE } from "@/lib/constants";
+import { STATIONS_PER_PAGE, CACHE_TIMES } from "@/lib/constants";
 import { getPlaiceholder } from "plaiceholder";
 
 const API_BASE = "https://prod.radio-api.net/stations";
@@ -84,7 +84,8 @@ export async function getStations(
 ): Promise<StationsResponse> {
     const data = await fetchWithCache<APIStationResponse>(
         `${API_BASE}/list-by-system-name?systemName=STATIONS_TOP&count=${count}&offset=${offset}`,
-        {status: "error", timeStamp: new Date().toISOString(), totalCount: 0, playables: []}
+        {status: "error", timeStamp: new Date().toISOString(), totalCount: 0, playables: []},
+        CACHE_TIMES.STATION_LIST
     );
 
     if (typeof delay === "number") {
@@ -111,7 +112,8 @@ export async function getStations(
 export async function getStationDetails(stationId: string, delay: number | null = null): Promise<Station | null> {
     const data = await fetchWithCache<APIStationDetailResponse>(
         `${API_BASE}/details?stationIds=${stationId}`,
-        []
+        [],
+        CACHE_TIMES.STATION_DETAILS
     );
 
     const station = data[0];
@@ -131,7 +133,8 @@ export async function getSearchResults(
     try {
         const data = await fetchWithCache<APIStationResponse>(
             `${API_BASE}/search?query=${encodeURIComponent(query)}&count=${count}&offset=${offset}`,
-            {status: "error", timeStamp: new Date().toISOString(), totalCount: 0, playables: []}
+            {status: "error", timeStamp: new Date().toISOString(), totalCount: 0, playables: []},
+            CACHE_TIMES.SEARCH_RESULTS
         );
 
         // Stelle sicher, dass playables immer ein Array ist
