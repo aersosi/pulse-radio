@@ -22,6 +22,7 @@ export const RecentSearchesPopover = forwardRef<HTMLDivElement, RecentSearchesPo
                 align="start"
                 sideOffset={4}
                 style={{width: width ? `${width}px` : "auto"}}
+                className="p-0"
             >
                 <div className="flex items-center justify-between py-2 pr-2 pl-4 border-b">
                     <span className="text-xs font-medium flex items-center gap-2 text-muted-foreground">
