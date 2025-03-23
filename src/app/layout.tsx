@@ -30,7 +30,7 @@ export default function RootLayout({children,}: Readonly<{
     return (
         <html lang="en" suppressHydrationWarning>
         <body
-            className={`${geistSans.variable} antialiased flex flex-col`}
+            className={`${geistSans.variable} antialiased flex flex-col container mx-auto`}
         >
         <ThemeProvider
             attribute="class"
@@ -38,7 +38,7 @@ export default function RootLayout({children,}: Readonly<{
             enableSystem
             disableTransitionOnChange
         >
-            <header className="container mx-auto flex flex-col sm:flex-row gap-4 p-4 justify-between ">
+            <header className="flex flex-col sm:flex-row gap-4 p-4 justify-between ">
                 <div className="flex gap-4 items-center">
                     <Link href={"/"} className="flex gap-3">
                         <Image
@@ -54,12 +54,12 @@ export default function RootLayout({children,}: Readonly<{
                         <h1 className="text-2xl font-bold">Pulse Radio</h1>
                     </Link>
                 </div>
-                <div className="flex gap-2 w-full sm:w-1/2">
+                <div className="flex gap-2 grow md:grow-0 md:w-1/2">
                     <SearchBar />
                     <ThemeDropdown></ThemeDropdown>
                 </div>
             </header>
-            <main className="grow container mx-auto px-4 flex flex-col gap-6">
+            <main className="grow px-4 flex flex-col gap-6">
                 {children}
             </main>
             <footer className="text-center p-4 text-muted-foreground">

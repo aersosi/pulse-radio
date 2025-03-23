@@ -1,31 +1,28 @@
 "use client";
 
-import { useRef } from "react";
+import { forwardRef } from "react";
 import { Button } from "@/components/ui";
 import { Clock, Trash2 } from "lucide-react";
 import { RecentSearchItem } from "./recent-search-item";
+import { PopoverContent } from "@/components/ui/popover";
 
 interface RecentSearchesPopoverProps {
+    width: number | null;
     recentSearches: string[];
     onClearAll: (e: React.MouseEvent) => void;
     onSelect: (query: string) => void;
     onRemove: (e: React.MouseEvent, query: string) => void;
 }
 
-export function RecentSearchesPopover({
-                                          recentSearches,
-                                          onClearAll,
-                                          onSelect,
-                                          onRemove
-                                      }: RecentSearchesPopoverProps) {
-    const popoverRef = useRef<HTMLDivElement>(null);
-
-    return (
-        <div
-            ref={popoverRef}
-            className="absolute top-full left-0 mt-1 w-full rounded-md border bg-popover p-0 text-popover-foreground shadow-md z-50 animate-in fade-in-0 zoom-in-95"
-        >
-            <div className="max-h-[300px] overflow-auto">
+export const RecentSearchesPopover = forwardRef<HTMLDivElement, RecentSearchesPopoverProps>(
+    ({ width, recentSearches, onClearAll, onSelect, onRemove }, ref) => {
+        return (
+            <PopoverContent
+                ref={ref}
+                align="start"
+                sideOffset={4}
+                style={{width: width ? `${width}px` : "auto"}}
+            >
                 <div className="flex items-center justify-between py-2 pr-2 pl-4 border-b">
                     <span className="text-xs font-medium flex items-center gap-2 text-muted-foreground">
                         <Clock className="w-4 h-4"/>
@@ -51,7 +48,9 @@ export function RecentSearchesPopover({
                         />
                     ))}
                 </ul>
-            </div>
-        </div>
-    );
-}
+            </PopoverContent>
+        );
+    }
+);
+
+RecentSearchesPopover.displayName = "RecentSearchesPopover";

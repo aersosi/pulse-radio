@@ -10,7 +10,7 @@ interface ErrorPageProps {
 
 export function ErrorPage({title, description, backLinkText = "Back to overview", backLinkHref = "/"}: ErrorPageProps) {
     return (
-        <div className="container mx-auto px-4 py-8 flex flex-col gap-8 items-center text-center">
+        <div className="px-4 py-8 flex flex-col gap-8 items-center text-center">
             <div className="flex gap-4 align-center justify-center">
                 <AlertCircle className="h-8 w-8 text-destructive/90"/>
                 <h2 className="text-2xl font-bold text-destructive/90">
