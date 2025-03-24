@@ -59,10 +59,6 @@ export interface StationCardProps {
   station: Station;
 }
 
-export interface StationDetailPageProps {
-  params: { id: string };
-}
-
 export interface AudioPlayerProps {
   streamUrl: string;
 }

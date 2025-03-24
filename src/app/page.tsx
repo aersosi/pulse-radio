@@ -44,10 +44,6 @@ export default function Home() {
         fetchStations();
     }, [offset]);
 
-    {
-        error && <div className="text-red-500">{error}</div>
-    }
-
     const handlePrev = () => {
         if (page > 1) {
             setPage(page - 1);
@@ -84,9 +80,13 @@ export default function Home() {
                     </div>
                 </div>
             </header>
+
+            {error && <div className="text-red-500">{error}</div>}
+
             <main className="container mx-auto px-4">
                 <StationList stations={stations} isLoading={isLoading}/>
             </main>
+
             <footer className="container mx-auto px-4">
                 <Pagination>
                     <PaginationContent>

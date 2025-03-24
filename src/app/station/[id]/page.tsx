@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getStationDetails } from "@/lib/api";
-import { StationDetailPageProps, StationDetail } from "@/lib/definitions";
+import { StationDetail } from "@/lib/definitions";
 import Btn_toTop100 from "@/components/Btn_toTop100";
 import {
     Card,
@@ -23,7 +23,7 @@ import HLSPlayer from "@/components/HLSPlayer";
 import NativeAudioPlayer from "@/components/NativeAudioPlayer";
 
 // Dynamic metadata based on station
-export async function generateMetadata({params}: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata({params}: { params: Promise<{ id: string }> }): Promise<Metadata> {
     const {id} = await params;
     const station = await getStationDetails(id);
 
@@ -39,7 +39,9 @@ export async function generateMetadata({params}: { params: { id: string } }): Pr
     };
 }
 
-export default async function StationDetailPage({params}: StationDetailPageProps) {
+export default async function StationDetailPage({params}: {
+    params: Promise<{ id: string }>;
+}) {
     const {id} = await params;
     const station: StationDetail | null = await getStationDetails(id);
 
@@ -90,9 +92,9 @@ export default async function StationDetailPage({params}: StationDetailPageProps
                     <div className="flex flex-col gap-8 items-center w-full">
                         {station.streamUrl ? (
                             station.streamUrl.includes('.m3u8') ? (
-                                <HLSPlayer url={station.streamUrl} />
+                                <HLSPlayer url={station.streamUrl}/>
                             ) : (
-                                <NativeAudioPlayer streamUrl={station.streamUrl} />
+                                <NativeAudioPlayer streamUrl={station.streamUrl}/>
                             )
                         ) : (
                             <div className="text-red-500 mt-4">Stream currently not available</div>
