@@ -40,7 +40,7 @@ export default function RootLayout({children,}: Readonly<{
         >
             <header className="flex flex-col sm:flex-row gap-4 p-4 justify-between ">
                 <div className="flex gap-4 items-center">
-                    <Link href={"/frontend/public"} className="flex gap-3">
+                    <Link href={"/"} className="flex gap-3">
                         <Image
                             className="w-8 h-8"
                             src={pulseLogo.src || placeholderImage.src}

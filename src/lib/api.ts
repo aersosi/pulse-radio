@@ -6,8 +6,8 @@ import {
     APIStation,
     APIStationDetail,
     ApiError,
-} from "./definitions";
-import { STATIONS_PER_PAGE, CACHE_TIMES } from "./constants";
+} from "@/lib/definitions";
+import { STATIONS_PER_PAGE, CACHE_TIMES } from "@/lib/constants";
 import { getPlaiceholder } from "plaiceholder";
 
 const API_BASE = "https://prod.radio-api.net/stations";

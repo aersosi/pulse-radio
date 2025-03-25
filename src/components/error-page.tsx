@@ -1,5 +1,5 @@
 import { AlertCircle } from "lucide-react"
-import BtnToHome from "./btn-to-home";
+import BtnToHome from "@/components/btn-to-home";
 
 interface ErrorPageProps {
     title: string;
