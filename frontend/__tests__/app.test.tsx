@@ -1,7 +1,7 @@
 import React from 'react';
 import {render, screen, fireEvent, waitFor, act} from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Home from "../src/app/page";
+import Home from "@/app/page";
 import {getStations, totalCount} from '@/lib/api';
 import {Station} from "@/lib/definitions";
 
@@ -12,7 +12,7 @@ jest.mock('@/lib/api', () => ({
 }));
 
 // Mock the StationList component
-jest.mock('@/components/station-list', () => {
+jest.mock('@/components/station/station-list', () => {
     return function MockStationList({stations, isLoading}) {
         return <div data-testid="station-list">{isLoading ? 'Loading' : `Stations: ${stations.length}`}</div>;
     };
