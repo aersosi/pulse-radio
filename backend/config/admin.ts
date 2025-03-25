@@ -1,4 +1,6 @@
-export default ({ env }) => ({
+import { Env } from "../types/env";
+
+export default ({ env }: { env: Env }) => ({
   auth: {
     secret: env('ADMIN_JWT_SECRET'),
   },
