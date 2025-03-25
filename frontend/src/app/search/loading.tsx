@@ -1,5 +1,5 @@
-import StationListLoading from "../../components/station-list-loading";
-import PaginationControls from "../../components/pagination-controls";
+import StationListLoading from "@/components/station-list-loading";
+import PaginationControls from "@/components/pagination-controls";
 
 export default function SearchLoading() {
     return (

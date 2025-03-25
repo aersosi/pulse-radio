@@ -1,6 +1,6 @@
 "use client";
 
-import { Skeleton, Button } from "../ui";
+import { Skeleton, Button } from "@/components/ui";
 import { usePlayer } from "@/lib/hooks";
 
 export default function PlayerHLS({url, title}: { url: string; title: string }) {

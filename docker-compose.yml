@@ -10,4 +10,4 @@ services:
   backend:
     build: ./backend
     ports:
-      - "5001:5001"
+      - "1337:1337"

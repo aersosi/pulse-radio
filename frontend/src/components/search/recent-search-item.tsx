@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "../ui";
+import { Button } from "@/components/ui";
 import { X } from "lucide-react";
 
 interface RecentSearchItemProps {

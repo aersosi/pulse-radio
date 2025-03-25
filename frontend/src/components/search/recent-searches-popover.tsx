@@ -1,10 +1,10 @@
 "use client";
 
 import { forwardRef } from "react";
-import { Button } from "../ui";
+import { Button } from "@/components/ui";
 import { Clock, Trash2 } from "lucide-react";
 import { RecentSearchItem } from "./recent-search-item";
-import { PopoverContent } from "../ui/popover";
+import { PopoverContent } from "@/components/ui/popover";
 
 interface RecentSearchesPopoverProps {
     width: number | null;

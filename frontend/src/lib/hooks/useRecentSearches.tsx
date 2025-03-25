@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MAX_RECENT_SEARCHES, SEARCHES_STORAGE_KEY } from "../constants";
+import { MAX_RECENT_SEARCHES, SEARCHES_STORAGE_KEY } from "@/lib/constants";
 
 export function useRecentSearches() {
     const [recentSearches, setRecentSearches] = useState<string[]>([]);
