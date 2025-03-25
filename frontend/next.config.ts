@@ -1,5 +1,6 @@
 const nextConfig = {
     output: "standalone",
+    basePath: '/frontend',
     compiler: {
         removeConsole: process.env.NODE_ENV === "production",
     },

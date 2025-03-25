@@ -1,18 +1,24 @@
 {
+  "version": 2,
   "builds": [
-    {
-      "src": "frontend/package.json",
-      "use": "@vercel/next"
-    }
+    { "src": "frontend/package.json", "use": "@vercel/next" }
   ],
   "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/$1"
+    },
     {
       "src": "/station/(.*)",
       "dest": "/frontend/station/$1"
     },
     {
-      "src": "/(.*)",
-      "dest": "/frontend/$1"
+      "src": "/_next/static/(.*)",
+      "dest": "/frontend/_next/static/$1"
+    },
+    {
+      "src": "/_next/data/(.*)",
+      "dest": "/frontend/_next/data/$1"
     }
   ]
 }
