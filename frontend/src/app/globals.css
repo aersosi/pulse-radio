@@ -20,6 +20,7 @@
 }
 
 .fludidContainer {
+  width: 100%;
   max-width: var(--fluid-container);
 }
 
