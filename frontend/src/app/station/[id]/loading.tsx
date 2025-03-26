@@ -42,7 +42,7 @@ export default function StationLoading() {
 
                         {/*Audio Player*/}
                         <Skeleton className="h-[54px] w-[300px] rounded-full"/>
-                        <p className="text-muted-foreground font-bold animate-pulse">Loading Radio Station ...</p>
+                        <p className="text-muted-foreground animate-pulse">Loading Radio Station ...</p>
                     </div>
                 </CardFooter>
                 </div>

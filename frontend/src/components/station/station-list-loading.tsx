@@ -13,7 +13,7 @@ export default function StationListLoading() {
                             <Skeleton className="h-4 w-1/2 mx-auto"/>
                         </CardTitle>
                     </CardHeader>
-                    <CardContent className="flex flex-col items-center">
+                    <CardContent className="flex flex-col items-center py-[var(--step-8-24)]">
                         {/*Station Logo Image*/}
                         <div className="fludidStationLogo mx-auto my-4 relative">
                             <Skeleton className="h-full w-full rounded-md"/>
@@ -21,7 +21,7 @@ export default function StationListLoading() {
                     </CardContent>
                     <CardFooter>
                         {/*Station topic*/}
-                        <Skeleton className="h-4 w-1/3 rounded-full mb-2"/>
+                        <Skeleton className="h-4 w-1/2 rounded-full mb-2"/>
                     </CardFooter>
                     </div>
                 </Card>

@@ -36,7 +36,7 @@ export default function RootLayout({children,}: Readonly<{
             enableSystem
             disableTransitionOnChange
         >
-            <div className="fludidContainer mx-auto flex flex-col">
+            <div className="fludidContainer grow mx-auto flex flex-col">
                 <header className="flex flex-col sm:flex-row gap-4 p-4 justify-between ">
                     <div className="flex gap-4 items-center">
                         <Link href={"/"} className="flex gap-3">
@@ -61,7 +61,7 @@ export default function RootLayout({children,}: Readonly<{
                 <main className="grow px-4 flex flex-col gap-6">
                     {children}
                 </main>
-                <footer className="text-center p-4 text-muted-foreground">
+                <footer className="text-center text-sm p-4 text-muted-foreground transition hover:text-green-500">
                     Pulse Radio © Copyright {new Date().getFullYear()} by Arthur Ersosi. All rights reserved.
                 </footer>
             </div>

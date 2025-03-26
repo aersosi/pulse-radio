@@ -50,10 +50,10 @@ export default async function SearchPage({searchParams,}: {
                 )}`}
                 </p>
                 <p className="text-xl">
-                    Search results for:
+                    Search results for: &nbsp;
                     <span className="font-bold text-green-500">{query}</span>
                 </p>
-                <p>Total: {totalCount}</p>
+                <p>Found Stations: {totalCount}</p>
             </div>
 
             <StationList stations={stations}/>
