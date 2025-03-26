@@ -29,7 +29,7 @@ export default function RootLayout({children,}: Readonly<{
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
-        <body className={`${geistSans.variable} antialiased`}>
+        <body className={`${geistSans.variable} antialiased flex flex-col`}>
         <ThemeProvider
             attribute="class"
             defaultTheme="system"
