@@ -60,6 +60,8 @@ export default async function StationDetailPage({params}: {
         <>
             <BtnToTop100/>
             <Card>
+                <div className="rounded-xl py-6 border shadow-sm">
+
                 <CardHeader className="text-center">
                     <CardTitle className="text-4xl">{station.name}</CardTitle>
                     {station.topics && (
@@ -76,7 +78,7 @@ export default async function StationDetailPage({params}: {
                             width={300}
                             height={300}
                             sizes="128px"
-                            className="w-32 h-32 my-4 mx-auto rounded-md"
+                            className="fludidStationLogo my-4 mx-auto rounded-md"
                         />
                     )}
 
@@ -105,11 +107,11 @@ export default async function StationDetailPage({params}: {
                             <InlineError
                                 title="Streaming Url not found"
                                 description="Stream currently not available"
-                                // onClose={() => setIsError(false)}
                             />
                         )}
                     </div>
                 </CardFooter>
+                </div>
             </Card>
             <p className="flex items-center h-9 text-center break-all max-w-3/4 text-muted-foreground text-sm mx-auto">{station.streamUrl}</p>
         </>

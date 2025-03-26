@@ -57,7 +57,7 @@ export default function PaginationControls({page, totalCount, isLoading = false,
 
     return (
         <Pagination>
-            <PaginationContent className={isLoading ? "opacity-50 pointer-events-none" : ""}>
+            <PaginationContent className={isLoading ? "animate-pulse pointer-events-none" : ""}>
                 <PaginationItem className={`cursor-pointer ${page <= 1 ? "opacity-30 pointer-events-none" : ""}`}>
                     <PaginationPrevious onClick={() => goToPage(page - 1)}/>
                 </PaginationItem>

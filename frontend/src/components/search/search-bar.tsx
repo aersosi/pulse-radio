@@ -14,7 +14,8 @@ export default function SearchBar({initialValue = ""}: { initialValue?: string }
     const searchBarRef = useRef<HTMLDivElement>(null);
     const popoverRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-    const [inputWidth, setInputWidth] = useState<number | null>(null);
+    const formRef = useRef<HTMLFormElement>(null);
+    const [inputWidth, setInputWidth] = useState(0);
     const router = useRouter();
 
     const {
@@ -26,18 +27,24 @@ export default function SearchBar({initialValue = ""}: { initialValue?: string }
     } = useRecentSearches();
 
     const updateInputWidth = () => {
-        if (inputRef.current) setInputWidth(inputRef.current.offsetWidth);
+        requestAnimationFrame(() => {
+            if (formRef.current) {
+                const newWidth = formRef.current.offsetWidth;
+                if (newWidth !== inputWidth) setInputWidth(newWidth);
+            }
+        });
     };
 
     useEffect(() => {
         updateInputWidth();
+        const resizeObserver = new ResizeObserver(updateInputWidth);
+        if (formRef.current) resizeObserver.observe(formRef.current);
+        window.addEventListener('resize', updateInputWidth);
 
-        const resizeObserver = new ResizeObserver(() => updateInputWidth());
-        if (inputRef.current) {
-            resizeObserver.observe(inputRef.current);
-        }
-
-        return () => resizeObserver.disconnect();
+        return () => {
+            resizeObserver.disconnect();
+            window.removeEventListener('resize', updateInputWidth);
+        };
     }, []);
 
     useEffect(() => {
@@ -87,7 +94,8 @@ export default function SearchBar({initialValue = ""}: { initialValue?: string }
         <div ref={searchBarRef} className="relative flex grow items-center">
             <Popover open={showPopover}>
                 <PopoverTrigger asChild>
-                <form onSubmit={handleSubmit} className="w-full relative">
+                <form                         ref={formRef}
+                                              onSubmit={handleSubmit} className="w-full relative">
                     <PopoverAnchor ref={inputRef} className="absolute bottom-0"/>
 
                     <Input

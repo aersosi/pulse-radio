@@ -1,0 +1,48 @@
+.stationCard {
+    --time: 0.3s;
+
+    .stationLogo {
+        transition: filter var(--time) ease-in-out;
+    }
+
+    .playIcon {
+        background-color: var(--pulse-green);
+        transition: opacity var(--time) ease-in-out;
+        opacity: 0;
+        transform: scale(1);
+    }
+
+    &:hover {
+        .stationLogo {
+            filter: grayscale(50%) brightness(75%);
+        }
+
+        .playIcon {
+            opacity: 1;
+            animation: scale 0.2s ease-out forwards;
+            animation-delay: 0.1s;
+        }
+    }
+
+    &:not(:hover) .playIcon {
+        animation: scaleReverse 0.2s ease-in forwards;
+    }
+}
+
+@keyframes scale {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.1);
+    }
+}
+
+@keyframes scaleReverse {
+    0% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

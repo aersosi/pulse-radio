@@ -29,42 +29,42 @@ export default function RootLayout({children,}: Readonly<{
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
-        <body
-            className={`${geistSans.variable} antialiased flex flex-col container mx-auto`}
-        >
+        <body className={`${geistSans.variable} antialiased`}>
         <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
         >
-            <header className="flex flex-col sm:flex-row gap-4 p-4 justify-between ">
-                <div className="flex gap-4 items-center">
-                    <Link href={"/"} className="flex gap-3">
-                        <Image
-                            className="w-8 h-8"
-                            src={pulseLogo.src || placeholderImage.src}
-                            alt={pulseLogo.src ? "Pulse radio logo" : "No image available"}
-                            width={128}
-                            height={128}
-                            sizes="32px"
-                            placeholder="blur"
-                            blurDataURL={pulseLogo.blurDataURL}
-                        />
-                        <h1 className="text-2xl font-bold">Pulse Radio</h1>
-                    </Link>
-                </div>
-                <div className="flex gap-2 grow md:grow-0 md:w-1/2">
-                    <SearchBar />
-                    <ThemeDropdown></ThemeDropdown>
-                </div>
-            </header>
-            <main className="grow px-4 flex flex-col gap-6">
-                {children}
-            </main>
-            <footer className="text-center p-4 text-muted-foreground">
-                Pulse Radio © Copyright {new Date().getFullYear()} by Arthur Ersosi. All rights reserved.
-            </footer>
+            <div className="fludidContainer mx-auto flex flex-col">
+                <header className="flex flex-col sm:flex-row gap-4 p-4 justify-between ">
+                    <div className="flex gap-4 items-center">
+                        <Link href={"/"} className="flex gap-3">
+                            <Image
+                                className="w-8 h-8"
+                                src={pulseLogo.src || placeholderImage.src}
+                                alt={pulseLogo.src ? "Pulse radio logo" : "No image available"}
+                                width={128}
+                                height={128}
+                                sizes="32px"
+                                placeholder="blur"
+                                blurDataURL={pulseLogo.blurDataURL}
+                            />
+                            <h1 className="text-2xl font-bold">Pulse Radio</h1>
+                        </Link>
+                    </div>
+                    <div className="flex gap-2 grow md:grow-0 md:w-1/2">
+                        <SearchBar/>
+                        <ThemeDropdown></ThemeDropdown>
+                    </div>
+                </header>
+                <main className="grow px-4 flex flex-col gap-6">
+                    {children}
+                </main>
+                <footer className="text-center p-4 text-muted-foreground">
+                    Pulse Radio © Copyright {new Date().getFullYear()} by Arthur Ersosi. All rights reserved.
+                </footer>
+            </div>
         </ThemeProvider>
         </body>
         </html>

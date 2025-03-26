@@ -1,5 +1,5 @@
 import { getStations } from "@/lib/api";
-import StationList from "@/components/station-list";
+import StationList from "@/components/station/station-list";
 import PaginationControls from "@/components/pagination-controls";
 import { ErrorPage } from "@/components/error-page";
 import { STATIONS_PER_PAGE } from "@/lib/constants";

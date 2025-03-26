@@ -15,24 +15,26 @@ export default function StationLoading() {
             <BtnToTop100/>
 
             <Card>
+                <div className="rounded-xl py-6 border shadow-sm">
+
                 <CardHeader className="text-center">
                     <CardTitle className="text-4xl">
                         {/*Station Name*/}
                         <Skeleton className="h-[40px] w-1/2 mx-auto rounded-full"/>
                     </CardTitle>
-                    <CardDescription className="text-xl">
+                    <CardDescription className="h-[28px] py-1 text-xl">
                         {/*Station Topic*/}
-                        <Skeleton className="h-[28px] w-1/3 mx-auto rounded-full"/>
+                        <Skeleton className="h-full w-1/3 mx-auto rounded-full"/>
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col items-center">
                     {/*Station Logo Image*/}
-                    <div className="w-32 h-32 mx-auto my-4 relative">
-                        <Skeleton className="h-[128px] w-[128px] rounded-md"/>
+                    <div className="fludidStationLogo mx-auto my-4 relative">
+                        <Skeleton className="w-full h-full rounded-md"/>
                     </div>
                     {/*Station Description*/}
-                    <div className="h-[72px] flex items-center w-full">
-                        <Skeleton className="h-9 w-1/2 mx-auto rounded-full"/>
+                    <div className="h-[52px] flex items-center w-full">
+                        <Skeleton className="h-6 w-1/2 mx-auto rounded-full"/>
                     </div>
                 </CardContent>
                 <CardFooter>
@@ -43,7 +45,11 @@ export default function StationLoading() {
                         <p className="text-muted-foreground font-bold animate-pulse">Loading Radio Station ...</p>
                     </div>
                 </CardFooter>
+                </div>
             </Card>
+            <div className="h-9 w-1/2 py-2 mx-auto">
+                <Skeleton className="h-full rounded-full"/>
+            </div>
         </>
     );
 }
