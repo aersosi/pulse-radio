@@ -157,9 +157,9 @@ export function usePlayer({ url, mediaType }: UsePlayerProps) {
             case "error":
                 return <p className="text-destructive/90">Error loading audio. Please reload the page.</p>;
             case "loading":
-                return <p className="text-green-500">Loading audio ...</p>;
+                return <p className="text-green-700">Loading audio ...</p>;
             case "adjusting":
-                return <p className="text-green-500">Adjusting volume ... ({volumePercentage}%)</p>;
+                return <p className="text-green-700">Adjusting volume ... ({volumePercentage}%)</p>;
             case "ready":
                 return <p>Enjoy your radio! Increase the volume if you like.</p>;
         }

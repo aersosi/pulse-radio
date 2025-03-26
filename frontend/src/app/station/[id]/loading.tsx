@@ -27,7 +27,7 @@ export default function StationLoading() {
                         <Skeleton className="h-full w-1/3 mx-auto rounded-full"/>
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="flex flex-col items-center">
+                <CardContent className="flex flex-col items-center py-[var(--step-8-24)]">
                     {/*Station Logo Image*/}
                     <div className="fludidStationLogo mx-auto my-4 relative">
                         <Skeleton className="w-full h-full rounded-md"/>
@@ -38,11 +38,11 @@ export default function StationLoading() {
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <div className="flex flex-col gap-8 items-center w-full">
+                    <div className="flex flex-col items-center w-full">
 
                         {/*Audio Player*/}
-                        <Skeleton className="h-[54px] w-[300px] rounded-full"/>
-                        <p className="text-muted-foreground animate-pulse">Loading Radio Station ...</p>
+                        <Skeleton className="h-[54px] w-[400px] rounded-full"/>
+                        <p className="text-muted-foreground animate-pulse py-4">Loading Radio Station ...</p>
                     </div>
                 </CardFooter>
                 </div>

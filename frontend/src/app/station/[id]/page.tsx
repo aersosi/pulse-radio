@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { getStationDetails } from "@/lib/api";
 import { Station } from "@/lib/definitions";
-import BtnToTop100 from "@/components/btn-to-home";
+import BtnToHome from "@/components/btn-to-home";
 import {
     Accordion,
     AccordionContent,
@@ -58,7 +58,7 @@ export default async function StationDetailPage({params}: {
 
     return (
         <>
-            <BtnToTop100/>
+            <BtnToHome/>
             <Card>
                 <div className="rounded-xl py-6 border shadow-sm">
 
@@ -67,10 +67,10 @@ export default async function StationDetailPage({params}: {
                         {station.topics ? (
                             <CardDescription className="text-xl">{station.topics}</CardDescription>
                         ) : (
-                            <p className="text-xl text-muted-foreground">No topics avalible</p>
+                            <p className="text-xl text-muted-foreground">Topics not avalible</p>
                         )}
                     </CardHeader>
-                    <CardContent className="flex flex-col items-center">
+                    <CardContent className="flex flex-col items-center py-[var(--step-8-24)]">
                         {station.logo && (
                             <Image
                                 src={station.logo || placeholderImage.src}
@@ -94,11 +94,11 @@ export default async function StationDetailPage({params}: {
                                 </AccordionItem>
                             </Accordion>
                         ) : (
-                            <div className="text-gray-600">Description not available</div>
+                            <p className="text-gray-600 text-sm py-4">Description not available</p>
                         )}
                     </CardContent>
                     <CardFooter>
-                        <div className="flex flex-col gap-8 items-center w-full">
+                        <div className="flex flex-col items-center w-full">
                             {station.streamUrl ? (
                                 station.streamUrl.includes('.m3u8') ? (
                                     <PlayerHLS url={station.streamUrl} title={station.name}/>

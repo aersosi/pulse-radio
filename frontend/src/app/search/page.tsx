@@ -4,6 +4,7 @@ import StationList from "@/components/station/station-list";
 import PaginationControls from "@/components/pagination-controls";
 import { ErrorPage } from "@/components/error-page";
 import { STATIONS_PER_PAGE } from "@/lib/constants";
+import BtnToHome from "@/components/btn-to-home";
 
 export default async function SearchPage({searchParams,}: {
     searchParams: Promise<{ q?: string; page?: string }>;
@@ -44,16 +45,20 @@ export default async function SearchPage({searchParams,}: {
     return (
         <>
             <div className="flex justify-between items-center gap-4 h-9">
-                <p>{`Station: ${totalCount > 0 ? offset + 1 : 0} - ${Math.min(
-                    offset + STATIONS_PER_PAGE,
-                    totalCount
-                )}`}
-                </p>
-                <p className="text-xl">
+                <BtnToHome></BtnToHome>
+                <p>
                     Search results for: &nbsp;
                     <span className="font-bold text-green-500">{query}</span>
                 </p>
-                <p>Found Stations: {totalCount}</p>
+                <div className="flex gap-4">
+                    <p>{`Station: ${totalCount > 0 ? offset + 1 : 0} - ${Math.min(
+                        offset + STATIONS_PER_PAGE,
+                        totalCount
+                    )}`}
+                    </p>
+                    <p>|</p>
+                    <p>Found Stations: {totalCount}</p>
+                </div>
             </div>
 
             <StationList stations={stations}/>
