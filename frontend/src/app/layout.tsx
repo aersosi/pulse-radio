@@ -8,6 +8,8 @@ import SearchBar from "@/components/search/search-bar";
 import placeholderImage from "public/images/no-image-available.webp"
 import pulseLogo from "public/images/pulse_logo_128.png"
 import "./globals.css";
+import { SpeedInsights } from "@vercel/speed-insights/next"
+
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -60,6 +62,7 @@ export default function RootLayout({children,}: Readonly<{
                 </header>
                 <main className="grow px-4 flex flex-col gap-6">
                     {children}
+                    <SpeedInsights />
                 </main>
                 <footer className="text-center text-sm p-4 text-muted-foreground transition hover:text-green-500">
                     Pulse Radio © Copyright {new Date().getFullYear()} by Arthur Ersosi. All rights reserved.
