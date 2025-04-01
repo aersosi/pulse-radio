@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
         const result = await getSearchResults(query, count, offset);
         return NextResponse.json(result);
     } catch (error) {
+        console.log(error);
         return new NextResponse(
             JSON.stringify({ error: 'Failed to fetch search results.' }),
             {

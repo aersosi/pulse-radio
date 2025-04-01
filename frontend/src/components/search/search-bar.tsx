@@ -26,24 +26,29 @@ export default function SearchBar({initialValue = ""}: { initialValue?: string }
         hasSearches,
     } = useRecentSearches();
 
-    const updateInputWidth = () => {
-        requestAnimationFrame(() => {
-            if (formRef.current) {
-                const newWidth = formRef.current.offsetWidth;
-                if (newWidth !== inputWidth) setInputWidth(newWidth);
-            }
-        });
-    };
-
     useEffect(() => {
-        updateInputWidth();
-        const resizeObserver = new ResizeObserver(updateInputWidth);
-        if (formRef.current) resizeObserver.observe(formRef.current);
-        window.addEventListener('resize', updateInputWidth);
+        const updateInputWidthInternal = () => {
+            requestAnimationFrame(() => {
+                if (formRef.current) {
+                    const newWidth = formRef.current.offsetWidth;
+                    setInputWidth((currentWidth) => {
+                        if (newWidth !== currentWidth) return newWidth;
+                        return currentWidth;
+                    });
+                }
+            });
+        };
+
+        updateInputWidthInternal();
+        const resizeObserver = new ResizeObserver(updateInputWidthInternal);
+        if (formRef.current) {
+            resizeObserver.observe(formRef.current);
+        }
+        window.addEventListener('resize', updateInputWidthInternal);
 
         return () => {
             resizeObserver.disconnect();
-            window.removeEventListener('resize', updateInputWidth);
+            window.removeEventListener('resize', updateInputWidthInternal);
         };
     }, []);
 
@@ -94,31 +99,31 @@ export default function SearchBar({initialValue = ""}: { initialValue?: string }
         <div ref={searchBarRef} className="relative flex grow items-center">
             <Popover open={showPopover}>
                 <PopoverTrigger asChild>
-                <form                         ref={formRef}
-                                              onSubmit={handleSubmit} className="w-full relative">
-                    <PopoverAnchor ref={inputRef} className="absolute bottom-0"/>
+                    <form ref={formRef}
+                          onSubmit={handleSubmit} className="w-full relative">
+                        <PopoverAnchor ref={inputRef} className="absolute bottom-0"/>
 
-                    <Input
-                        ref={inputRef}
-                        type="text"
-                        placeholder="Search stations..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onFocus={() => hasSearches && setShowPopover(true)}
-                        onClick={() => hasSearches && setShowPopover(true)}
-                        className="pl-4"
-                    />
-                    <Button
-                        type="submit"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-1 top-[2px] px-3 hover:bg-transparent"
-                    >
-                        <Search/>
-                        <span className="sr-only">Search</span>
-                    </Button>
-                </form>
-            </PopoverTrigger>
+                        <Input
+                            ref={inputRef}
+                            type="text"
+                            placeholder="Search stations..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onFocus={() => hasSearches && setShowPopover(true)}
+                            onClick={() => hasSearches && setShowPopover(true)}
+                            className="pl-4"
+                        />
+                        <Button
+                            type="submit"
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-1 top-[2px] px-3 hover:bg-transparent"
+                        >
+                            <Search/>
+                            <span className="sr-only">Search</span>
+                        </Button>
+                    </form>
+                </PopoverTrigger>
 
                 {hasSearches && showPopover && (
                     <RecentSearchesPopover
