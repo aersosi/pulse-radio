@@ -1,9 +1,7 @@
 import { getStations } from "@/lib/api";
+import { NextResponse } from "next/server";
 
 export async function GET() {
     const result = await getStations(100, 0);
-    return new Response(JSON.stringify(result.stations), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-    });
+    return NextResponse.json(result.stations);
 }
