@@ -9,6 +9,7 @@ import placeholderImage from "public/images/no-image-available.webp"
 import pulseLogo from "public/images/pulse_logo_128.png"
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/react"
 
 
 const geistSans = Geist({
@@ -63,6 +64,7 @@ export default function RootLayout({children,}: Readonly<{
                 <main className="grow px-4 flex flex-col gap-6">
                     {children}
                     <SpeedInsights />
+                    <Analytics />
                 </main>
                 <footer className="text-center text-sm p-4 text-muted-foreground transition hover:text-green-500">
                     Pulse Radio © Copyright {new Date().getFullYear()} by Arthur Ersosi. All rights reserved.
