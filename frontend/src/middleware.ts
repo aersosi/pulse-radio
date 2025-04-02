@@ -1,47 +1,34 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
-function isAllowedHost(request: NextRequest): boolean {
-    const requestHost = request.headers.get('host');
-    const isDevelopment = process.env.NEXT_PUBLIC_ENV === 'development';
+async function checkToken() {
+    const accessToken = process.env.VERCEL_ACCESS_TOKEN;
+    const projectID = process.env.VERCEL_PROJECT_ID;
 
-    const allowedHosts = [
-        process.env.VERCEL_URL,
-        process.env.APP_URL?.replace(/https?:\/\//, ''),
-    ].filter(Boolean);
-
-    if (isDevelopment && requestHost?.startsWith('localhost:')) {
-        console.log(`Allowed development host: ${requestHost}`);
-        return true;
+    try {
+        const response = await fetch(`https://api.vercel.com/v9/projects/${projectID}/env`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+        return response.ok;
+    } catch (error) {
+        console.error("Error checking Vercel token:", error);
+        return false;
     }
-
-    if (requestHost && allowedHosts.includes(requestHost)) {
-        console.log(`Allowed production host: ${requestHost}`);
-        return true;
-    }
-
-    console.log(`Denied host: ${requestHost}. Allowed hosts: ${allowedHosts.join(', ')}`);
-    return false;
 }
 
-export function middleware(request: NextRequest) {
-    if (request.nextUrl.pathname.startsWith('/api/')) {
-        if (!isAllowedHost(request)) {
-            return new NextResponse(
-                JSON.stringify({ error: 'Unauthorized: Access restricted to allowed hosts.' }),
-                {
-                    status: 401,
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-        }
+export async function middleware(req: NextRequest) {
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    const isTokenValid = await checkToken();
+
+    // redirect protected routes when not in development & invalid vercel token
+    if (!isDevelopment && !isTokenValid) {
+        return NextResponse.redirect(new URL("/", req.nextUrl.origin));
     }
 
     return NextResponse.next();
 }
 
 export const config = {
-    matcher: '/api/:path*',
+    matcher: ["/api/:path*"],
 };
