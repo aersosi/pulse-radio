@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import Hls from "hls.js";
 import { START_VOLUME, TARGET_VOLUME, VOLUME_CLIMB_DURATION } from "@/lib/constants";
 import { PlayerState, UsePlayerProps } from "@/lib/definitions";
@@ -139,7 +139,7 @@ export function usePlayer({ url, mediaType }: UsePlayerProps) {
         }
     }, [url, handleCanPlay, handleError, handlePlay]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         setPlayerState("loading");
 
         if (mediaType === "audio") {

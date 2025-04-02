@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useLayoutEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Input, Button } from "@/components/ui";
 import { Search } from "lucide-react";
@@ -26,8 +26,8 @@ export default function SearchBar({initialValue = ""}: { initialValue?: string }
         hasSearches,
     } = useRecentSearches();
 
-    useEffect(() => {
-        const updateInputWidthInternal = () => {
+    useLayoutEffect(() => {
+        const updateInputWidth = () => {
             requestAnimationFrame(() => {
                 if (formRef.current) {
                     const newWidth = formRef.current.offsetWidth;
@@ -39,20 +39,20 @@ export default function SearchBar({initialValue = ""}: { initialValue?: string }
             });
         };
 
-        updateInputWidthInternal();
-        const resizeObserver = new ResizeObserver(updateInputWidthInternal);
+        updateInputWidth();
+        const resizeObserver = new ResizeObserver(updateInputWidth);
         if (formRef.current) {
             resizeObserver.observe(formRef.current);
         }
-        window.addEventListener('resize', updateInputWidthInternal);
+        window.addEventListener('resize', updateInputWidth);
 
         return () => {
             resizeObserver.disconnect();
-            window.removeEventListener('resize', updateInputWidthInternal);
+            window.removeEventListener('resize', updateInputWidth);
         };
     }, []);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             if (
                 searchBarRef.current &&
