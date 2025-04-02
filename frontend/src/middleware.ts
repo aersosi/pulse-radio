@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 async function checkToken() {
     const accessToken = process.env.VERCEL_ACCESS_TOKEN;
@@ -17,13 +17,16 @@ async function checkToken() {
     }
 }
 
-export async function middleware(req: NextRequest) {
+export async function middleware() {
     const isDevelopment = process.env.NODE_ENV === 'development';
     const isTokenValid = await checkToken();
 
-    // redirect protected routes when not in development & invalid vercel token
+    // Return 401 for protected routes: if not in development & invalid vercel token
     if (!isDevelopment && !isTokenValid) {
-        return NextResponse.redirect(new URL("/", req.nextUrl.origin));
+        return NextResponse.json(
+            {error: "Unauthorized: Invalid or missing Vercel token"},
+            {status: 401}
+        );
     }
 
     return NextResponse.next();
