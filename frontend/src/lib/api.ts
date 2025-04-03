@@ -30,7 +30,7 @@ function handleApiError<T>(error: unknown, returnValue: T, errorDescription: str
 async function fetchWithCache<T>(
     url: string,
     defaultValue: T,
-    revalidateTime: number = 86400
+    revalidateTime: number = 86400 // 24h
 ): Promise<T> {
     try {
         const res = await fetch(url, {
@@ -73,7 +73,7 @@ function mapStation(stationData: APIStation | APIStationDetail, detailed: boolea
 async function getBlurDataURL(imageUrl: string) {
     const res = await fetch(imageUrl);
     const buffer = await res.arrayBuffer();
-    const { base64 } = await getPlaiceholder(Buffer.from(buffer));
+    const {base64} = await getPlaiceholder(Buffer.from(buffer));
     return base64;
 }
 
