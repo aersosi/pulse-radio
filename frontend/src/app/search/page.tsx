@@ -6,12 +6,11 @@ import { ErrorPage } from "@/components/error-page";
 import { STATIONS_PER_PAGE } from "@/lib/constants";
 import BtnToHome from "@/components/btn-to-home";
 
-export default async function SearchPage({searchParams,}: {
-    searchParams: Promise<{ q?: string; page?: string }>;
+export default async function SearchPage({searchParams}: {
+    searchParams: { q?: string; page?: string };
 }) {
-    const params = await searchParams;
-    const query = params.q || "";
-    const page = params.page ? parseInt(params.page) : 1;
+    const query = searchParams.q || "";
+    const page = searchParams.page ? parseInt(searchParams.page) : 1;
     const offset = (page - 1) * STATIONS_PER_PAGE;
 
     const {stations, totalCount} = await getSearchResults(

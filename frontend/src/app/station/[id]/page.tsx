@@ -23,8 +23,8 @@ import { ErrorPage } from "@/components/error-page";
 import placeholderImage from "public/images/no-image-available.webp"
 
 // Dynamic metadata based on station
-export async function generateMetadata({params}: { params: Promise<{ id: string }> }): Promise<Metadata> {
-    const {id} = await params;
+export async function generateMetadata({params}: { params: { id: string } }): Promise<Metadata> {
+    const {id} = params;
     const station = await getStationDetails(id);
 
     if (!station) {
@@ -40,10 +40,11 @@ export async function generateMetadata({params}: { params: Promise<{ id: string 
 }
 
 export default async function StationDetailPage({params}: {
-    params: Promise<{ id: string }>;
+    params: {
+        id: string;
+    };
 }) {
-    const {id} = await params;
-    const station: Station | null = await getStationDetails(id, 1000);
+    const station: Station | null = await getStationDetails(params.id, 1000);
 
     if (!station) {
         return (
