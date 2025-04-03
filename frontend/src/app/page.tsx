@@ -4,7 +4,8 @@ import PaginationControls from "@/components/pagination-controls";
 import { ErrorPage } from "@/components/error-page";
 import { STATIONS_PER_PAGE } from "@/lib/constants";
 
-export default async function Home({searchParams}: { searchParams: { page?: string } }) {
+export default async function Home(props: { searchParams: Promise<{ page?: string }> }) {
+    const searchParams = await props.searchParams;
     const page = searchParams.page ? parseInt(searchParams.page) : 1;
 
     const offset = (page - 1) * STATIONS_PER_PAGE;
