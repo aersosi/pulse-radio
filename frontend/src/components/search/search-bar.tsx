@@ -88,10 +88,15 @@ export default function SearchBar({initialValue = ""}: { initialValue?: string }
         removeSingleSearch(query);
     };
 
-    const handleClearAll = (e: React.MouseEvent) => {
+    const handleRemoveAllSearches = (e: React.MouseEvent) => {
         e.stopPropagation();
         clearAllSearches();
         setShowPopover(false);
+        inputRef.current?.focus();
+    };
+
+    const handleShowPopover = (): void => {
+        hasSearches && setShowPopover(true);
         inputRef.current?.focus();
     };
 
@@ -99,8 +104,7 @@ export default function SearchBar({initialValue = ""}: { initialValue?: string }
         <div ref={searchBarRef} className="relative flex grow items-center">
             <Popover open={showPopover}>
                 <PopoverTrigger asChild>
-                    <form ref={formRef}
-                          onSubmit={handleSubmit} className="w-full relative">
+                    <form ref={formRef} onSubmit={handleSubmit} className="w-full relative">
                         <PopoverAnchor ref={inputRef} className="absolute bottom-0"/>
 
                         <Input
@@ -109,15 +113,15 @@ export default function SearchBar({initialValue = ""}: { initialValue?: string }
                             placeholder="Search stations..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            onFocus={() => hasSearches && setShowPopover(true)}
-                            onClick={() => hasSearches && setShowPopover(true)}
-                            className="pl-4"
+                            onFocus={handleShowPopover}
+                            onClick={handleShowPopover}
+                            className="pl-3"
                         />
                         <Button
                             type="submit"
-                            variant="ghost"
-                            size="sm"
-                            className="absolute right-1 top-[2px] px-3 hover:bg-transparent"
+                            variant="ghostPulse"
+                            size="xs"
+                            className="absolute right-1 top-1"
                         >
                             <Search/>
                             <span className="sr-only">Search</span>
@@ -130,9 +134,9 @@ export default function SearchBar({initialValue = ""}: { initialValue?: string }
                         ref={popoverRef}
                         width={inputWidth}
                         recentSearches={recentSearches}
-                        onClearAll={handleClearAll}
-                        onSelect={selectSearch}
                         onRemove={handleremoveSingleSearch}
+                        onRemoveAll={handleRemoveAllSearches}
+                        onSelect={selectSearch}
                     />
                 )}
             </Popover>
