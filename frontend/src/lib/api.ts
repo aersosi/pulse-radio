@@ -1,16 +1,16 @@
 import {
     Station,
-    StationsResponse,
     APIStationResponse,
     APIStationDetailResponse,
     APIStation,
     APIStationDetail,
     ApiError,
+    SearchResult,
+    StationCollection, ErrorType,
 } from "@/lib/definitions";
-import { STATIONS_PER_PAGE, CACHE_TIMES } from "@/lib/constants";
+import { STATIONS_PER_PAGE, CACHE_TIMES, API_BASE } from "@/lib/constants";
 import { getPlaiceholder } from "plaiceholder";
-
-const API_BASE = "https://prod.radio-api.net/stations";
+import { searchSchema } from "@/lib/schemas";
 
 function handleApiError<T>(error: unknown, returnValue: T, errorDescription: string): T {
     if (error instanceof Error) {
@@ -69,7 +69,6 @@ function mapStation(stationData: APIStation | APIStationDetail, detailed: boolea
     };
 }
 
-
 async function getBlurDataURL(imageUrl: string) {
     const res = await fetch(imageUrl);
     const buffer = await res.arrayBuffer();
@@ -81,7 +80,7 @@ export async function getStations(
     count: number = STATIONS_PER_PAGE,
     offset: number = 0,
     delay: number | null = null
-): Promise<StationsResponse> {
+): Promise<StationCollection> {
     const data = await fetchWithCache<APIStationResponse>(
         `${API_BASE}/list-by-system-name?systemName=STATIONS_TOP&count=${count}&offset=${offset}`,
         {status: "error", timeStamp: new Date().toISOString(), totalCount: 0, playables: []},
@@ -108,7 +107,6 @@ export async function getStations(
     };
 }
 
-
 export async function getStationDetails(stationId: string, delay: number | null = null): Promise<Station | null> {
     const data = await fetchWithCache<APIStationDetailResponse>(
         `${API_BASE}/details?stationIds=${stationId}`,
@@ -126,28 +124,48 @@ export async function getStationDetails(stationId: string, delay: number | null 
 }
 
 export async function getSearchResults(
-    query: string,
-    count: number = STATIONS_PER_PAGE,
-    offset: number = 0
-): Promise<StationsResponse> {
+    rawQuery: unknown,
+    rawCount: unknown = STATIONS_PER_PAGE,
+    rawOffset: unknown = 0
+): Promise<SearchResult> {
     try {
+        const parsedInput = searchSchema.safeParse({
+            query: rawQuery,
+            count: rawCount,
+            offset: rawOffset,
+        });
+
+        // throw ZodError
+        if (!parsedInput.success) {
+            throw {
+                type: 'validation',
+                message: "Invalid search parameters",
+                details: parsedInput.error.errors
+            };
+        }
+
+        const {query, count, offset} = parsedInput.data;
         const data = await fetchWithCache<APIStationResponse>(
             `${API_BASE}/search?query=${encodeURIComponent(query)}&count=${count}&offset=${offset}`,
-            {status: "error", timeStamp: new Date().toISOString(), totalCount: 0, playables: []},
+            {
+                status: "error",
+                timeStamp: new Date().toISOString(),
+                totalCount: 0,
+                playables: []
+            },
             CACHE_TIMES.SEARCH_RESULTS
         );
 
-        // Stelle sicher, dass playables immer ein Array ist
+        // Process successful response
         const playables = data.playables || [];
-
-        // Wenn die Seite außerhalb des gültigen Bereichs liegt, gib leere Ergebnisse zurück
-        const totalPages = Math.ceil((data.totalCount || 0) / count);
+        const totalCount = data.totalCount || 0;
+        const totalPages = Math.ceil(totalCount / count);
         const currentPage = Math.floor(offset / count) + 1;
 
         if (currentPage > totalPages && totalPages > 0) {
             return {
                 stations: [],
-                totalCount: data.totalCount || 0
+                totalCount
             };
         }
 
@@ -163,13 +181,17 @@ export async function getSearchResults(
 
         return {
             stations,
-            totalCount: data.totalCount || 0
+            totalCount
         };
-    } catch (error) {
-        console.error('Error in getSearchResults:', error);
+
+    } catch (error: unknown) {
+        const err = error as ErrorType;
         return {
-            stations: [],
-            totalCount: 0
+            error: {
+                message: err.message ?? "Search failed",
+                details: err.details ?? error,
+                type: err.type ?? 'network'
+            }
         };
     }
 }

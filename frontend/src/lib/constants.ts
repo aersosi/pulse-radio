@@ -1,4 +1,5 @@
 export const STATIONS_PER_PAGE = 6;
+export const API_BASE = "https://prod.radio-api.net/stations";
 
 export const CACHE_TIMES = {
     STATION_DETAILS: 60 * 60 * 24 * 7, // 7 Tage

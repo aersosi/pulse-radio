@@ -96,7 +96,7 @@ export default function SearchBar({initialValue = ""}: { initialValue?: string }
     };
 
     const handleShowPopover = (): void => {
-        hasSearches && setShowPopover(true);
+        if (hasSearches) setShowPopover(true);
         inputRef.current?.focus();
     };
 

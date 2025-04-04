@@ -19,7 +19,7 @@ export function ErrorPage({title, description, backLinkText = "Back to overview"
             </div>
 
             {description && (
-                <p>{description}</p>
+                <p className="w-full max-w-3/4 truncate">{description}</p>
             )}
             <BtnToHome linkText={backLinkText} linkHref={backLinkHref}/>
         </div>

@@ -3,6 +3,11 @@ const nextConfig = {
     compiler: {
         removeConsole: process.env.NODE_ENV === "production",
     },
+    // logging: {
+    //     fetches: {
+    //         fullUrl: true,
+    //     },
+    // },
     images: {
         minimumCacheTTL: 86400,
         remotePatterns: [

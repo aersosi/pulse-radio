@@ -15,15 +15,12 @@ export async function GET(req: NextRequest) {
         const result = await getSearchResults(query, count, offset);
         return NextResponse.json(result);
     } catch (error) {
-        console.log(error);
         return new NextResponse(
-            JSON.stringify({ error: 'Failed to fetch search results.' }),
+            JSON.stringify({ error: 'Failed to fetch search results.', details: error  }),
             {
                 status: 500,
                 headers: { 'Content-Type': 'application/json' }
             }
         );
-
-
     }
 }

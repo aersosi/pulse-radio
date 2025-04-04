@@ -1,4 +1,6 @@
 // API response interfaces
+import { Station } from "@/lib/definitions/frontend";
+
 export type APIStation = {
     id: string;
     name: string;
@@ -31,3 +33,23 @@ export type ApiError = {
     statusCode?: number;
     endpoint?: string;
 }
+
+export type StationCollection = {
+    stations: Station[];
+    totalCount: number;
+    error?: never;
+};
+
+export type ErrorType = {
+    message: string;
+    details?: unknown;
+    type: 'validation' | 'api' | 'network' | 'auth' | 'timeout';
+};
+
+export type ErrorResponse = {
+    stations?: never;
+    totalCount?: never;
+    error: ErrorType
+};
+
+export type SearchResult = StationCollection | ErrorResponse;

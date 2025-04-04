@@ -5,7 +5,6 @@ import { Button } from "@/components/ui";
 import { X } from "lucide-react";
 import { RecentSearchItemProps } from "@/lib/definitions";
 
-
 export function RecentSearchItem({search, onSelect, onRemove}: RecentSearchItemProps) {
 
     const handleReturnSearchItem = (e: React.MouseEvent) => {
