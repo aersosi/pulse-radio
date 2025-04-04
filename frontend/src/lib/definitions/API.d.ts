@@ -41,9 +41,9 @@ export type StationCollection = {
 };
 
 export type ErrorType = {
+    type: 'validation' | 'api' | 'network' | 'auth' | 'timeout';
     message: string;
     details?: unknown;
-    type: 'validation' | 'api' | 'network' | 'auth' | 'timeout';
 };
 
 export type ErrorResponse = {

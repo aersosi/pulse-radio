@@ -2,9 +2,9 @@ export const STATIONS_PER_PAGE = 6;
 export const API_BASE = "https://prod.radio-api.net/stations";
 
 export const CACHE_TIMES = {
-    STATION_DETAILS: 60 * 60 * 24 * 7, // 7 Tage
-    STATION_LIST: 60 * 60 * 24,       // 24 Stunden
-    SEARCH_RESULTS: 60 * 60,          // 1 Stunde
+    ONE_HOUR: 60 * 60,
+    ONE_DAY: 60 * 60 * 24,
+    SEVEN_DAYS: 60 * 60 * 24 * 7,
 };
 
 export const MAX_RECENT_SEARCHES = 10;

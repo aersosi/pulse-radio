@@ -1,3 +1,5 @@
+import { CACHE_TIMES } from "@/lib/constants";
+
 const nextConfig = {
     output: "standalone",
     compiler: {
@@ -9,7 +11,7 @@ const nextConfig = {
     //     },
     // },
     images: {
-        minimumCacheTTL: 86400,
+        minimumCacheTTL: CACHE_TIMES.ONE_DAY,
         remotePatterns: [
             {
                 protocol: 'https',
