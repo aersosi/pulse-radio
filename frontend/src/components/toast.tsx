@@ -8,14 +8,19 @@ export function Toast({ error }: { error: ErrorType }) {
     useEffect(() => {
         let toastIds: (string | number)[] = [];
 
+        console.log(error)
         if (error.details && Array.isArray(error.details)) {
             // Show each validation error as separate toast with main message included
             error.details.forEach((err, index) => {
+
+                console.log(err)
+                console.log(err.message);
+
                 setTimeout(() => {
                     const errorMessage = (
                         <div>
-                            <p className="font-semibold">{error.message}</p>
-                            <p>{`${err.path.join('.')}: ${err.message}`}</p>
+                            <p className="font-semibold">{`${err.path.join('.').toUpperCase()}: ${error.message}`}</p>
+                            <p>{err.message}</p>
                         </div>
                     );
 

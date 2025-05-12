@@ -71,7 +71,7 @@ export async function getStations(
     rawCount: unknown = STATIONS_PER_PAGE,
     rawOffset: unknown = 0,
     delay: number | null = null
-): Promise<StationCollection | ErrorResponse> {
+): Promise<StationCollection | ErrorResponse | null> {
     try {
         const parsedInput = stationsSchema.safeParse({
             count: rawCount,
@@ -120,7 +120,6 @@ export async function getStations(
         const details = err.details ?? error;
 
         console.error(`Error in getStations [${type}]:`, message, details);
-
         return {
             error: { type, message, details }
         };
@@ -130,7 +129,7 @@ export async function getStations(
 export async function getStationDetails(
     rawStationId: unknown,
     delay: number | null = null
-): Promise<Station | null | ErrorResponse> {
+): Promise<Station | ErrorResponse | null> {
     try {
         const parsedInput = stationDetailsSchema.safeParse({
             stationId: rawStationId
@@ -167,7 +166,6 @@ export async function getStationDetails(
         const details = err.details ?? error;
 
         console.error(`Error in getStationDetails [${type}]:`, message, details);
-
         return {
             error: { type, message, details }
         };
@@ -228,7 +226,6 @@ export async function getSearchResults(
         const details = err.details ?? error;
 
         console.error(`Error in getSearchResults [${type}]:`, message, details);
-
         return {
             error: { type, message, details }
         };

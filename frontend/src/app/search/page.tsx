@@ -28,9 +28,9 @@ export default async function SearchPage(
     if ('error' in result && result.error) {
         return (
             <>
-                <Toast error={result.error}/>
+                <Toast error={result.error} />
                 <ErrorPage
-                    title="No stations found for:"
+                    title="No stations found for"
                     description={`${query}`}
                     backLinkText="Back to overview"
                     backLinkHref="/"
@@ -39,7 +39,7 @@ export default async function SearchPage(
         );
     }
 
-    const {stations, totalCount} = result;
+    const { stations, totalCount } = result;
     const totalPages = Math.ceil(totalCount / STATIONS_PER_PAGE);
 
     // Pagination issues
@@ -53,12 +53,14 @@ export default async function SearchPage(
     // No results
     if (!stations || stations.length === 0) {
         return (
-            <ErrorPage
-                title="No stations found for:"
-                description={`${query}`}
-                backLinkText="Back to overview"
-                backLinkHref="/"
-            />
+            <>
+                <ErrorPage
+                    title="No stations found for:"
+                    description={`${query}`}
+                    backLinkText="Back to overview"
+                    backLinkHref="/"
+                />
+            </>
         );
     }
 

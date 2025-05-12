@@ -115,7 +115,7 @@ export default function SearchBar({initialValue = ""}: { initialValue?: string }
                             onChange={(e) => setSearchQuery(e.target.value)}
                             onFocus={handleShowPopover}
                             onClick={handleShowPopover}
-                            className="pl-3"
+                            className="pl-3 pr-9 truncate"
                         />
                         <Button
                             type="submit"

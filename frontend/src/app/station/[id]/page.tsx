@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { getStationDetails } from "@/lib/api";
-import { Station } from "@/lib/definitions";
+import { ErrorResponse, Station } from "@/lib/definitions";
 import BtnToHome from "@/components/btn-to-home";
 import {
     Accordion,
@@ -26,7 +26,7 @@ import placeholderImage from "public/images/no-image-available.webp"
 export async function generateMetadata(props: { params: Promise<{ id: string }> }): Promise<Metadata> {
     const params = await props.params;
     const {id} = params;
-    const station = await getStationDetails(id);
+    const station: Station | ErrorResponse | null = await getStationDetails(id);
 
     if (!station) {
         return {
@@ -48,7 +48,7 @@ export default async function StationDetailPage(
     }
 ) {
     const params = await props.params;
-    const station: Station | null = await getStationDetails(params.id, 1000);
+    const station: Station | ErrorResponse | null = await getStationDetails(params.id, 1000);
 
     if (!station) {
         return (
@@ -66,7 +66,6 @@ export default async function StationDetailPage(
             <BtnToHome/>
             <Card>
                 <div className="rounded-xl py-6 border shadow-sm">
-
                     <CardHeader className="text-center">
                         <CardTitle className="text-4xl">{station.name}</CardTitle>
                         {station.topics ? (
