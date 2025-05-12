@@ -3,7 +3,7 @@
 **Global Radio Station Aggregator with Seamless Listening Experience**  
 Discover and enjoy thousands of radio stations from around the world with an intuitive, modern, and high-performance application.
 
-![Pulse-Radio Screenshot](https://github.com/aersosi/pulse-radio/blob/main/public/pulse-radio-screenshot.png?raw=true)
+![Pulse-Radio Screenshot](https://github.com/aersosi/pulse-radio/blob/development/pulseRadio_120525.png?raw=true)
 
 ## Project Description
 
