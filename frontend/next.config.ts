@@ -1,10 +1,17 @@
+import { CACHE_TIMES } from "@/lib/constants";
+
 const nextConfig = {
     output: "standalone",
     compiler: {
         removeConsole: process.env.NODE_ENV === "production",
     },
+    // logging: {
+    //     fetches: {
+    //         fullUrl: true,
+    //     },
+    // },
     images: {
-        minimumCacheTTL: 86400,
+        minimumCacheTTL: CACHE_TIMES.ONE_DAY,
         remotePatterns: [
             {
                 protocol: 'https',

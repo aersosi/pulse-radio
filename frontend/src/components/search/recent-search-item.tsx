@@ -1,30 +1,29 @@
 "use client";
 
+import React from "react";
 import { Button } from "@/components/ui";
 import { X } from "lucide-react";
+import { RecentSearchItemProps } from "@/lib/definitions";
 
-interface RecentSearchItemProps {
-    search: string;
-    onSelect: (query: string) => void;
-    onRemove: (e: React.MouseEvent, query: string) => void;
-}
+export function RecentSearchItem({search, onSelect, onRemove}: RecentSearchItemProps) {
 
-export function RecentSearchItem({ search, onSelect, onRemove }: RecentSearchItemProps) {
+    const handleReturnSearchItem = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        onRemove(e, search);
+    }
+
     return (
         <li
-            className="flex items-center justify-between pl-3 py-1 hover:bg-accent cursor-pointer rounded-md"
+            className="flex items-center justify-between pl-2 py-1 transition-colors hover:bg-accent [&:has(button:hover)]:bg-red-500/10 cursor-pointer rounded-md"
             onClick={() => onSelect(search)}
         >
             <span className="truncate">{search}</span>
             <Button
-                variant="ghost"
-                size="sm"
-                onClick={(e) => {
-                    e.stopPropagation();
-                    onRemove(e, search);
-                }}
-                className="hover:text-destructive-foreground"
+                variant="transparentDestructive"
+                size="xs"
+                onClick={handleReturnSearchItem}
             >
+
                 <X/>
                 <span className="sr-only">Remove</span>
             </Button>

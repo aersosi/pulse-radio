@@ -35,7 +35,7 @@ export function InlineError({title = "Error", description, onClose,}: InlineErro
             <AlertTitle>{title}</AlertTitle>
             {description && <AlertDescription>{description}</AlertDescription>}
             <Button
-                variant="ghost"
+                variant="ghostPulse"
                 size="sm"
                 className="absolute top-2 right-2 h-7 w-7 p-0"
                 onClick={handleClose}

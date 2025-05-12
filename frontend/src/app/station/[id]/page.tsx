@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { getStationDetails } from "@/lib/api";
-import { Station } from "@/lib/definitions";
+import { ErrorResponse, Station } from "@/lib/definitions";
 import BtnToHome from "@/components/btn-to-home";
 import {
     Accordion,
@@ -23,9 +23,10 @@ import { ErrorPage } from "@/components/error-page";
 import placeholderImage from "public/images/no-image-available.webp"
 
 // Dynamic metadata based on station
-export async function generateMetadata({params}: { params: Promise<{ id: string }> }): Promise<Metadata> {
-    const {id} = await params;
-    const station = await getStationDetails(id);
+export async function generateMetadata(props: { params: Promise<{ id: string }> }): Promise<Metadata> {
+    const params = await props.params;
+    const {id} = params;
+    const station: Station | ErrorResponse | null = await getStationDetails(id);
 
     if (!station) {
         return {
@@ -39,11 +40,15 @@ export async function generateMetadata({params}: { params: Promise<{ id: string 
     };
 }
 
-export default async function StationDetailPage({params}: {
-    params: Promise<{ id: string }>;
-}) {
-    const {id} = await params;
-    const station: Station | null = await getStationDetails(id, 1000);
+export default async function StationDetailPage(
+    props: {
+        params: Promise<{
+            id: string;
+        }>;
+    }
+) {
+    const params = await props.params;
+    const station: Station | ErrorResponse | null = await getStationDetails(params.id, 1000);
 
     if (!station) {
         return (
@@ -61,7 +66,6 @@ export default async function StationDetailPage({params}: {
             <BtnToHome/>
             <Card>
                 <div className="rounded-xl py-6 border shadow-sm">
-
                     <CardHeader className="text-center">
                         <CardTitle className="text-4xl">{station.name}</CardTitle>
                         {station.topics ? (

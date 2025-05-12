@@ -207,3 +207,7 @@ video {
     width: 100%;
     max-width: 400px;
 }
+
+[data-sonner-toast][data-type=error] .action-button {
+    background: var(--error-text) !important;
+}

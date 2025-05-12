@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useLayoutEffect } from "react";
 import { MAX_RECENT_SEARCHES, SEARCHES_STORAGE_KEY } from "@/lib/constants";
 
 export function useRecentSearches() {
     const [recentSearches, setRecentSearches] = useState<string[]>([]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const saved = localStorage.getItem(SEARCHES_STORAGE_KEY);
         if (saved) {
             try {

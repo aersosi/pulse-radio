@@ -1,53 +1,72 @@
 # Pulse-Radio
-## 🌍 Experience Radio Like Never Before with Pulse-Radio – Your Personal Radio Station Aggregator App!
 
-Listen to thousands of radio stations from around the world – from your local favorites to exotic sounds from distant lands. Enjoy a modern, fast, and intuitive listening experience.
+**Global Radio Station Aggregator with Seamless Listening Experience**  
+Discover and enjoy thousands of radio stations from around the world with an intuitive, modern, and high-performance application.
 
-### 🎧 Features
+![Pulse-Radio Screenshot](https://github.com/aersosi/pulse-radio/blob/main/public/pulse-radio-screenshot.png?raw=true)
 
-- ✅ **Global Access** – Listen to radio stations from all over the world – anytime, anywhere
-- ✅ **Smart Search** – Find topics and stations that interest you with keyword search
-- ✅ **Optimized Performance** – Smooth and fast user experience
-- ✅ **Modern UI** – Intuitive navigation for the best user experience
-- ✅ **Light & Dark Mode** – Energy-efficient and easy on the eyes
+## Project Description
 
----
+Pulse-Radio is a comprehensive web application that revolutionizes radio listening by providing global access to radio stations across different genres and regions. The platform solves the challenge of finding and enjoying diverse radio content by offering a user-friendly interface, smart search capabilities, and optimized performance. Designed for music enthusiasts, travelers, and radio lovers, Pulse-Radio makes discovering and listening to international radio stations effortless.
 
-### 🛠️ Technologies Used
+## Features
 
-- 📡 **Access to streams** via an open API
-- 🐳 **Dockerized** backend and frontend architecture
-- 🚀 **Configured for Vercel** deployment
-- ⚛️ **Next.js & React** – Powerful, modern web app
-- 🔒 **Type Safety** with TypeScript static typing
-- 📱 **Mobile First & Responsive Design** with Shadcn and Tailwind UI
-- 📊 **Strapi CMS** for flexible content management
-- 🧪 **Extensive Test Coverage** with Jest (unit tests)
+- **Global Access** – Listen to radio stations from all corners of the world, breaking geographical limitations.
+- **Smart Search** – Powerful keyword search to find stations by genre, location, language, or topic.
+- **Optimized Performance** – Smooth, fast, and responsive streaming experience with minimal buffering.
+- **Modern UI** – Intuitive and clean interface design for easy navigation and enjoyable user experience.
+- **Light & Dark Mode** – Adaptive theme options for comfortable listening in any environment.
+- **Responsive Design** – Seamless experience across desktop, tablet, and mobile devices.
 
----
+## Tech Stack
 
-### 🔗 Get Started
-
-📂 Clone the repository:
-```sh
- git clone https://github.com/aersosi/pulse-radio.git
-```
-
-📦 Install dependencies:
-```sh
- cd pulse-radio
- npm install
-```
-
-▶️ Run the app:
-```sh
- npm run dev
-```
+- **Frontend:** Next.js, React, TypeScript
+- **Styling:** Tailwind CSS, Shadcn UI
+- **Backend:** Dockerized architecture
+- **CMS:** Strapi
+- **Deployment:** Vercel
+- **Testing:** Jest
 
 ---
 
-### 📎 Links
-- 🔗 [GitHub Repository](https://github.com/aersosi/pulse-radio)
-- 🌐 Live Demo: *Coming soon!*
+## Local Development
 
-🚀 **Enjoy the best radio experience with Pulse-Radio!**
+Follow these steps to set up and run the project locally:
+
+1. **Clone the repository:**
+    ```bash
+    git clone https://github.com/aersosi/pulse-radio.git
+    cd pulse-radio
+    ```
+
+2. **Install dependencies:**
+    ```bash
+    npm install
+    # or
+    yarn install
+    # or
+    pnpm install
+    ```
+
+3. **Configure environment variables:**
+    * Create a `.env` file in the root directory
+    * Add necessary configuration settings (API keys, database connections, etc.)
+
+4. **Start the development server:**
+    ```bash
+    npm run dev
+    # or
+    yarn dev
+    # or
+    pnpm dev
+    ```
+
+5. **Open the application:**
+   Navigate to the URL shown in your terminal (usually `http://localhost:3000`)
+
+---
+
+## Useful Links
+
+- [GitHub Repository](https://github.com/aersosi/pulse-radio)
+- Live Demo: *Coming soon!*

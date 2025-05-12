@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useLayoutEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Input, Button } from "@/components/ui";
 import { Search } from "lucide-react";
@@ -26,19 +26,24 @@ export default function SearchBar({initialValue = ""}: { initialValue?: string }
         hasSearches,
     } = useRecentSearches();
 
-    const updateInputWidth = () => {
-        requestAnimationFrame(() => {
-            if (formRef.current) {
-                const newWidth = formRef.current.offsetWidth;
-                if (newWidth !== inputWidth) setInputWidth(newWidth);
-            }
-        });
-    };
+    useLayoutEffect(() => {
+        const updateInputWidth = () => {
+            requestAnimationFrame(() => {
+                if (formRef.current) {
+                    const newWidth = formRef.current.offsetWidth;
+                    setInputWidth((currentWidth) => {
+                        if (newWidth !== currentWidth) return newWidth;
+                        return currentWidth;
+                    });
+                }
+            });
+        };
 
-    useEffect(() => {
         updateInputWidth();
         const resizeObserver = new ResizeObserver(updateInputWidth);
-        if (formRef.current) resizeObserver.observe(formRef.current);
+        if (formRef.current) {
+            resizeObserver.observe(formRef.current);
+        }
         window.addEventListener('resize', updateInputWidth);
 
         return () => {
@@ -47,7 +52,7 @@ export default function SearchBar({initialValue = ""}: { initialValue?: string }
         };
     }, []);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             if (
                 searchBarRef.current &&
@@ -83,10 +88,15 @@ export default function SearchBar({initialValue = ""}: { initialValue?: string }
         removeSingleSearch(query);
     };
 
-    const handleClearAll = (e: React.MouseEvent) => {
+    const handleRemoveAllSearches = (e: React.MouseEvent) => {
         e.stopPropagation();
         clearAllSearches();
         setShowPopover(false);
+        inputRef.current?.focus();
+    };
+
+    const handleShowPopover = (): void => {
+        if (hasSearches) setShowPopover(true);
         inputRef.current?.focus();
     };
 
@@ -94,40 +104,39 @@ export default function SearchBar({initialValue = ""}: { initialValue?: string }
         <div ref={searchBarRef} className="relative flex grow items-center">
             <Popover open={showPopover}>
                 <PopoverTrigger asChild>
-                <form                         ref={formRef}
-                                              onSubmit={handleSubmit} className="w-full relative">
-                    <PopoverAnchor ref={inputRef} className="absolute bottom-0"/>
+                    <form ref={formRef} onSubmit={handleSubmit} className="w-full relative">
+                        <PopoverAnchor ref={inputRef} className="absolute bottom-0"/>
 
-                    <Input
-                        ref={inputRef}
-                        type="text"
-                        placeholder="Search stations..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onFocus={() => hasSearches && setShowPopover(true)}
-                        onClick={() => hasSearches && setShowPopover(true)}
-                        className="pl-4"
-                    />
-                    <Button
-                        type="submit"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-1 top-[2px] px-3 hover:bg-transparent"
-                    >
-                        <Search/>
-                        <span className="sr-only">Search</span>
-                    </Button>
-                </form>
-            </PopoverTrigger>
+                        <Input
+                            ref={inputRef}
+                            type="text"
+                            placeholder="Search stations..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onFocus={handleShowPopover}
+                            onClick={handleShowPopover}
+                            className="pl-3 pr-9 truncate"
+                        />
+                        <Button
+                            type="submit"
+                            variant="ghostPulse"
+                            size="xs"
+                            className="absolute right-1 top-1"
+                        >
+                            <Search/>
+                            <span className="sr-only">Search</span>
+                        </Button>
+                    </form>
+                </PopoverTrigger>
 
                 {hasSearches && showPopover && (
                     <RecentSearchesPopover
                         ref={popoverRef}
                         width={inputWidth}
                         recentSearches={recentSearches}
-                        onClearAll={handleClearAll}
-                        onSelect={selectSearch}
                         onRemove={handleremoveSingleSearch}
+                        onRemoveAll={handleRemoveAllSearches}
+                        onSelect={selectSearch}
                     />
                 )}
             </Popover>
