@@ -1,13 +1,14 @@
 # Pulse-Radio
 
 **Global Radio Station Aggregator with Seamless Listening Experience**  
-Discover and enjoy thousands of radio stations from around the world with an intuitive, modern, and high-performance application.
+Experience Radio Like Never Before with Pulse-Radio – Your Personal Radio Station Aggregator App!
 
 ![Pulse-Radio Screenshot](https://github.com/aersosi/pulse-radio/blob/development/pulseRadio_120525.png?raw=true)
 
 ## Project Description
 
-Pulse-Radio is a comprehensive web application that revolutionizes radio listening by providing global access to radio stations across different genres and regions. The platform solves the challenge of finding and enjoying diverse radio content by offering a user-friendly interface, smart search capabilities, and optimized performance. Designed for music enthusiasts, travelers, and radio lovers, Pulse-Radio makes discovering and listening to international radio stations effortless.
+Listen to thousands of radio stations from around the world – from your local favorites to exotic sounds from distant lands. 
+Enjoy a modern, fast, and intuitive listening experience.
 
 ## Features
 
