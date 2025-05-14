@@ -6,7 +6,7 @@ import { ErrorType } from "@/lib/definitions";
 
 export function Toast({ error }: { error: ErrorType }) {
     useEffect(() => {
-        let toastIds: (string | number)[] = [];
+        const toastIds: (string | number)[] = [];
 
         console.log(error)
         if (error.details && Array.isArray(error.details)) {

@@ -9,18 +9,21 @@ export default async function Home(props: { searchParams: Promise<{ page?: strin
     const page = searchParams.page ? parseInt(searchParams.page) : 1;
 
     const offset = (page - 1) * STATIONS_PER_PAGE;
-    const { stations, totalCount } = await getStations(STATIONS_PER_PAGE, offset);
+    const result = await getStations(STATIONS_PER_PAGE, offset);
 
-    if (!stations || stations.length === 0) {
+    // Check if the result is a StationCollection
+    if (!result || 'error' in result || !result.stations || result.stations.length === 0) {
         return (
-        <ErrorPage
-            title="Stations Not Found"
-            description="The stations you are looking for do not exist or are not available."
-            backLinkText="Back to overview"
-            backLinkHref="/"
-        />
+            <ErrorPage
+                title="Stations Not Found"
+                description="The stations you are looking for do not exist or are not available."
+                backLinkText="Back to overview"
+                backLinkHref="/"
+            />
         );
     }
+
+    const { stations, totalCount } = result;
 
     return (
         <>
@@ -29,8 +32,8 @@ export default async function Home(props: { searchParams: Promise<{ page?: strin
                 <p>Found Stations: {totalCount}</p>
             </div>
 
-            <StationList stations={stations}/>
-            <PaginationControls page={page} totalCount={totalCount}/>
+            <StationList stations={stations} />
+            <PaginationControls page={page} totalCount={totalCount} />
         </>
     );
 }

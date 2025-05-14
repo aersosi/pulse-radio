@@ -1,4 +1,4 @@
-import { getStationDetails, getStations } from "@/lib/api";
+import { getStationDetails } from "@/lib/api";
 import { NextRequest, NextResponse } from "next/server";
 import { isTooManyRequests } from "@/lib/utils";
 

@@ -15,30 +15,15 @@ import { searchSchema, stationDetailsSchema, stationsSchema } from "@/lib/schema
 
 async function fetchWithCache<T>(
     url: string,
-    revalidateTime: number = CACHE_TIMES.ONE_DAY // 24h
+    revalidateTime: number = CACHE_TIMES.ONE_DAY
 ): Promise<T> {
-    const res = await fetch(url, {
-        next: { revalidate: revalidateTime }
-    });
+    const res = await fetch(url, { next: { revalidate: revalidateTime } });
 
     if (!res.ok) {
-        const error = new Error(`API Error: ${res.status}`);
-        (error as any).statusCode = res.status;
-        (error as any).endpoint = url;
-        (error as any).type = 'api';
-        throw error;
+        throw new Error(`API Error: ${res.status} (${url})`);
     }
 
-    try {
-        return await res.json() as T;
-    } catch (jsonError) {
-        const error = new Error(`API Error: Failed to parse JSON response from ${url}`);
-         (error as any).statusCode = res.status; // Keep status
-         (error as any).endpoint = url;
-         (error as any).type = 'api'; // Mark as API/parsing error
-         (error as any).details = jsonError; // Add original parsing error
-         throw error;
-    }
+    return res.json();
 }
 
 function mapStation(stationData: APIStation | APIStationDetail, detailed: boolean = false): Station {
@@ -86,7 +71,7 @@ export async function getStations(
             };
         }
 
-        const { count, offset } = parsedInput.data;
+        const {count, offset} = parsedInput.data;
         const data = await fetchWithCache<APIStationResponse>(
             `${API_BASE}/list-by-system-name?systemName=STATIONS_TOP&count=${count}&offset=${offset}`,
             CACHE_TIMES.ONE_DAY
@@ -121,7 +106,7 @@ export async function getStations(
 
         console.error(`Error in getStations [${type}]:`, message, details);
         return {
-            error: { type, message, details }
+            error: {type, message, details}
         };
     }
 }
@@ -143,7 +128,7 @@ export async function getStationDetails(
             };
         }
 
-        const { stationId } = parsedInput.data;
+        const {stationId} = parsedInput.data;
         const data = await fetchWithCache<APIStationDetailResponse>(
             `${API_BASE}/details?stationIds=${stationId}`,
             CACHE_TIMES.SEVEN_DAYS
@@ -167,7 +152,7 @@ export async function getStationDetails(
 
         console.error(`Error in getStationDetails [${type}]:`, message, details);
         return {
-            error: { type, message, details }
+            error: {type, message, details}
         };
     }
 }
@@ -192,7 +177,7 @@ export async function getSearchResults(
             };
         }
 
-        const { query, count, offset } = parsedInput.data;
+        const {query, count, offset} = parsedInput.data;
         const data = await fetchWithCache<APIStationResponse>(
             `${API_BASE}/search?query=${encodeURIComponent(query)}&count=${count}&offset=${offset}`,
             CACHE_TIMES.ONE_HOUR
@@ -212,7 +197,7 @@ export async function getSearchResults(
             })
         );
 
-        return { stations, totalCount };
+        return {stations, totalCount};
 
     } catch (error: unknown) {
         const err = error as Partial<ErrorType> & {
@@ -227,7 +212,7 @@ export async function getSearchResults(
 
         console.error(`Error in getSearchResults [${type}]:`, message, details);
         return {
-            error: { type, message, details }
+            error: {type, message, details}
         };
     }
 }

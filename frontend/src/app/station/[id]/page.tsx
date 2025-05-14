@@ -25,10 +25,10 @@ import placeholderImage from "public/images/no-image-available.webp"
 // Dynamic metadata based on station
 export async function generateMetadata(props: { params: Promise<{ id: string }> }): Promise<Metadata> {
     const params = await props.params;
-    const {id} = params;
+    const { id } = params;
     const station: Station | ErrorResponse | null = await getStationDetails(id);
 
-    if (!station) {
+    if (!station || 'error' in station) {
         return {
             title: 'Station not found',
         };
@@ -50,7 +50,7 @@ export default async function StationDetailPage(
     const params = await props.params;
     const station: Station | ErrorResponse | null = await getStationDetails(params.id, 1000);
 
-    if (!station) {
+    if (!station || 'error' in station) {
         return (
             <ErrorPage
                 title="Station Not Found"

@@ -29,11 +29,6 @@ export type APIStreamItem = {
     bitrate?: number;
 }
 
-export type ApiError = {
-    statusCode?: number;
-    endpoint?: string;
-}
-
 export type StationCollection = {
     stations: Station[];
     totalCount: number;

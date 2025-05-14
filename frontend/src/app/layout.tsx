@@ -8,8 +8,8 @@ import SearchBar from "@/components/search/search-bar";
 import placeholderImage from "public/images/no-image-available.webp"
 import pulseLogo from "public/images/pulse_logo_128.png"
 import "./globals.css";
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import { Analytics } from "@vercel/analytics/react"
+// import { SpeedInsights } from "@vercel/speed-insights/next"
+// import { Analytics } from "@vercel/analytics/react"
 import { Toaster } from "@/components/ui/sonner"
 
 
