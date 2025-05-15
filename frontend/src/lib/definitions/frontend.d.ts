@@ -1,9 +1,17 @@
+import { APIStreamItem } from "@/lib/definitions/API";
+
 export type Station = {
     id: string;
     name: string;
-    logo: string;
-    blurDataURL: string | null;
+    logo300x300?: string;
     topics: string | null;
+
+    city?: string | null;
+    country?: string | null;
+    strikingColor1?: string | null;
+    strikingColor2?: string | null;
+
+    blurDataURL: string | null;
     description?: string | null;
     streamUrl?: string | null;
 }

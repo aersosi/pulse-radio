@@ -6,9 +6,14 @@ export type APIStation = {
     name: string;
     logo300x300?: string | null;
     topics?: string[] | null;
+    city?: string;
+    country?: string;
+    strikingColor1?: string;
+    strikingColor2?: string;
 }
 
 export type APIStationDetail = APIStation & {
+
     description?: string | null;
     shortDescription?: string | null;
     streams?: APIStreamItem[] | null;
@@ -21,7 +26,6 @@ export type APIStationResponse = {
     totalCount?: number;
 }
 
-export type APIStationDetailResponse = APIStationDetail[];
 
 export type APIStreamItem = {
     url: string;

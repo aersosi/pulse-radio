@@ -75,9 +75,9 @@ export default async function StationDetailPage(
                         )}
                     </CardHeader>
                     <CardContent className="flex flex-col items-center py-[var(--step-8-24)]">
-                        {station.logo && (
+                        {station.logo300x300 && (
                             <Image
-                                src={station.logo || placeholderImage.src}
+                                src={station.logo300x300 || placeholderImage.src}
                                 alt={station.name ? station.name : "No image available"}
                                 placeholder={station.blurDataURL ? "blur" : undefined}
                                 blurDataURL={station.blurDataURL || undefined}

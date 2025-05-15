@@ -1,8 +1,7 @@
 import {
     APIStation,
     APIStationDetail,
-    APIStationDetailResponse,
-    APIStationResponse,
+    APIStationResponse, APIStreamItem,
     ErrorResponse,
     ErrorType,
     SearchResult,
@@ -30,7 +29,11 @@ function mapStation(stationData: APIStation | APIStationDetail, detailed: boolea
     const station: Station = {
         id: stationData.id,
         name: stationData.name,
-        logo: stationData.logo300x300 ?? "",
+        city: stationData.city || null,
+        country: stationData.country || null,
+        strikingColor1: stationData.strikingColor1 || null,
+        strikingColor2: stationData.strikingColor2 || null,
+        logo300x300: stationData.logo300x300 ?? "",
         topics: stationData.topics?.join(", ") || null,
         blurDataURL: null
     };
@@ -38,8 +41,10 @@ function mapStation(stationData: APIStation | APIStationDetail, detailed: boolea
     if (!detailed) return station;
 
     const detailData = stationData as APIStationDetail;
+
     return {
         ...station,
+
         description: detailData.description || detailData.shortDescription || null,
         streamUrl: detailData.streams?.[0]?.url || null,
     };
@@ -85,8 +90,8 @@ export async function getStations(
         const stations = await Promise.all(
             playables.map(async (item) => {
                 const mappedStation = mapStation(item);
-                mappedStation.blurDataURL = mappedStation.logo
-                    ? await getBlurDataURL(mappedStation.logo)
+                mappedStation.blurDataURL = mappedStation.logo300x300
+                    ? await getBlurDataURL(mappedStation.logo300x300)
                     : null;
                 return mappedStation;
             })
@@ -129,7 +134,7 @@ export async function getStationDetails(
         }
 
         const {stationId} = parsedInput.data;
-        const data = await fetchWithCache<APIStationDetailResponse>(
+        const data = await fetchWithCache<APIStationDetail[]>(
             `${API_BASE}/details?stationIds=${stationId}`,
             CACHE_TIMES.SEVEN_DAYS
         );
@@ -190,8 +195,8 @@ export async function getSearchResults(
         const stations = await Promise.all(
             playables.map(async (item) => {
                 const mappedStation = mapStation(item);
-                mappedStation.blurDataURL = mappedStation.logo
-                    ? await getBlurDataURL(mappedStation.logo)
+                mappedStation.blurDataURL = mappedStation.logo300x300
+                    ? await getBlurDataURL(mappedStation.logo300x300)
                     : null;
                 return mappedStation;
             })

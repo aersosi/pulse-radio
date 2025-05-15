@@ -56,6 +56,9 @@ export default function RootLayout({children,}: Readonly<{
                             />
                             <h1 className="text-2xl font-bold">Pulse Radio</h1>
                         </Link>
+                        <Toaster duration={100000} expand={true} toastOptions={{
+                            classNames: {actionButton: 'action-button',},
+                        }} richColors/>
                     </div>
                     <div className="flex gap-2 grow md:grow-0 md:w-1/2">
                         <SearchBar/>
@@ -66,9 +69,6 @@ export default function RootLayout({children,}: Readonly<{
                     {children}
                     {/*<SpeedInsights />*/}
                     {/*<Analytics />*/}
-                    <Toaster duration={100000} expand={true} toastOptions={{
-                        classNames: {actionButton: 'action-button',},
-                    }} richColors/>
                 </main>
                 <footer className="text-center text-sm p-4 text-muted-foreground transition hover:text-green-500">
                     Pulse Radio © Copyright {new Date().getFullYear()} by Arthur Ersosi. All rights reserved.

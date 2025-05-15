@@ -11,16 +11,18 @@
 }
 
 :root {
-    /* Break-zone: 1024px → 2560 */
+    /* Break-zone: 1024px → 2560px */
 
     /* 0px → 2080px */
     --fluid-container: clamp(64rem, 20rem + 68.75vw, 130rem);
 
     /* 80px-120px */
-    --fluid-station-logo: clamp(5rem, 3.3333rem + 2.6042vw, 7.5rem);
+    --fluid-station-logo-80: clamp(5rem, 3.3333rem + 2.6042vw, 7.5rem);
+    /* 60px → 100px */
+    --fluid-station-logo-60: clamp(3.75rem, 2.0833rem + 2.6042vw, 6.25rem);
+
     /* 16px → 32px */
     --fluid-play-icon: clamp(1rem, 0.3333rem + 1.0417vw, 2rem);
-
     --step-8-32: clamp(0.5rem, -0.1667rem + 1.0417vw, 1.5rem);
 }
 
@@ -65,8 +67,8 @@
 }
 
 .fludidStationLogo {
-    width: var(--fluid-station-logo);
-    height: var(--fluid-station-logo);
+    width: var(--fluid-station-logo-80);
+    height: var(--fluid-station-logo-80);
 }
 
 .fludidPlayIcon {
