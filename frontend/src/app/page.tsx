@@ -27,7 +27,7 @@ export default async function Home(props: { searchParams: Promise<{ page?: strin
 
     return (
         <>
-            <div className="flex justify-between items-center gap-4 h-9">
+            <div className="flex justify-between items-center gap-4 h-8">
                 <p>{`Station: ${offset + 1} - ${Math.min(offset + STATIONS_PER_PAGE, totalCount)}`}</p>
                 <p>Found Stations: {totalCount}</p>
             </div>

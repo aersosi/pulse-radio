@@ -47,7 +47,7 @@ export default function StationLoading() {
                 </CardFooter>
                 </div>
             </Card>
-            <div className="h-9 w-1/2 py-2 mx-auto">
+            <div className="h-8 w-1/2 py-2 mx-auto">
                 <Skeleton className="h-full rounded-full"/>
             </div>
         </>

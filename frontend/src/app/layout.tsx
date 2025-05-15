@@ -65,7 +65,7 @@ export default function RootLayout({children,}: Readonly<{
                         <ThemeDropdown></ThemeDropdown>
                     </div>
                 </header>
-                <main className="grow px-4 flex flex-col gap-6">
+                <main className="grow px-4 flex flex-col gap-4">
                     {children}
                     {/*<SpeedInsights />*/}
                     {/*<Analytics />*/}

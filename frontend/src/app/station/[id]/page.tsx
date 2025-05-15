@@ -119,7 +119,7 @@ export default async function StationDetailPage(
                     </CardFooter>
                 </div>
             </Card>
-            <p className="flex items-center h-9 text-center break-all max-w-3/4 text-muted-foreground text-sm mx-auto">{station.streamUrl}</p>
+            <p className="flex items-center h-8 text-center break-all max-w-3/4 text-muted-foreground text-sm mx-auto">{station.streamUrl}</p>
         </>
     );
 }
