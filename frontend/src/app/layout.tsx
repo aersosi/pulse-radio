@@ -43,7 +43,7 @@ export default function RootLayout({children,}: Readonly<{
             <div className="fludidContainer grow mx-auto flex flex-col">
                 <header className="flex flex-col sm:flex-row gap-4 p-4 justify-between ">
                     <div className="flex gap-4 items-center">
-                        <Link href={"/"} className="flex gap-3">
+                        <Link href={"/"} className="flex gap-3 transition hover:text-primary">
                             <Image
                                 className="w-8 h-8"
                                 src={pulseLogo.src || placeholderImage.src}
@@ -70,7 +70,7 @@ export default function RootLayout({children,}: Readonly<{
                     {/*<SpeedInsights />*/}
                     {/*<Analytics />*/}
                 </main>
-                <footer className="text-center text-sm p-4 text-muted-foreground transition hover:text-green-500">
+                <footer className="text-center text-sm p-4 text-muted-foreground">
                     Pulse Radio © Copyright {new Date().getFullYear()} by Arthur Ersosi. All rights reserved.
                 </footer>
             </div>

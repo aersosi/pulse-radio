@@ -3,7 +3,7 @@ import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
-const pulseBG = "hover:bg-green-500/10"
+const pulseBG = "hover:bg-primary/10"
 const pulseText = "hover:text-green-600"
 const pulseOutline = "hover:border-green-600/30"
 const destructiveBG = "hover:bg-red-500/10"
@@ -16,7 +16,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          `bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 hover:text-green-500`,
+          `bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 hover:text-primary`,
         destructive:
           `bg-destructive text-white shadow-xs hover:bg-destructive/90 hover:text-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40`,
         outline:

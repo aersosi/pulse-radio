@@ -70,7 +70,7 @@ export default async function SearchPage(
                 <BtnToHome></BtnToHome>
                 <p>
                     Search results for: &nbsp;
-                    <span className="font-bold text-green-500 truncate">{query}</span>
+                    <span className="font-bold text-primary truncate">{query}</span>
                 </p>
                 <div className="flex gap-4">
                     <p>{`Station: ${totalCount > 0 ? offset + 1 : 0} - ${Math.min(
