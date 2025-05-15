@@ -38,7 +38,7 @@ export default function StationCard({station}: { station: Station }) {
                             </div>
                             <div className="relative fludidStationLogo">
                                 <div
-                                    className={`placeholderBG ${styles.placeholderBG} ${bgColor} outline-3 ${outlineColor} ${borderColor}`}/>
+                                    className={`placeholderBG ${styles.placeholderBG} ${bgColor} outline-3 ${outlineColor} `}/>
                                 <Image
                                     priority={true}
                                     src={station.logo300x300 || placeholderImage.src}

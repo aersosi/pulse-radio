@@ -1,6 +1,9 @@
 .stationCard {
     --time: 0.2s;
 
+    .fludidStationLogo {
+    }
+
     .placeholderBG {
         position: absolute;
         inset: 5px;
