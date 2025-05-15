@@ -38,6 +38,7 @@ export default function StationCard({station}: { station: Station }) {
                             </div>
                             <div className={`border ${borderColor} relative fludidStationLogo rounded-md`}>
                                 <Image
+                                    priority={true}
                                     src={station.logo300x300 || placeholderImage.src}
                                     alt={station.name ? station.name : "No station name available"}
                                     placeholder={station.blurDataURL ? "blur" : undefined}

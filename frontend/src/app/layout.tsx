@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { ThemeProvider } from "@/components/theme-provider"
@@ -33,6 +34,13 @@ export default function RootLayout({children,}: Readonly<{
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
+        <Head>
+            <link
+                rel="preconnect"
+                href="https://station-images-prod.radio-assets.com"
+                crossOrigin="anonymous"
+            />
+        </Head>
         <body className={`${geistSans.variable} antialiased flex flex-col`}>
         <ThemeProvider
             attribute="class"
