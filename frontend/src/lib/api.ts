@@ -9,7 +9,6 @@ import {
     StationCollection,
 } from "@/lib/definitions";
 import { API_BASE, CACHE_TIMES, STATIONS_PER_PAGE } from "@/lib/constants";
-import { getPlaiceholder } from "plaiceholder";
 import { searchSchema, stationDetailsSchema, stationsSchema } from "@/lib/schemas";
 
 async function fetchWithCache<T>(
