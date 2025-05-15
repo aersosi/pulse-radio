@@ -53,14 +53,13 @@ export default function RootLayout({children,}: Readonly<{
                     <div className="flex gap-4 items-center">
                         <Link href={"/"} className="flex gap-3 transition hover:text-primary">
                             <Image
+                                priority={true}
                                 className="w-8 h-8"
                                 src={pulseLogo.src || placeholderImage.src}
                                 alt={pulseLogo.src ? "Pulse radio logo" : "No image available"}
                                 width={128}
                                 height={128}
                                 sizes="32px"
-                                placeholder="blur"
-                                blurDataURL={pulseLogo.blurDataURL}
                             />
                             <h1 className="text-2xl font-bold">Pulse Radio</h1>
                         </Link>

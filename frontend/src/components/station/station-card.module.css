@@ -1,50 +1,40 @@
 .stationCard {
+    --time: 0.2s;
+
+    .placeholderBG {
+        position: absolute;
+        inset: 5px;
+        transition: all var(--time) ease-in-out;
+        border-radius: calc(var(--radius) - 2px);
+    }
+
     .stationLogo {
-        transition: filter 0.3s ease-in-out, opacity 0.3s ease-in-out, padding 0.2s ease-in-out;
+        transition: all var(--time) ease-in-out;
         position: relative;
-        padding: 4px;
+        border-radius: calc(var(--radius) - 2px);
     }
 
     .playIcon {
-        transition: opacity 0.3s ease-in-out;
+        transition: opacity var(--time) ease-in-out;
         opacity: 0;
-        transform: scale(1);
     }
 
     &:hover {
+        .placeholderBG {
+            border-radius: 100%;
+            inset: 10px;
+        }
+
         .stationLogo {
-            filter: grayscale(100%) brightness(50%);
-            opacity: 0.75;
-            padding: 0;
+            opacity: 0;
+            padding: 6px;
+            border-radius: 100%;
         }
 
         .playIcon {
-            color: white;
             opacity: 1;
-            animation: scale 0.2s ease-out forwards;
-            animation-delay: 0.1s;
         }
     }
 
-    &:not(:hover) .playIcon {
-        animation: scaleReverse 0.2s ease-in forwards;
-    }
 }
 
-@keyframes scale {
-    0% {
-        transform: scale(1);
-    }
-    100% {
-        transform: scale(1.2);
-    }
-}
-
-@keyframes scaleReverse {
-    0% {
-        transform: scale(1.2);
-    }
-    100% {
-        transform: scale(1);
-    }
-}

@@ -2,7 +2,7 @@ export function lightenHexColor(
     hex: string,
     lightnessAmount: number = 0.2,
     saturationAmount: number = 0
-): [string, string, string] {
+): [string, string, string, string, string] {
     hex = hex.replace(/^#/, '');
 
     if (hex.length === 3) {
@@ -48,9 +48,11 @@ export function lightenHexColor(
     const sPerc = Math.round(s * 100);
     const lPerc = Math.round(l * 100);
 
-    const isBright = 62; // todo: magic number must be some real contrast-check
-    const textColor = lPerc <= isBright ? "text-white" : "text-black";
-    const borderColor = lPerc <= isBright ? "border-white/30" : "border-black/30";
+    const isBright = lPerc <= 62; // todo: magic number must be some real contrast-check
+    const textColor = isBright ? "text-white" : "text-black";
+    const bgColor = isBright ? "bg-white/30" : "bg-black/30";
+    const outlineColor = isBright ? "outline-white" : "outline-black";
+    const borderColor = isBright ? "border-white/30" : "border-black/30";
 
-    return [textColor, borderColor, `hsl(${hDeg}, ${sPerc}%, ${lPerc}%)`];
+    return [textColor, bgColor, borderColor, outlineColor, `hsl(${hDeg}, ${sPerc}%, ${lPerc}%)`];
 }

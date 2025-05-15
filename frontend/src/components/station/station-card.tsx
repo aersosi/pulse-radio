@@ -13,7 +13,7 @@ import { Play } from "lucide-react";
 
 export default function StationCard({station}: { station: Station }) {
     const hasColor = station.strikingColor1 ? station.strikingColor1 : "#cdcdcd";
-    const [textColor, borderColor, gradientColorLight] = lightenHexColor(`${hasColor}`, 0.2, -0.1);
+    const [textColor, bgColor, borderColor, outlineColor, gradientColorLight] = lightenHexColor(`${hasColor}`, 0.2, -0.1);
     const gradient = {
         backgroundImage: `radial-gradient(
         at top right,
@@ -36,14 +36,13 @@ export default function StationCard({station}: { station: Station }) {
                                 <p className="2xl:text-lg">{station.country}</p>
                                 <p className="text-lg 2xl:text-2xl font-semibold">{station.city}</p>
                             </div>
-                            <div className={`border ${borderColor} relative fludidStationLogo rounded-md`}>
+                            <div className="relative fludidStationLogo">
+                                <div
+                                    className={`placeholderBG ${styles.placeholderBG} ${bgColor} outline-3 ${outlineColor} ${borderColor}`}/>
                                 <Image
                                     priority={true}
                                     src={station.logo300x300 || placeholderImage.src}
                                     alt={station.name ? station.name : "No station name available"}
-                                    placeholder={station.blurDataURL ? "blur" : undefined}
-                                    blurDataURL={station.blurDataURL || undefined}
-                                    data-url={station.blurDataURL || undefined}
                                     width={300}
                                     height={300}
                                     sizes="80px"

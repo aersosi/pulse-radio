@@ -35,7 +35,6 @@ function mapStation(stationData: APIStation | APIStationDetail, detailed: boolea
         strikingColor2: stationData.strikingColor2 || null,
         logo300x300: stationData.logo300x300 ?? "",
         topics: stationData.topics?.join(", ") || null,
-        blurDataURL: null
     };
 
     if (!detailed) return station;
@@ -48,13 +47,6 @@ function mapStation(stationData: APIStation | APIStationDetail, detailed: boolea
         description: detailData.description || detailData.shortDescription || null,
         streamUrl: detailData.streams?.[0]?.url || null,
     };
-}
-
-async function getBlurDataURL(imageUrl: string) {
-    const res = await fetch(imageUrl);
-    const buffer = await res.arrayBuffer();
-    const {base64} = await getPlaiceholder(Buffer.from(buffer));
-    return base64;
 }
 
 export async function getStations(
@@ -76,7 +68,7 @@ export async function getStations(
             };
         }
 
-        const {count, offset} = parsedInput.data;
+        const { count, offset } = parsedInput.data;
         const data = await fetchWithCache<APIStationResponse>(
             `${API_BASE}/list-by-system-name?systemName=STATIONS_TOP&count=${count}&offset=${offset}`,
             CACHE_TIMES.ONE_DAY
@@ -87,31 +79,21 @@ export async function getStations(
         }
 
         const playables = data.playables || [];
-        const stations = await Promise.all(
-            playables.map(async (item) => {
-                const mappedStation = mapStation(item);
-                mappedStation.blurDataURL = mappedStation.logo300x300
-                    ? await getBlurDataURL(mappedStation.logo300x300)
-                    : null;
-                return mappedStation;
-            })
-        );
+        const stations = playables.map(item => mapStation(item));
 
         return {
             stations,
             totalCount: data.totalCount || 0
         };
-
     } catch (error: unknown) {
         const err = error as Partial<ErrorType> & { statusCode?: number; endpoint?: string; details?: unknown };
-
         const type = err.type ?? 'network';
         const message = err.message ?? "Failed to fetch stations";
         const details = err.details ?? error;
 
         console.error(`Error in getStations [${type}]:`, message, details);
         return {
-            error: {type, message, details}
+            error: { type, message, details }
         };
     }
 }
@@ -182,28 +164,18 @@ export async function getSearchResults(
             };
         }
 
-        const {query, count, offset} = parsedInput.data;
+        const { query, count, offset } = parsedInput.data;
         const data = await fetchWithCache<APIStationResponse>(
             `${API_BASE}/search?query=${encodeURIComponent(query)}&count=${count}&offset=${offset}`,
             CACHE_TIMES.ONE_HOUR
         );
 
-        // Process successful response
         const playables = data.playables || [];
         const totalCount = data.totalCount || 0;
 
-        const stations = await Promise.all(
-            playables.map(async (item) => {
-                const mappedStation = mapStation(item);
-                mappedStation.blurDataURL = mappedStation.logo300x300
-                    ? await getBlurDataURL(mappedStation.logo300x300)
-                    : null;
-                return mappedStation;
-            })
-        );
+        const stations = playables.map(item => mapStation(item));
 
-        return {stations, totalCount};
-
+        return { stations, totalCount };
     } catch (error: unknown) {
         const err = error as Partial<ErrorType> & {
             statusCode?: number;
@@ -217,7 +189,7 @@ export async function getSearchResults(
 
         console.error(`Error in getSearchResults [${type}]:`, message, details);
         return {
-            error: {type, message, details}
+            error: { type, message, details }
         };
     }
 }

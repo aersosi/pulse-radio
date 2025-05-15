@@ -9,7 +9,6 @@ export type Station = {
     strikingColor1?: string | null;
     strikingColor2?: string | null;
 
-    blurDataURL: string | null;
     description?: string | null;
     streamUrl?: string | null;
 }

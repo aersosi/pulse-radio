@@ -80,8 +80,6 @@ export default async function StationDetailPage(
                                 priority={true}
                                 src={station.logo300x300 || placeholderImage.src}
                                 alt={station.name ? station.name : "No image available"}
-                                placeholder={station.blurDataURL ? "blur" : undefined}
-                                blurDataURL={station.blurDataURL || undefined}
                                 width={300}
                                 height={300}
                                 sizes="128px"
