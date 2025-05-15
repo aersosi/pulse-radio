@@ -1,5 +1,3 @@
-import { APIStreamItem } from "@/lib/definitions/API";
-
 export type Station = {
     id: string;
     name: string;

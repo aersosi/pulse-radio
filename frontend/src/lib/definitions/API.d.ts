@@ -13,7 +13,6 @@ export type APIStation = {
 }
 
 export type APIStationDetail = APIStation & {
-
     description?: string | null;
     shortDescription?: string | null;
     streams?: APIStreamItem[] | null;

@@ -4,9 +4,7 @@ import { Station } from "@/lib/definitions";
 import {
     Card,
     CardContent,
-    CardFooter,
     CardHeader,
-    CardTitle,
 } from "@/components/ui";
 import placeholderImage from "../../../public/images/no-image-available.webp";
 import styles from "./station-card.module.css";

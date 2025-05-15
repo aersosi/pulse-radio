@@ -1,7 +1,7 @@
 import {
     APIStation,
     APIStationDetail,
-    APIStationResponse, APIStreamItem,
+    APIStationResponse,
     ErrorResponse,
     ErrorType,
     SearchResult,
