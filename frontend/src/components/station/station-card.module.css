@@ -1,0 +1,43 @@
+.stationCard {
+    --time: 0.2s;
+
+    .fludidStationLogo {
+    }
+
+    .placeholderBG {
+        position: absolute;
+        inset: 5px;
+        transition: all var(--time) ease-in-out;
+        border-radius: calc(var(--radius) - 2px);
+    }
+
+    .stationLogo {
+        transition: all var(--time) ease-in-out;
+        position: relative;
+        border-radius: calc(var(--radius) - 2px);
+    }
+
+    .playIcon {
+        transition: opacity var(--time) ease-in-out;
+        opacity: 0;
+    }
+
+    &:hover {
+        .placeholderBG {
+            border-radius: 100%;
+            inset: 10px;
+        }
+
+        .stationLogo {
+            opacity: 0;
+            padding: 6px;
+            border-radius: 100%;
+        }
+
+        .playIcon {
+            opacity: 1;
+        }
+    }
+
+}
+
