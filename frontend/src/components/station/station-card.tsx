@@ -12,12 +12,19 @@ import styles from "./station-card.module.css";
 import { Play } from "lucide-react";
 
 export default function StationCard({station}: { station: Station }) {
-    const hasColor = station.strikingColor1 ? station.strikingColor1 : "#cdcdcd";
-    const [textColor, bgColor, borderColor, outlineColor, gradientColorLight] = lightenHexColor(`${hasColor}`, 0.2, -0.1);
+
+    const fallbackColors = [
+        '#e61717', '#ffbf00', '#22cc00',
+        '#00d9b5', '#00d4ff', '#0073e6',
+        '#531aff', '#c317e6', '#e60b9d'];
+    const randomFallbackColor = fallbackColors[Math.floor(Math.random() * fallbackColors.length)];
+    const hasColor = station.strikingColor1 ? station.strikingColor1 : randomFallbackColor;
+
+    const [textColor, bgColor, borderColor, outlineColor, gradientColorLight] = lightenHexColor(`${hasColor}`, 0.3, -0.1);
     const gradient = {
         backgroundImage: `radial-gradient(
         at top right,
-        ${hasColor} 45%,
+        ${hasColor} 40%,
         ${gradientColorLight}
       )`
     };
@@ -34,7 +41,7 @@ export default function StationCard({station}: { station: Station }) {
                         <div className="flex gap-4 justify-between">
                             <div>
                                 <p className="2xl:text-lg">{station.country}</p>
-                                <p className="text-lg 2xl:text-2xl font-semibold">{station.city}</p>
+                                <p className="text-lg 2xl:text-xl font-semibold">{station.city}</p>
                             </div>
                             <div className="relative fludidStationLogo">
                                 <div
@@ -60,12 +67,12 @@ export default function StationCard({station}: { station: Station }) {
                         <div className="flex gap-2 flex-wrap">
                             {topicsSplit?.map((topic, index) => (
                                 <span key={index}
-                                      className={`border ${borderColor} px-2 2xl:px-2.5 py-0.5 2xl:py-1 rounded-full font-semibold text-xs 2xl:text-base`}>
+                                      className={`border ${borderColor} px-2 2xl:px-2.5 py-0.5 2xl:py-1 rounded-full font-semibold text-xs 2xl:text-sm`}>
                                     {topic}
                                 </span>
                             ))}
                         </div>
-                        <h2 className="text-xl 2xl:text-3xl font-semibold">{station.name}</h2>
+                        <h2 className="text-xl 2xl:text-2xl font-semibold">{station.name}</h2>
                     </CardContent>
                 </div>
             </Card>

@@ -77,7 +77,7 @@ export default function RootLayout({children,}: Readonly<{
                     {/*<SpeedInsights />*/}
                     {/*<Analytics />*/}
                 </main>
-                <footer className="text-center text-sm p-4 text-muted-foreground">
+                <footer className="text-center text-sm p-2 text-muted-foreground">
                     Pulse Radio © Copyright {new Date().getFullYear()} by Arthur Ersosi. All rights reserved.
                 </footer>
             </div>

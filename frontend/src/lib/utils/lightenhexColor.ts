@@ -1,15 +1,17 @@
+import { hex } from 'wcag-contrast';
+
 export function lightenHexColor(
-    hex: string,
+    hexString: string,
     lightnessAmount: number = 0.2,
     saturationAmount: number = 0
 ): [string, string, string, string, string] {
-    hex = hex.replace(/^#/, '');
+    hexString = hexString.replace(/^#/, '');
 
-    if (hex.length === 3) {
-        hex = hex.split('').map(c => c + c).join('');
+    if (hexString.length === 3) {
+        hexString = hexString.split('').map(c => c + c).join('');
     }
 
-    const num = parseInt(hex, 16);
+    const num = parseInt(hexString, 16);
     const r = (num >> 16) & 255;
     const g = (num >> 8) & 255;
     const b = num & 255;
@@ -48,11 +50,14 @@ export function lightenHexColor(
     const sPerc = Math.round(s * 100);
     const lPerc = Math.round(l * 100);
 
-    const isBright = lPerc <= 62; // todo: magic number must be some real contrast-check
-    const textColor = isBright ? "text-white" : "text-black";
-    const bgColor = isBright ? "bg-white/30" : "bg-black/30";
-    const outlineColor = isBright ? "outline-white" : "outline-black";
-    const borderColor = isBright ? "border-white/30" : "border-black/30";
+    // wcag contrast-ration of white on hexString (BG color)
+    const ratio = hex('#ffffff', hexString);
+    const isReadable = ratio >= 4.5;
+
+    const textColor = isReadable ? "text-white" : "text-black";
+    const bgColor = isReadable ? "bg-white/30" : "bg-black/30";
+    const outlineColor = isReadable ? "outline-white" : "outline-black";
+    const borderColor = isReadable ? "border-white/30" : "border-black/30";
 
     return [textColor, bgColor, borderColor, outlineColor, `hsl(${hDeg}, ${sPerc}%, ${lPerc}%)`];
 }
