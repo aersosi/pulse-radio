@@ -19,13 +19,13 @@ import { truncateEnd, truncateStart } from "@/lib/utils";
 import PlayerHLS from "@/components/mediaPlayer/player-HLS";
 import PlayerAudio from "@/components/mediaPlayer/player-audio";
 import { InlineError } from "@/components/error-alert";
-import { ErrorPage } from "@/components/error-page";
+import StationNotFound from "@/app/station/[id]/not-found";
 import placeholderImage from "public/images/no-image-available.webp"
 
 // Dynamic metadata based on station
 export async function generateMetadata(props: { params: Promise<{ id: string }> }): Promise<Metadata> {
     const params = await props.params;
-    const { id } = params;
+    const {id} = params;
     const station: Station | ErrorResponse | null = await getStationDetails(id);
 
     if (!station || 'error' in station) {
@@ -41,23 +41,14 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
 }
 
 export default async function StationDetailPage(
-    props: {
-        params: Promise<{
-            id: string;
-        }>;
-    }
+    props: { params: Promise<{ id: string; }>; }
 ) {
     const params = await props.params;
     const station: Station | ErrorResponse | null = await getStationDetails(params.id, 1000);
 
     if (!station || 'error' in station) {
         return (
-            <ErrorPage
-                title="Station Not Found"
-                description="The station you are looking for does not exist or is not available."
-                backLinkText="Back to overview"
-                backLinkHref="/"
-            />
+            <StationNotFound></StationNotFound>
         );
     }
 

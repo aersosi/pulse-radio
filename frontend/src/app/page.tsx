@@ -1,25 +1,21 @@
+import StationLoading from "@/app/loading";
 import { getStations } from "@/lib/api";
 import StationList from "@/components/station/station-list";
 import PaginationControls from "@/components/pagination-controls";
-import { ErrorPage } from "@/components/error-page";
+import PageNotFound from "@/app/not-found";
 import { STATIONS_PER_PAGE } from "@/lib/constants";
+import { Suspense } from "react";
 
-export default async function Home(props: { searchParams: Promise<{ page?: string }> }) {
+async function HomeContent(props: { searchParams: Promise<{ page?: string }> }) {
     const searchParams = await props.searchParams;
     const page = searchParams.page ? parseInt(searchParams.page) : 1;
 
     const offset = (page - 1) * STATIONS_PER_PAGE;
     const result = await getStations(STATIONS_PER_PAGE, offset);
 
-    // Check if the result is a StationCollection
     if (!result || 'error' in result || !result.stations || result.stations.length === 0) {
         return (
-            <ErrorPage
-                title="Stations Not Found"
-                description="The stations you are looking for do not exist or are not available."
-                backLinkText="Back to overview"
-                backLinkHref="/"
-            />
+            <PageNotFound></PageNotFound>
         );
     }
 
@@ -35,5 +31,13 @@ export default async function Home(props: { searchParams: Promise<{ page?: strin
             <StationList stations={stations} />
             <PaginationControls page={page} totalCount={totalCount} />
         </>
+    );
+}
+
+export default function Home(props: { searchParams: Promise<{ page?: string }> }) {
+    return (
+        <Suspense fallback={<StationLoading />}>
+            <HomeContent searchParams={props.searchParams} />
+        </Suspense>
     );
 }

@@ -1,36 +1,28 @@
+import SearchNotFound from "@/app/search/not-found";
 import { redirect } from 'next/navigation';
 import { getSearchResults } from "@/lib/api";
 import StationList from "@/components/station/station-list";
 import PaginationControls from "@/components/pagination-controls";
-import { ErrorPage } from "@/components/error-page";
 import { STATIONS_PER_PAGE } from "@/lib/constants";
 import BtnToHome from "@/components/btn-to-home";
 import { Toast } from "@/components/toast";
 
 export default async function SearchPage(
-    props: {
-        searchParams: Promise<{ q?: string; page?: string }>;
-    }
+    props: { searchParams: Promise<{ q?: string; page?: string }>; }
 ) {
     const searchParams = await props.searchParams;
     const query = searchParams.q || "";
     const page = searchParams.page ? parseInt(searchParams.page) : 1;
     const offset = (page - 1) * STATIONS_PER_PAGE;
 
-    // Get search results
-    const result = await getSearchResults(
-        query,
-        STATIONS_PER_PAGE,
-        offset
-    );
+    const result = await getSearchResults(query, STATIONS_PER_PAGE, offset);
 
-    // Handle error response
     if ('error' in result && result.error) {
         return (
             <>
-                <Toast error={result.error} />
-                <ErrorPage
-                    title="No stations found for"
+                <Toast error={result.error}/>
+                <SearchNotFound
+                    title="No stations found matching:"
                     description={`${query}`}
                     backLinkText="Back to overview"
                     backLinkHref="/"
@@ -39,7 +31,7 @@ export default async function SearchPage(
         );
     }
 
-    const { stations, totalCount } = result;
+    const {stations, totalCount} = result;
     const totalPages = Math.ceil(totalCount / STATIONS_PER_PAGE);
 
     // Pagination issues
@@ -54,8 +46,8 @@ export default async function SearchPage(
     if (!stations || stations.length === 0) {
         return (
             <>
-                <ErrorPage
-                    title="No stations found for:"
+                <SearchNotFound
+                    title="No stations found matching:"
                     description={`${query}`}
                     backLinkText="Back to overview"
                     backLinkHref="/"
